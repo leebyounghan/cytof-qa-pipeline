@@ -1,0 +1,28 @@
+{
+  "task_id": "FRDR_covid19__20200429p8_p095n03_B08_004__step_04",
+  "dataset": "FRDR_covid19",
+  "sample": "20200429p8_p095n03_B08_004",
+  "step": 4,
+  "parent": "Step03_SSC-H|SSC-A == Singlets1",
+  "x_marker": "SSC-W",
+  "y_marker": "SSC-A",
+  "annotation_column": "Step04_SSC-W|SSC-A",
+  "categories": [
+    "Singlets2",
+    "Unassigned"
+  ],
+  "note": "Singlets2: single cells (second-pass doublet exclusion via pulse width) — vertical band at narrow SSC-W (the bulk of events sit in this band); the high-SSC-W tail to the right (residual doublets with inflated pulse width) is excluded.",
+  "tips": "Second singlet discrimination on SSC-W × SSC-A — SSC-W (pulse width) flags residual doublets that passed the H-vs-A gate; true singlets have a narrow, stereotyped pulse width while doublets show inflated width.",
+  "gating_context": "Root -> Step03_SSC-H|SSC-A(Singlets1)",
+  "gt_summary": {
+    "n_parent_cells": 185048,
+    "n_cells_per_category": {
+      "Singlets2": 177863,
+      "Unassigned": 7185
+    },
+    "population_proportions": {
+      "Singlets2": 0.9612,
+      "Unassigned": 0.0388
+    }
+  }
+}

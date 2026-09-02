@@ -1,0 +1,34 @@
+{
+  "task_id": "Bjornson__R15W11_W070515101208_Hu_M_GM-CSF__step_04",
+  "dataset": "Bjornson",
+  "sample": "R15W11_W070515101208_Hu_M_GM-CSF",
+  "step": 4,
+  "parent": "Step03_CD66_Gd158Di|CD45_In115Di == CD45hiCD66lo",
+  "x_marker": "CD3_Gd157Di",
+  "y_marker": "CD19_Yb173Di",
+  "annotation_column": "Step04_CD3_Gd157Di|CD19_Yb173Di",
+  "categories": [
+    "Bcells",
+    "Tcells",
+    "CD3negCD19neg",
+    "Unassigned"
+  ],
+  "note": "Three-way lymphoid split on a CD3 × CD19 plot. Tcells: T lymphocytes (both αβ and γδ) — large dense blob at the lower-right (CD3+, CD19-). Bcells: B lymphocytes — smaller cluster at the upper-left (CD3-, CD19+). CD3negCD19neg: non-B non-T fraction (NK cells, ILCs, monocytes, DCs, basophils — parsed downstream) — broad dense cluster sitting just left of the T-cell column and below the B-cell blob (CD3 negative-to-low, CD19 low-to-intermediate; the cluster sits above the (0,0) origin, not strictly at it). The double-positive upper-right corner is essentially empty.",
+  "tips": "Three-way lymphoid split on a single CD3 × CD19 plot. Bcells: CD3- CD19+. Tcells: CD3+ CD19-. CD3negCD19neg: CD3- CD19-. Useful co-markers: CD20 (not in panel) would refine mature B cells; CD56_Lu175Di resolves NK from other CD3-CD19- subsets downstream; IgM_Yb174Di (in panel) could further refine mature vs naive B cells; HLA-DR_Yb176Di is expressed on B cells (APCs) and typically negative on resting T cells — useful as a positive confirmation for Bcells and a negative check for Tcells; CD7_Pr141Di is expressed on essentially all T cells (and NK) but not on B cells, reinforcing Tcells assignment within the CD3+CD19- polygon.",
+  "gating_context": "Root -> Step03_CD66_Gd158Di|CD45_In115Di(CD45hiCD66lo)",
+  "gt_summary": {
+    "n_parent_cells": 38996,
+    "n_cells_per_category": {
+      "Bcells": 1550,
+      "Tcells": 25791,
+      "CD3negCD19neg": 10876,
+      "Unassigned": 779
+    },
+    "population_proportions": {
+      "Bcells": 0.0397,
+      "Tcells": 0.6614,
+      "CD3negCD19neg": 0.2789,
+      "Unassigned": 0.02
+    }
+  }
+}

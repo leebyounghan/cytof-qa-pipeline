@@ -1,0 +1,26 @@
+{
+  "task_id": "Vaccine__14.T4_Normalized__step_14",
+  "dataset": "Vaccine",
+  "sample": "14.T4_Normalized",
+  "step": 14,
+  "parent": "Step12_144Nd_CD19|171Yb_CD20 == CD20neg",
+  "x_marker": "154Sm_CD27",
+  "y_marker": "161Dy_CD38",
+  "annotation_column": "Step14_154Sm_CD27|161Dy_CD38",
+  "categories": [
+    "Plasmablast",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step12_144Nd_CD19|171Yb_CD20(CD20neg)",
+  "gt_summary": {
+    "n_parent_cells": 2704,
+    "n_cells_per_category": {
+      "Plasmablast": 545,
+      "Unassigned": 2159
+    },
+    "population_proportions": {
+      "Plasmablast": 0.2016,
+      "Unassigned": 0.7984
+    }
+  }
+}

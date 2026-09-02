@@ -1,0 +1,26 @@
+{
+  "task_id": "Acute2021__9_Normalized__step_03",
+  "dataset": "Acute2021",
+  "sample": "9_Normalized",
+  "step": 3,
+  "parent": "Step02_Time|Residual == Cleanup2",
+  "x_marker": "Time",
+  "y_marker": "Center",
+  "annotation_column": "Step03_Time|Center",
+  "categories": [
+    "Cleanup3",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step02_Time|Residual(Cleanup2)",
+  "gt_summary": {
+    "n_parent_cells": 140090,
+    "n_cells_per_category": {
+      "Cleanup3": 139362,
+      "Unassigned": 728
+    },
+    "population_proportions": {
+      "Cleanup3": 0.9948,
+      "Unassigned": 0.0052
+    }
+  }
+}

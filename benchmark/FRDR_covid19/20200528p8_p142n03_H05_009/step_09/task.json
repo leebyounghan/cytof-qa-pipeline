@@ -1,0 +1,28 @@
+{
+  "task_id": "FRDR_covid19__20200528p8_p142n03_H05_009__step_09",
+  "dataset": "FRDR_covid19",
+  "sample": "20200528p8_p142n03_H05_009",
+  "step": 9,
+  "parent": "Step08_CD19|CD3 == B_Cells",
+  "x_marker": "Comp-PE-A",
+  "y_marker": "Comp-Alexa Fluor 700-A",
+  "annotation_column": "Step09_CD86|CD3",
+  "categories": [
+    "B_cells_CD86p",
+    "Unassigned"
+  ],
+  "note": "B_cells_CD86p: activated B cells (antigen-engaged with co-stimulatory licensing) — right cluster (CD86+), separated from the larger CD86- cloud on the left. CD3 (y) is a purity sanity-check axis (parent already CD3-, so events stay at CD3-low); the activation call is driven by CD86 on x.",
+  "tips": "B-cell activation readout. B_cells_CD86p: CD86+ (CD86 is up-regulated on antigen-engaged B cells as a T-cell co-stimulatory ligand). Axis design caveat: y_marker is CD3, but parent is already CD3- by the B_Cells gate at Step 8 — CD3 on y is a purity sanity-check axis (events should cluster at CD3-low); the activation call is driven by CD86 on x. In-panel co-marker prior: HLA-DR (Comp-BV510-A) is constitutively high on B cells and is further up-regulated on activated B cells — complementary activation/APC-licensing readout.",
+  "gating_context": "Root -> Step08_CD19|CD3(B_Cells)",
+  "gt_summary": {
+    "n_parent_cells": 95,
+    "n_cells_per_category": {
+      "B_cells_CD86p": 12,
+      "Unassigned": 83
+    },
+    "population_proportions": {
+      "B_cells_CD86p": 0.1263,
+      "Unassigned": 0.8737
+    }
+  }
+}

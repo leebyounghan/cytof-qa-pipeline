@@ -1,0 +1,35 @@
+{
+  "task_id": "Acute2021__57_Normalized__step_40",
+  "dataset": "Acute2021",
+  "sample": "57_Normalized",
+  "step": 40,
+  "parent": "Step29_145Nd_CD4|146Nd_CD8a == CD4",
+  "x_marker": "150Nd_CD45RA",
+  "y_marker": "154Sm_CD27",
+  "annotation_column": "Step40_150Nd_CD45RA|154Sm_CD27",
+  "categories": [
+    "CD4/CD45RAnegCD27pos",
+    "CD4/CD45RAnegCD27neg",
+    "CD4Naive",
+    "CD4TEMRA",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step29_145Nd_CD4|146Nd_CD8a(CD4)",
+  "gt_summary": {
+    "n_parent_cells": 93330,
+    "n_cells_per_category": {
+      "CD4/CD45RAnegCD27pos": 3003,
+      "CD4/CD45RAnegCD27neg": 427,
+      "CD4Naive": 86886,
+      "CD4TEMRA": 1699,
+      "Unassigned": 1315
+    },
+    "population_proportions": {
+      "CD4/CD45RAnegCD27pos": 0.0322,
+      "CD4/CD45RAnegCD27neg": 0.0046,
+      "CD4Naive": 0.931,
+      "CD4TEMRA": 0.0182,
+      "Unassigned": 0.0141
+    }
+  }
+}

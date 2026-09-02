@@ -1,0 +1,31 @@
+{
+  "task_id": "FR-FCM-Z74D_tissue__exp_423_Donor_thLN_030_T cells__step_10",
+  "dataset": "FR-FCM-Z74D_tissue",
+  "sample": "exp_423_Donor_thLN_030_T cells",
+  "step": 10,
+  "parent": "Step03_Foxp3|CD127 == tot_Treg",
+  "x_marker": "Helios",
+  "y_marker": "Foxp3",
+  "annotation_column": "Step10_Helios|Foxp3",
+  "categories": [
+    "Treg_Heliosp",
+    "Treg_Heliosn",
+    "Unassigned"
+  ],
+  "note": "Treg lineage stratification by Helios on Helios × Foxp3. Treg_Heliosp: stable-lineage Treg (enriched for thymus-derived Treg) — right cluster (Helios+). Treg_Heliosn: peripherally-induced or less-stable Treg — left cluster (Helios-). Helios is bimodal — boundary set at the valley between the two peaks. Foxp3 (y) is a parent-gate visual QC only (parent already Foxp3+, events stay at Foxp3-high).",
+  "tips": "Treg lineage stratification by Helios (Ikaros family TF IKZF2). Treg_Heliosp: Helios+ — Helios as a strict thymic-origin marker is contested; Helios expression can also be induced in peripherally-generated Treg under certain activation conditions [Gottschalk et al. 2012, Akimova et al.], so 'Helios+' is best read as 'enriched for stable-lineage Treg'. Treg_Heliosn: Helios-. The Foxp3 y-axis is a parent-gate visual QC only — parent is already Foxp3+; the call is driven by Helios. Tissue context: under the thymic-origin interpretation, Helios- Treg would be enriched in mucosal tissues (Ileum) where microbiota-driven peripheral Treg induction occurs; this prediction depends on the contested Helios interpretation and should be confirmed from the data.",
+  "gating_context": "Root -> Step03_Foxp3|CD127(tot_Treg)",
+  "gt_summary": {
+    "n_parent_cells": 12380,
+    "n_cells_per_category": {
+      "Treg_Heliosp": 9882,
+      "Treg_Heliosn": 2422,
+      "Unassigned": 76
+    },
+    "population_proportions": {
+      "Treg_Heliosp": 0.7982,
+      "Treg_Heliosn": 0.1956,
+      "Unassigned": 0.0061
+    }
+  }
+}

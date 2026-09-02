@@ -1,0 +1,28 @@
+{
+  "task_id": "Lyoplate_DC__DC,2f,MONO,2f,NK 22013_12828_003__step_04",
+  "dataset": "Lyoplate_DC",
+  "sample": "DC,2f,MONO,2f,NK 22013_12828_003",
+  "step": 4,
+  "parent": "Step03_CD16|CD56 == CD16neg_CD56neg",
+  "x_marker": "SSC-A",
+  "y_marker": "HLADR",
+  "annotation_column": "Step04_SSC-A|HLADR",
+  "categories": [
+    "HLADRpos",
+    "Unassigned"
+  ],
+  "note": "HLADRpos: HLA-DR-positive APCs — upper cluster (HLA-DR high) spanning a broad SSC-A range; the HLA-DR-low cluster at the lower-left is excluded. HLA-DR is bimodal — boundary set at the valley between the HLA-DR- and HLA-DR+ peaks.",
+  "tips": "Enrich HLA-DR+ antigen-presenting cells within the CD14- CD16- CD56- compartment — the entry point to the DC branch. HLADRpos: HLA-DR+ (DCs are typically HLA-DR-high). Axis design caveat: x_marker is SSC-A, but this is a display / sanity-check axis to verify that events fall within the DC scatter range; the HLA-DR+ call is driven by HLA-DR on y.",
+  "gating_context": "Root -> Step03_CD16|CD56(CD16neg_CD56neg)",
+  "gt_summary": {
+    "n_parent_cells": 1431,
+    "n_cells_per_category": {
+      "HLADRpos": 1260,
+      "Unassigned": 171
+    },
+    "population_proportions": {
+      "HLADRpos": 0.8805,
+      "Unassigned": 0.1195
+    }
+  }
+}

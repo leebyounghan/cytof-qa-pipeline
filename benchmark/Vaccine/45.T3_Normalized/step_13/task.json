@@ -1,0 +1,32 @@
+{
+  "task_id": "Vaccine__45.T3_Normalized__step_13",
+  "dataset": "Vaccine",
+  "sample": "45.T3_Normalized",
+  "step": 13,
+  "parent": "Step12_144Nd_CD19|171Yb_CD20 == TotalCD19B",
+  "x_marker": "174Yb_IgD",
+  "y_marker": "154Sm_CD27",
+  "annotation_column": "Step13_174Yb_IgD|154Sm_CD27",
+  "categories": [
+    "IgDnegMemB",
+    "IgDposMemB",
+    "NaiveB",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step12_144Nd_CD19|171Yb_CD20(TotalCD19B)",
+  "gt_summary": {
+    "n_parent_cells": 5559,
+    "n_cells_per_category": {
+      "IgDnegMemB": 403,
+      "IgDposMemB": 213,
+      "NaiveB": 4851,
+      "Unassigned": 92
+    },
+    "population_proportions": {
+      "IgDnegMemB": 0.0725,
+      "IgDposMemB": 0.0383,
+      "NaiveB": 0.8726,
+      "Unassigned": 0.0165
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "task_id": "FRDR_covid19__20200507p8_p126n01_B05_002__step_03",
+  "dataset": "FRDR_covid19",
+  "sample": "20200507p8_p126n01_B05_002",
+  "step": 3,
+  "parent": "Step02_FSC-A|SSC-A == Cells",
+  "x_marker": "SSC-H",
+  "y_marker": "SSC-A",
+  "annotation_column": "Step03_SSC-H|SSC-A",
+  "categories": [
+    "Singlets1",
+    "Unassigned"
+  ],
+  "note": "Singlets1: single cells (first doublet/aggregate exclusion) — events on the linear SSC-H ≈ SSC-A diagonal; off-diagonal events above the diagonal (SSC-A inflated relative to SSC-H, indicating coincident events / aggregates) and the SSC-A saturation edge at the top are excluded.",
+  "tips": "First singlet discrimination on the SSC-H × SSC-A diagonal — singlet events fall on the linear diagonal; doublets/aggregates deviate because area scales faster than height when two events are coincident.",
+  "gating_context": "Root -> Step02_FSC-A|SSC-A(Cells)",
+  "gt_summary": {
+    "n_parent_cells": 84110,
+    "n_cells_per_category": {
+      "Singlets1": 83625,
+      "Unassigned": 485
+    },
+    "population_proportions": {
+      "Singlets1": 0.9942,
+      "Unassigned": 0.0058
+    }
+  }
+}

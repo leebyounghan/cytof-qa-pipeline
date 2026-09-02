@@ -1,0 +1,32 @@
+{
+  "task_id": "Acute2021__29_Normalized__step_13",
+  "dataset": "Acute2021",
+  "sample": "29_Normalized",
+  "step": 13,
+  "parent": "Step12_144Nd_CD19|171Yb_CD20 == TotalCD19B",
+  "x_marker": "174Yb_IgD",
+  "y_marker": "154Sm_CD27",
+  "annotation_column": "Step13_174Yb_IgD|154Sm_CD27",
+  "categories": [
+    "IgDnegMemB",
+    "IgDposMemB",
+    "NaiveB",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step12_144Nd_CD19|171Yb_CD20(TotalCD19B)",
+  "gt_summary": {
+    "n_parent_cells": 1566,
+    "n_cells_per_category": {
+      "IgDnegMemB": 225,
+      "IgDposMemB": 129,
+      "NaiveB": 1087,
+      "Unassigned": 125
+    },
+    "population_proportions": {
+      "IgDnegMemB": 0.1437,
+      "IgDposMemB": 0.0824,
+      "NaiveB": 0.6941,
+      "Unassigned": 0.0798
+    }
+  }
+}

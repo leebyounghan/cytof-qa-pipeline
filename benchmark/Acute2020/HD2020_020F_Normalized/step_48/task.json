@@ -1,0 +1,32 @@
+{
+  "task_id": "Acute2020__HD2020_020F_Normalized__step_48",
+  "dataset": "Acute2020",
+  "sample": "HD2020_020F_Normalized",
+  "step": 48,
+  "parent": "Step40_150Nd_CD45RA|154Sm_CD27 == CD4TEMRA",
+  "x_marker": "173Yb_HLA-DR",
+  "y_marker": "161Dy_CD38",
+  "annotation_column": "Step48_173Yb_HLA-DR|161Dy_CD38",
+  "categories": [
+    "CD4TEMRA/activated",
+    "CD4TEMRA/CD38pos",
+    "CD4TEMRA/activated+CD38pos",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step40_150Nd_CD45RA|154Sm_CD27(CD4TEMRA)",
+  "gt_summary": {
+    "n_parent_cells": 111,
+    "n_cells_per_category": {
+      "CD4TEMRA/activated": 0,
+      "CD4TEMRA/CD38pos": 10,
+      "CD4TEMRA/activated+CD38pos": 8,
+      "Unassigned": 93
+    },
+    "population_proportions": {
+      "CD4TEMRA/activated": 0.0,
+      "CD4TEMRA/CD38pos": 0.0901,
+      "CD4TEMRA/activated+CD38pos": 0.0721,
+      "Unassigned": 0.8378
+    }
+  }
+}

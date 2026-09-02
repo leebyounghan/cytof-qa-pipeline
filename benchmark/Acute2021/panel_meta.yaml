@@ -1,0 +1,1029 @@
+name: Acute2021
+panel: ''
+instrument: ''
+n_steps: 62
+n_samples: 65
+cofactor: 5.0
+channel_marker_map:
+  Time: Time
+  Event_length: Event_length
+  89Y_CD45: CD45
+  103Rh_Live_Dead: Live_Dead
+  106Cd: 106Cd
+  110Cd: 110Cd
+  111Cd: 111Cd
+  112Cd: 112Cd
+  113Cd: 113Cd
+  114Cd: 114Cd
+  116Cd: 116Cd
+  120Sn: 120Sn
+  127I: 127I
+  131Xe: 131Xe
+  133Cs: 133Cs
+  138Ba: 138Ba
+  139La: 139La
+  140Ce_Bead: Bead
+  141Pr_CD196_CCR6: CD196_CCR6
+  142Ce_Bead: Bead
+  142Nd: 142Nd
+  143Nd_CD123_IL-3R: CD123_IL-3R
+  144Nd_CD19: CD19
+  145Nd_CD4: CD4
+  146Nd_CD8a: CD8a
+  147Sm_CD11c: CD11c
+  148Nd_CD16: CD16
+  149Sm_CD45RO: CD45RO
+  150Nd_CD45RA: CD45RA
+  151Eu_CD161: CD161
+  152Sm_CD194_CCR4: CD194_CCR4
+  153Eu_CD25_IL-2Ra: CD25_IL-2Ra
+  154Sm_CD27: CD27
+  155Gd_CD57: CD57
+  156Gd_CD183_CXCR3: CD183_CXCR3
+  157Gd: 157Gd
+  158Gd_CD185_CXCR5: CD185_CXCR5
+  159Tb: 159Tb
+  160Gd_CD28: CD28
+  161Dy_CD38: CD38
+  162Dy: 162Dy
+  163Dy_CD56_NCAM: CD56_NCAM
+  164Dy_TCRgd: TCRgd
+  165Ho_Bead: Bead
+  166Er_CD294: CD294
+  167Er_CD197_CCR7: CD197_CCR7
+  168Er_CD14: CD14
+  169Tm: 169Tm
+  170Er_CD3: CD3
+  171Yb_CD20: CD20
+  172Yb_CD66b: CD66b
+  173Yb_HLA-DR: HLA-DR
+  174Yb_IgD: IgD
+  175Lu_Bead: Bead
+  176Yb_CD127_IL-7Ra: CD127_IL-7Ra
+  190BCKG: 190BCKG
+  191Ir_DNA1: DNA1
+  193Ir_DNA2: DNA2
+  194Pt: 194Pt
+  195Pt: 195Pt
+  198Pt: 198Pt
+  208Pb: 208Pb
+  209Bi: 209Bi
+  Center: Center
+  Offset: Offset
+  Width: Width
+  Residual: Residual
+gating_plan:
+- step: 1
+  parent: ALL
+  x_marker: Time
+  y_marker: 140Ce_Bead
+  annotation column name: Step01_Time|140Ce_Bead
+  annotation categories:
+  - Cleanup1
+  - Bead
+  note: 'Cleanup1: real cells (calibration beads excluded) — broad lower band at low
+    140Ce_Bead, spanning the full time axis. Bead: calibration beads — tight upper
+    band at high 140Ce_Bead, well separated from Cleanup1 by a clear gap.'
+  tips: 'Cleanup1: 140Ce- (real cells; bead channel empty). Bead: 140Ce++ (calibration
+    beads labeled with cerium).'
+- step: 2
+  parent: Step01_Time|140Ce_Bead == Cleanup1
+  x_marker: Time
+  y_marker: Residual
+  annotation column name: Step02_Time|Residual
+  annotation categories:
+  - Cleanup2
+  note: 'Cleanup2: clean singlet events (doublets, partial events, and acquisition
+    artifacts excluded) — broad mid-range band on Residual, spanning the full time
+    axis; the thin bottom-edge band is excluded.'
+  tips: 'Cleanup2: Residual mid-range. Residual is a CyTOF Helios Gaussian-discrimination
+    parameter (ion-cloud fit residual), NOT a biological marker. Mid-range = clean
+    singlet event; extreme values indicate doublets, partial events, or acquisition
+    artifacts.'
+- step: 3
+  parent: Step02_Time|Residual == Cleanup2
+  x_marker: Time
+  y_marker: Center
+  annotation column name: Step03_Time|Center
+  annotation categories:
+  - Cleanup3
+  note: 'Cleanup3: properly-centered events with well-formed ion clouds — dense horizontal
+    band at mid-to-high Center, spanning the full time axis; outliers far from this
+    dense band are excluded.'
+  tips: 'Cleanup3: Center mid-to-high. Center is a CyTOF Helios Gaussian-discrimination
+    parameter (ion-cloud centroid), NOT a biological marker. Properly-centered events
+    correspond to well-formed droplets with intact ion clouds.'
+- step: 4
+  parent: Step03_Time|Center == Cleanup3
+  x_marker: Time
+  y_marker: Offset
+  annotation column name: Step04_Time|Offset
+  annotation categories:
+  - Cleanup4
+  note: 'Cleanup4: events with normal baseline (acquisition artifacts excluded) —
+    dense horizontal band at mid-range Offset, spanning the full time axis; outliers
+    above and below this dense band are excluded.'
+  tips: 'Cleanup4: Offset mid-range. Offset is a CyTOF Helios Gaussian-discrimination
+    parameter (baseline offset of the ion-cloud signal), NOT a biological marker.
+    Mid-range = normal event baseline; extreme values flag acquisition artifacts.'
+- step: 5
+  parent: Step04_Time|Offset == Cleanup4
+  x_marker: Time
+  y_marker: Width
+  annotation column name: Step05_Time|Width
+  annotation categories:
+  - Cleanup5
+  note: 'Cleanup5: singlet events (wide-pulse doublets and aggregates excluded) —
+    dense horizontal band at mid-range Width, spanning the full time axis; outliers
+    far from this dense band are excluded.'
+  tips: 'Cleanup5: Width mid-range. Width is a CyTOF Helios Gaussian-discrimination
+    parameter (ion-cloud temporal width), NOT a biological marker. Typical width =
+    singlet event; wider signals indicate doublets or aggregates.'
+- step: 6
+  parent: Step05_Time|Width == Cleanup5
+  x_marker: Time
+  y_marker: 103Rh_Live_Dead
+  annotation column name: Step06_Time|103Rh_Live_Dead
+  annotation categories:
+  - Cleanup6
+  note: 'Cleanup6: live cells (dead cells excluded) — concentrated at low 103Rh_Live_Dead
+    with density fading upward, spanning the full time axis; the high-Rh dead-cell
+    tail at the top is excluded.'
+  tips: 'Cleanup6: 103Rh- (Rhodium viability dye excluded from live cells; dead cells
+    are Rh+).'
+- step: 7
+  parent: Step06_Time|103Rh_Live_Dead == Cleanup6
+  x_marker: 191Ir_DNA1
+  y_marker: Event_length
+  annotation column name: Step07_191Ir_DNA1|Event_length
+  annotation categories:
+  - Ir
+  note: 'Ir: nucleated real cells — dense vertical blob at high 191Ir_DNA1 spanning
+    a broad Event_length range; the low-DNA1, low-Event_length cluster at the lower-left
+    is excluded.'
+  tips: 'Ir: 191Ir_DNA1++ (Iridium-191 intercalator marks nucleated real cells).'
+- step: 8
+  parent: Step07_191Ir_DNA1|Event_length == Ir
+  x_marker: 193Ir_DNA2
+  y_marker: 89Y_CD45
+  annotation column name: Step08_193Ir_DNA2|89Y_CD45
+  annotation categories:
+  - CD45
+  note: 'CD45: leukocytes — dense oval island in the mid-to-high 193Ir_DNA2 / mid-to-high
+    89Y_CD45 region. Excluded on all sides: high-DNA2 doublets (right), low-DNA2 non-live
+    debris (left), and the low-CD45 non-immune band (bottom).'
+  tips: 'CD45: CD45+ on the 193Ir_DNA2 axis — also serves as an additional doublet/debris
+    filter (the DNA2-extreme tail is excluded here, complementing Step 07''s DNA1
+    gate; combined DNA1+ DNA2+ defines intact nucleated singlet leukocytes).'
+- step: 9
+  parent: Step08_193Ir_DNA2|89Y_CD45 == CD45
+  x_marker: 172Yb_CD66b
+  y_marker: 89Y_CD45
+  annotation column name: Step09_172Yb_CD66b|89Y_CD45
+  annotation categories:
+  - Mononuclear
+  - Granulocyte
+  - CD66bnegCD45lo
+  - CD45hiCD66bpos
+  note: 'Mononuclear: lymphocytes, monocytes, and dendritic cells (the parent for
+    B-cell, T-cell, NK, monocyte, DC, basophil, and ILC branches downstream) — upper-left
+    island at low CD66b and high CD45. Granulocyte: granulocytes (further split into
+    neutrophils and eosinophils downstream) — large diagonal blob at mid-to-high CD66b
+    and intermediate CD45. CD66bnegCD45lo: dying cells / debris — sparse cluster at
+    the lower-left (both axes low). CD45hiCD66bpos: atypical population (activated
+    granulocytes or contamination) — sparse cluster at the upper-right (both axes
+    high).'
+  tips: 'Mononuclear: CD45+ CD66b-. Granulocyte: CD45int CD66b+ (granulocytes express
+    CD66b with intermediate CD45). CD66bnegCD45lo: CD45lo CD66b-. CD45hiCD66bpos:
+    CD45hi CD66b+. Useful co-markers: CD16 confirms Granulocyte (neutrophils CD16+);
+    CD3/CD19 low confirms Mononuclear.'
+- step: 10
+  parent: Step09_172Yb_CD66b|89Y_CD45 == Mononuclear
+  x_marker: 168Er_CD14
+  y_marker: 163Dy_CD56_NCAM
+  annotation column name: Step10_168Er_CD14|163Dy_CD56_NCAM
+  annotation categories:
+  - CD14negCD56neg
+  note: 'CD14negCD56neg: mononuclear cells with monocytes and NK cells excluded (a
+    cleanup step en route to B-cell gating downstream) — small dense cluster at the
+    lower-left (both CD14 and CD56 low); excluded are the CD14+ monocytes on the right
+    and the CD56+ NK cells at the upper-left.'
+  tips: 'CD14negCD56neg: CD14- CD56-. Useful co-markers: CD16 helps flag residual
+    NK contamination (NK are CD56+ CD16+); CD3/CD19 low confirms no T/B carryover.'
+- step: 11
+  parent: Step10_168Er_CD14|163Dy_CD56_NCAM == CD14negCD56neg
+  x_marker: 143Nd_CD123_IL-3R
+  y_marker: 170Er_CD3
+  annotation column name: Step11_143Nd_CD123_IL-3R|170Er_CD3
+  annotation categories:
+  - CD123negCD3neg
+  note: 'CD123negCD3neg: residual non-T fraction with basophils and pDCs excluded
+    (B-lineage cells and other residuals retained for B-cell gating downstream) —
+    sparse cluster at the lower-left (CD123 and CD3 both low); the CD3+ T-cell band
+    at the top and any CD123+ basophil/pDC events on the right are excluded.'
+  tips: 'CD123negCD3neg: CD3- CD123lo/-. Useful co-markers: HLA-DR helps sanity-check
+    the CD123 split — CD123+ basophils are HLA-DR-, while CD123+ pDCs are HLA-DR+
+    (both excluded by this gate, but HLA-DR confirms which is which).'
+- step: 12
+  parent: Step11_143Nd_CD123_IL-3R|170Er_CD3 == CD123negCD3neg
+  x_marker: 144Nd_CD19
+  y_marker: 171Yb_CD20
+  annotation column name: Step12_144Nd_CD19|171Yb_CD20
+  annotation categories:
+  - CD20neg
+  - TotalCD19B
+  note: 'CD20neg: non-mature-B residual within the B-lineage parent (contains plasmablast
+    candidates and background; plasmablasts resolved downstream) — broad band at low
+    CD20 spanning all CD19 levels, with a dense corner at the lower-left (CD19-CD20-
+    background). TotalCD19B: main mature B cell pool (further resolved into naive
+    / memory subsets downstream) — dense blob at the upper-right (high CD19 and high
+    CD20).'
+  tips: 'CD20neg: CD20- (any CD19) — includes both CD19-CD20- background and CD19+CD20-
+    plasmablasts (separated at Step 14). TotalCD19B: CD19+ CD20+.'
+- step: 13
+  parent: Step12_144Nd_CD19|171Yb_CD20 == TotalCD19B
+  x_marker: 174Yb_IgD
+  y_marker: 154Sm_CD27
+  annotation column name: Step13_174Yb_IgD|154Sm_CD27
+  annotation categories:
+  - IgDnegMemB
+  - IgDposMemB
+  - NaiveB
+  note: 'NaiveB: naive B cells (un-activated, no class switch) — broad band at low
+    CD27 with mid-to-high IgD, densest at the lower-right (IgD high, CD27 low). IgDnegMemB:
+    class-switched memory B cells — blob at the upper-left (IgD low-to-mid, CD27 high).
+    IgDposMemB: non-switched / IgM memory B cells — sparser blob at the upper-right
+    (IgD high, CD27 high).'
+  tips: 'NaiveB: IgD+ CD27-. IgDnegMemB: IgD- CD27+. IgDposMemB: IgD+ CD27+. Useful
+    co-markers: CD38 high may flag plasmablast-adjacent cells (true plasmablasts are
+    gated separately at Step 14 from the CD20- branch).'
+- step: 14
+  parent: Step12_144Nd_CD19|171Yb_CD20 == CD20neg
+  x_marker: 154Sm_CD27
+  y_marker: 161Dy_CD38
+  annotation column name: Step14_154Sm_CD27|161Dy_CD38
+  annotation categories:
+  - Plasmablast
+  note: 'Plasmablast: antibody-secreting B-lineage cells — small sparse cluster at
+    the upper-right (CD27 very high, CD38 very high), well separated from the broad
+    background of the parent.'
+  tips: 'Plasmablast: CD27++ CD38++. Useful co-markers: CD19+ is required — parent
+    (CD20-) includes CD19+CD20- plasmablasts and CD19-CD20- background; only CD19+
+    cells with CD27++CD38++ are true plasmablasts.'
+- step: 15
+  parent: Step09_172Yb_CD66b|89Y_CD45 == Mononuclear
+  x_marker: 144Nd_CD19
+  y_marker: 170Er_CD3
+  annotation column name: Step15_144Nd_CD19|170Er_CD3
+  annotation categories:
+  - NonTNonB
+  note: 'NonTNonB: mononuclear cells with B and T cells excluded (the parent for monocytes,
+    DCs, NK cells, basophils, and ILCs) — dense cluster at the lower-left (both CD19
+    and CD3 low); excluded are the CD3+ T-cell blob at the upper-left and the CD19+
+    B-cell blob at the lower-right.'
+  tips: 'NonTNonB: CD19- CD3-. Useful co-markers: CD14 — the Mononuclear parent still
+    includes monocytes, so some CD14+ cells spill into NonTNonB; they are removed
+    downstream at Step17/21.'
+- step: 16
+  parent: Step15_144Nd_CD19|170Er_CD3 == NonTNonB
+  x_marker: 163Dy_CD56_NCAM
+  y_marker: 171Yb_CD20
+  annotation column name: Step16_163Dy_CD56_NCAM|171Yb_CD20
+  annotation categories:
+  - NonBNonNK
+  note: 'NonBNonNK: further-cleaned non-B, non-NK fraction (NK cells and any residual
+    B cells excluded; the parent for monocyte and basophil/ILC branches) — dense cluster
+    at the lower-left (CD56 low, CD20 low); the CD56+ NK-cell band at the lower-right
+    is excluded.'
+  tips: 'NonBNonNK: CD56- CD20-.'
+- step: 17
+  parent: Step16_163Dy_CD56_NCAM|171Yb_CD20 == NonBNonNK
+  x_marker: 147Sm_CD11c
+  y_marker: 168Er_CD14
+  annotation column name: Step17_147Sm_CD11c|168Er_CD14
+  annotation categories:
+  - TotalMonocyte
+  note: 'TotalMonocyte: total monocytes (further resolved into classical / transitional
+    / non-classical downstream) — captured on the right side (CD11c+); main dense
+    blob at the upper-right (CD11c high, CD14 high) with a sparser CD14-dim tail extending
+    downward along high CD11c. Excluded: the CD11c-low cluster at the lower-left.'
+  tips: 'TotalMonocyte: CD14+ (all monocyte subsets are CD14+). Useful co-markers:
+    HLA-DR+ confirms monocyte identity (monocytes are HLA-DR+; absence suggests residual
+    debris or contamination).'
+- step: 18
+  parent: Step17_147Sm_CD11c|168Er_CD14 == TotalMonocyte
+  x_marker: 161Dy_CD38
+  y_marker: 168Er_CD14
+  annotation column name: Step18_161Dy_CD38|168Er_CD14
+  annotation categories:
+  - ClassicalMono
+  - TransitionalMono
+  - NonclassicalMono
+  note: 'ClassicalMono: classical monocytes (most abundant, inflammatory subset) —
+    main dense blob at the upper-right (CD38 high, CD14 high). TransitionalMono: intermediate
+    monocytes (mid-differentiation) — small cluster in the middle (CD38 mid, CD14
+    mid). NonclassicalMono: non-classical (patrolling) monocytes — cluster at the
+    lower-left (CD38 low, CD14 low-to-dim). The three populations form a diagonal
+    progression from lower-left to upper-right.'
+  tips: 'Blood monocytes are classically split into three subsets via CD14 × CD16
+    (classical = CD14++ CD16-, non-classical = CD14dim CD16+). This panel replaces
+    CD16 with CD38 — classical monocytes are metabolically most active (CD38-high),
+    while non-classical are CD38-low after further differentiation. ClassicalMono:
+    CD14++ CD38+. TransitionalMono: CD14int CD38int. NonclassicalMono: CD14+ CD38-
+    (parent is CD14+; distinguished from classical by CD38 loss). Useful co-markers:
+    CD16 — not used by this gate, but canonical non-classical monocytes are CD16+;
+    CD16 level is a useful sanity check against the CD38-based split.'
+- step: 19
+  parent: Step16_163Dy_CD56_NCAM|171Yb_CD20 == NonBNonNK
+  x_marker: 173Yb_HLA-DR
+  y_marker: 143Nd_CD123_IL-3R
+  annotation column name: Step19_173Yb_HLA-DR|143Nd_CD123_IL-3R
+  annotation categories:
+  - Basophil
+  - HLADRloCD123lo
+  note: 'Basophil: basophils — distinct cluster at the upper-left (HLA-DR low, CD123
+    high). HLADRloCD123lo: residual non-DC, non-basophil population (may contain ILCs;
+    further resolved downstream) — smaller cluster at the lower-left (both HLA-DR
+    and CD123 low). The HLA-DR+ cloud on the right (DCs and other HLA-DR+ events)
+    is excluded.'
+  tips: 'Basophil: HLA-DR- CD123++ (basophils are IL-3Rα-high and lack HLA-DR). HLADRloCD123lo:
+    HLA-DR- CD123-. Useful co-markers: CD16 is classical for distinguishing basophils
+    (CD16-) from residual neutrophils (CD16+); confirms Basophil vs granulocyte spillover.'
+- step: 20
+  parent: Step19_173Yb_HLA-DR|143Nd_CD123_IL-3R == HLADRloCD123lo
+  x_marker: 151Eu_CD161
+  y_marker: 176Yb_CD127_IL-7Ra
+  annotation column name: Step20_151Eu_CD161|176Yb_CD127_IL-7Ra
+  annotation categories:
+  - ILC
+  note: 'ILC: innate lymphoid cells — small sparse cluster at the upper-right (CD161
+    high, CD127 high), well separated from the broad CD127-low / CD161-low background.'
+  tips: 'ILC: CD127+ CD161+ (IL-7Rα+ and CD161+).'
+- step: 21
+  parent: Step15_144Nd_CD19|170Er_CD3 == NonTNonB
+  x_marker: 168Er_CD14
+  y_marker: 170Er_CD3
+  annotation column name: Step21_168Er_CD14|170Er_CD3
+  annotation categories:
+  - NonTNonBCD14neg
+  note: 'NonTNonBCD14neg: further-cleaned non-T, non-B, non-monocyte fraction (enriches
+    for NK cells and DCs downstream) — left band at low CD14 (parent already CD3-low);
+    the CD14+ monocyte cloud on the right is excluded.'
+  tips: 'NonTNonBCD14neg: CD3- CD14-.'
+- step: 22
+  parent: Step21_168Er_CD14|170Er_CD3 == NonTNonBCD14neg
+  x_marker: 163Dy_CD56_NCAM
+  y_marker: 173Yb_HLA-DR
+  annotation column name: Step22_163Dy_CD56_NCAM|173Yb_HLA-DR
+  annotation categories:
+  - TotalDC
+  - TotalNK
+  note: 'TotalDC: total dendritic cells (further split into pDC and cDC downstream)
+    — cluster at the upper-left (CD56 low, HLA-DR high). TotalNK: total NK cells (further
+    split into early / late maturation states downstream) — dense blob at the lower-right
+    (CD56 mid-to-high, HLA-DR low). The lower-left double-negative background is excluded.'
+  tips: 'Primary split is on CD56 alone within the NonT/NonB/CD14- residual: TotalDC
+    = CD56- (HLA-DR axis is shown for orientation — DCs are typically HLA-DR+, but
+    HLA-DR is not enforced as a gate boundary here; HLA-DR-low events that fall in
+    CD56- still go to TotalDC and are refined downstream). TotalNK = CD56+ (HLA-DR
+    is not a defining axis — most NK are HLA-DR-/lo but this gate does not exclude
+    on HLA-DR). Useful co-markers: CD11c/CD123 distinguish DC subtypes downstream
+    (Step 24); CD3 low confirms no T-cell contamination; CD14 low confirms no monocyte
+    spillover.'
+- step: 23
+  parent: Step22_163Dy_CD56_NCAM|173Yb_HLA-DR == TotalNK
+  x_marker: 155Gd_CD57
+  y_marker: 163Dy_CD56_NCAM
+  annotation column name: Step23_155Gd_CD57|163Dy_CD56_NCAM
+  annotation categories:
+  - EarlyNK
+  - LateNK
+  note: 'EarlyNK: immature cytokine-producing NK cells — left band at low CD57. LateNK:
+    mature cytotoxic NK cells (terminally differentiated) — right band at mid-to-high
+    CD57. The two are separated by a CD57 boundary.'
+  tips: 'EarlyNK: CD56+ CD57-. LateNK: CD56+ CD57+. Useful co-markers: CD16 marks
+    the main cytotoxic NK compartment (CD56dim CD16+); combined with CD57 confirms
+    mature cytotoxic NK (LateNK).'
+- step: 24
+  parent: Step22_163Dy_CD56_NCAM|173Yb_HLA-DR == TotalDC
+  x_marker: 147Sm_CD11c
+  y_marker: 143Nd_CD123_IL-3R
+  annotation column name: Step24_147Sm_CD11c|143Nd_CD123_IL-3R
+  annotation categories:
+  - pDC
+  - cDC
+  note: 'pDC: plasmacytoid dendritic cells — small cluster at the upper-left (CD11c
+    low, CD123 high). cDC: conventional / classical dendritic cells (further refined
+    to mDC downstream) — main dense blob at the center-right (CD11c high, CD123 mid-to-low).'
+  tips: 'pDC: CD123+ CD11c- (IL-3Rα+, lacks integrin αX). cDC: CD11c+ CD123-. Useful
+    co-markers: HLA-DR should be high for both pDC and cDC (DC hallmark); CD14 low
+    excludes monocyte spillover.'
+- step: 25
+  parent: Step24_147Sm_CD11c|143Nd_CD123_IL-3R == cDC
+  x_marker: 161Dy_CD38
+  y_marker: 143Nd_CD123_IL-3R
+  annotation column name: Step25_161Dy_CD38|143Nd_CD123_IL-3R
+  annotation categories:
+  - mDC
+  note: 'mDC: myeloid dendritic cells (within the conventional DC compartment) — cluster
+    on the right (CD38 mid-to-high, CD123 low-to-mid); the CD38-low cluster on the
+    left is excluded.'
+  tips: 'mDC: CD123- CD38+.'
+- step: 26
+  parent: Step09_172Yb_CD66b|89Y_CD45 == Mononuclear
+  x_marker: 168Er_CD14
+  y_marker: 147Sm_CD11c
+  annotation column name: Step26_168Er_CD14|147Sm_CD11c
+  annotation categories:
+  - CD11cnegCD14neg
+  note: 'CD11cnegCD14neg: non-myeloid residual within the mononuclear fraction (lymphoid
+    lineages; feeds the T-cell branch downstream) — large dense cluster at the lower-left
+    (both CD14 and CD11c low); excluded are the CD14+ events on the right and the
+    CD11c+ events at the top (myeloid).'
+  tips: 'CD11cnegCD14neg: CD11c- CD14-.'
+- step: 27
+  parent: Step26_168Er_CD14|147Sm_CD11c == CD11cnegCD14neg
+  x_marker: 144Nd_CD19
+  y_marker: 170Er_CD3
+  annotation column name: Step27_144Nd_CD19|170Er_CD3
+  annotation categories:
+  - CD3T
+  note: 'CD3T: T cells (parent for the αβ vs γδ split downstream) — upper region (CD3+),
+    with the main dense blob at the upper-left (CD3+ CD19-); the CD3-low band at the
+    bottom is excluded.'
+  tips: 'CD3T: CD3+ CD19-.'
+- step: 28
+  parent: Step27_144Nd_CD19|170Er_CD3 == CD3T
+  x_marker: 164Dy_TCRgd
+  y_marker: 170Er_CD3
+  annotation column name: Step28_164Dy_TCRgd|170Er_CD3
+  annotation categories:
+  - abT
+  - gdT
+  note: 'abT: αβ T cells (the majority of T cells; parent for CD4/CD8 split downstream)
+    — large dense band at low TCRgd (left). gdT: γδ T cells (minority) — sparser cluster
+    at mid-to-high TCRgd (right). Split along TCRgd.'
+  tips: 'abT: CD3+ TCRgd-. gdT: CD3+ TCRgd+.'
+- step: 29
+  parent: Step28_164Dy_TCRgd|170Er_CD3 == abT
+  x_marker: 145Nd_CD4
+  y_marker: 146Nd_CD8a
+  annotation column name: Step29_145Nd_CD4|146Nd_CD8a
+  annotation categories:
+  - CD8
+  - DPT
+  - DNT
+  - CD4
+  note: 'CD8: cytotoxic T cells (parent for memory subsetting downstream) — dense
+    blob at the upper-left (CD4 low, CD8 high). CD4: helper T cells (parent for memory
+    subsetting downstream and the Treg / Tfh / Th-polarization branches) — largest
+    dense blob at the lower-right (CD4 high, CD8 low). DPT: double-positive T cells
+    (rare; often thymic emigrants or activated transitional) — sparser cluster at
+    the upper-right (CD4 high, CD8 high). DNT: double-negative T cells (includes MAIT
+    and NKT precursors; resolved downstream) — sparse cluster at the lower-left (both
+    low). Classical CD4 vs CD8 four-quadrant layout.'
+  tips: 'CD8: CD4- CD8+. CD4: CD4+ CD8-. DPT: CD4+ CD8+. DNT: CD4- CD8-. Useful co-markers:
+    CD161 — DNT is enriched for MAIT/NKT (resolved later at Step 61); high CD161 on
+    DNT cells flags these unconventional T cells.'
+- step: 30
+  parent: Step29_145Nd_CD4|146Nd_CD8a == CD8
+  x_marker: 150Nd_CD45RA
+  y_marker: 154Sm_CD27
+  annotation column name: Step30_150Nd_CD45RA|154Sm_CD27
+  annotation categories:
+  - CD8/CD45RAnegCD27pos
+  - CD8/CD45RAnegCD27neg
+  - CD8Naive
+  - CD8TEMRA
+  note: 'CD8Naive: naive cytotoxic T cells (antigen-inexperienced) — upper-right quadrant
+    (CD45RA high, CD27 high). CD8TEMRA: terminally differentiated effector memory
+    CD8 re-expressing CD45RA — lower-right quadrant (CD45RA high, CD27 low). CD8/CD45RAnegCD27pos:
+    central memory / early effector memory CD8 (further split into TCM vs TEM1 downstream)
+    — upper-left quadrant (CD45RA low, CD27 high). CD8/CD45RAnegCD27neg: late effector
+    memory CD8 (further split into TEM2 vs TEM3 downstream) — lower-left quadrant
+    (CD45RA low, CD27 low). Classical CD45RA vs CD27 four-quadrant layout.'
+  tips: 'CD8Naive: CD45RA+ CD27+. CD8TEMRA: CD45RA+ CD27-. CD8/CD45RAnegCD27pos: CD45RA-
+    CD27+. CD8/CD45RAnegCD27neg: CD45RA- CD27-. Useful co-markers: CD45RO complements
+    CD45RA (memory cells are CD45RO+ CD45RA-; naive are CD45RO- CD45RA+); CD28 helps
+    distinguish less-differentiated (CD28+) vs late (CD28-) memory.'
+- step: 31
+  parent: Step30_150Nd_CD45RA|154Sm_CD27 == CD8Naive
+  x_marker: 173Yb_HLA-DR
+  y_marker: 161Dy_CD38
+  annotation column name: Step31_173Yb_HLA-DR|161Dy_CD38
+  annotation categories:
+  - CD8Naive/activated
+  - CD8Naive/CD38pos
+  - CD8Naive/activated+CD38pos
+  note: 'CD8Naive/activated: activated naive CD8 T cells (not proliferating) — lower-right
+    quadrant (HLA-DR+, CD38-). CD8Naive/CD38pos: proliferating naive CD8 T cells (e.g.
+    recent thymic emigrants) — upper-left quadrant (HLA-DR-, CD38+). CD8Naive/activated+CD38pos:
+    dually activated and proliferating naive CD8 T cells — upper-right quadrant (both
+    +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left
+    quadrant is excluded.'
+  tips: 'HLA-DR marks activation (MHC-II induced on recently-activated T cells); CD38
+    marks proliferation / metabolic activity. CD8Naive/activated: HLA-DR+ CD38-. CD8Naive/CD38pos:
+    HLA-DR- CD38+. CD8Naive/activated+CD38pos: HLA-DR+ CD38+.'
+- step: 32
+  parent: Step30_150Nd_CD45RA|154Sm_CD27 == CD8/CD45RAnegCD27pos
+  x_marker: 167Er_CD197_CCR7
+  y_marker: 146Nd_CD8a
+  annotation column name: Step32_167Er_CD197_CCR7|146Nd_CD8a
+  annotation categories:
+  - CD8TEM1
+  - CD8TCM
+  note: 'CD8TCM: central memory cytotoxic T cells (lymph-node homing memory) — right
+    band (CCR7 high). CD8TEM1: earliest-stage effector memory CD8 (CD27 retained)
+    — left band (CCR7 low). Split along CCR7.'
+  tips: 'CD8TCM: CCR7+. CD8TEM1: CCR7- (effector memory with CD27 retained — earliest
+    EM stage in this panel''s progression). Useful co-markers: CD28 retained in TCM
+    and early EM, lost in late EM; CD45RO confirms memory status.'
+- step: 33
+  parent: Step32_167Er_CD197_CCR7|146Nd_CD8a == CD8TEM1
+  x_marker: 173Yb_HLA-DR
+  y_marker: 161Dy_CD38
+  annotation column name: Step33_173Yb_HLA-DR|161Dy_CD38
+  annotation categories:
+  - CD8TEM1/activated
+  - CD8TEM1/CD38pos
+  - CD8TEM1/activated+CD38pos
+  note: 'CD8TEM1/activated: activated CD8 TEM1 cells (not proliferating) — lower-right
+    quadrant (HLA-DR+, CD38-). CD8TEM1/CD38pos: proliferating CD8 TEM1 cells — upper-left
+    quadrant (HLA-DR-, CD38+). CD8TEM1/activated+CD38pos: dually activated and proliferating
+    CD8 TEM1 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout;
+    the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.'
+  tips: 'HLA-DR = activation; CD38 = proliferation. CD8TEM1/activated: HLA-DR+ CD38-.
+    CD8TEM1/CD38pos: HLA-DR- CD38+. CD8TEM1/activated+CD38pos: HLA-DR+ CD38+.'
+- step: 34
+  parent: Step32_167Er_CD197_CCR7|146Nd_CD8a == CD8TCM
+  x_marker: 173Yb_HLA-DR
+  y_marker: 161Dy_CD38
+  annotation column name: Step34_173Yb_HLA-DR|161Dy_CD38
+  annotation categories:
+  - CD8TCM/activated
+  - CD8TCM/CD38pos
+  - CD8TCM/activated+CD38pos
+  note: 'CD8TCM/activated: activated CD8 central memory cells — lower-right quadrant
+    (HLA-DR+, CD38-). CD8TCM/CD38pos: proliferating CD8 central memory cells — upper-left
+    quadrant (HLA-DR-, CD38+). CD8TCM/activated+CD38pos: dually activated and proliferating
+    CD8 central memory cells — upper-right quadrant (both +). Three-quadrant HLA-DR
+    × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.'
+  tips: 'HLA-DR = activation; CD38 = proliferation. CD8TCM/activated: HLA-DR+ CD38-.
+    CD8TCM/CD38pos: HLA-DR- CD38+. CD8TCM/activated+CD38pos: HLA-DR+ CD38+.'
+- step: 35
+  parent: Step30_150Nd_CD45RA|154Sm_CD27 == CD8/CD45RAnegCD27neg
+  x_marker: 167Er_CD197_CCR7
+  y_marker: 146Nd_CD8a
+  annotation column name: Step35_167Er_CD197_CCR7|146Nd_CD8a
+  annotation categories:
+  - CD8TEM2
+  - CD8TEM3
+  note: 'CD8TEM2: intermediate-stage effector memory CD8 (CD27 lost, CCR7 retained)
+    — right band (CCR7 high). CD8TEM3: terminally differentiated effector memory CD8
+    (CD27 and CCR7 both lost) — left band (CCR7 low). Split along CCR7.'
+  tips: 'CD8TEM2: CCR7+. CD8TEM3: CCR7-. Useful co-markers: CD28 — early EM (TEM1)
+    often retains CD28; progressive loss from TEM2 → TEM3 toward terminal differentiation.
+    CD45RO+ confirms memory status.'
+- step: 36
+  parent: Step35_167Er_CD197_CCR7|146Nd_CD8a == CD8TEM3
+  x_marker: 173Yb_HLA-DR
+  y_marker: 161Dy_CD38
+  annotation column name: Step36_173Yb_HLA-DR|161Dy_CD38
+  annotation categories:
+  - CD8TEM3/activated
+  - CD8TEM3/CD38pos
+  - CD8TEM3/activated+CD38pos
+  note: 'CD8TEM3/activated: activated CD8 TEM3 cells — lower-right quadrant (HLA-DR+,
+    CD38-). CD8TEM3/CD38pos: proliferating CD8 TEM3 cells — upper-left quadrant (HLA-DR-,
+    CD38+). CD8TEM3/activated+CD38pos: dually activated and proliferating CD8 TEM3
+    cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the
+    resting (HLA-DR-, CD38-) lower-left quadrant is excluded.'
+  tips: 'HLA-DR = activation; CD38 = proliferation. CD8TEM3/activated: HLA-DR+ CD38-.
+    CD8TEM3/CD38pos: HLA-DR- CD38+. CD8TEM3/activated+CD38pos: HLA-DR+ CD38+.'
+- step: 37
+  parent: Step35_167Er_CD197_CCR7|146Nd_CD8a == CD8TEM2
+  x_marker: 173Yb_HLA-DR
+  y_marker: 161Dy_CD38
+  annotation column name: Step37_173Yb_HLA-DR|161Dy_CD38
+  annotation categories:
+  - CD8TEM2/activated
+  - CD8TEM2/CD38pos
+  - CD8TEM2/activated+CD38pos
+  note: 'CD8TEM2/activated: activated CD8 TEM2 cells — lower-right quadrant (HLA-DR+,
+    CD38-). CD8TEM2/CD38pos: proliferating CD8 TEM2 cells — upper-left quadrant (HLA-DR-,
+    CD38+). CD8TEM2/activated+CD38pos: dually activated and proliferating CD8 TEM2
+    cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the
+    resting (HLA-DR-, CD38-) lower-left quadrant is excluded.'
+  tips: 'HLA-DR = activation; CD38 = proliferation. CD8TEM2/activated: HLA-DR+ CD38-.
+    CD8TEM2/CD38pos: HLA-DR- CD38+. CD8TEM2/activated+CD38pos: HLA-DR+ CD38+.'
+- step: 38
+  parent: Step30_150Nd_CD45RA|154Sm_CD27 == CD8TEMRA
+  x_marker: 173Yb_HLA-DR
+  y_marker: 161Dy_CD38
+  annotation column name: Step38_173Yb_HLA-DR|161Dy_CD38
+  annotation categories:
+  - CD8TEMRA/activated
+  - CD8TEMRA/CD38pos
+  - CD8TEMRA/activated+CD38pos
+  note: 'CD8TEMRA/activated: activated CD8 TEMRA cells — lower-right quadrant (HLA-DR+,
+    CD38-). CD8TEMRA/CD38pos: proliferating CD8 TEMRA cells — upper-left quadrant
+    (HLA-DR-, CD38+). CD8TEMRA/activated+CD38pos: dually activated and proliferating
+    CD8 TEMRA cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38
+    layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.'
+  tips: 'HLA-DR = activation; CD38 = proliferation. CD8TEMRA/activated: HLA-DR+ CD38-.
+    CD8TEMRA/CD38pos: HLA-DR- CD38+. CD8TEMRA/activated+CD38pos: HLA-DR+ CD38+.'
+- step: 39
+  parent: Step29_145Nd_CD4|146Nd_CD8a == CD8 & Step30_150Nd_CD45RA|154Sm_CD27 != CD8Naive
+  x_marker: 173Yb_HLA-DR
+  y_marker: 161Dy_CD38
+  annotation column name: Step39_173Yb_HLA-DR|161Dy_CD38
+  annotation categories:
+  - nnCD8/activated
+  - nnCD8/CD38pos
+  - nnCD8/activated+CD38pos
+  note: 'Aggregated activation status across all non-naive CD8 T cells (TCM + all
+    TEM stages + TEMRA). nnCD8/activated: activated non-naive CD8 — lower-right quadrant
+    (HLA-DR+, CD38-). nnCD8/CD38pos: proliferating non-naive CD8 — upper-left quadrant
+    (HLA-DR-, CD38+). nnCD8/activated+CD38pos: dually activated and proliferating
+    non-naive CD8 — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout;
+    the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.'
+  tips: 'Aggregate of all non-naive CD8 (TCM + all TEM stages + TEMRA). HLA-DR = activation;
+    CD38 = proliferation. nnCD8/activated: HLA-DR+ CD38-. nnCD8/CD38pos: HLA-DR- CD38+.
+    nnCD8/activated+CD38pos: HLA-DR+ CD38+.'
+- step: 40
+  parent: Step29_145Nd_CD4|146Nd_CD8a == CD4
+  x_marker: 150Nd_CD45RA
+  y_marker: 154Sm_CD27
+  annotation column name: Step40_150Nd_CD45RA|154Sm_CD27
+  annotation categories:
+  - CD4/CD45RAnegCD27pos
+  - CD4/CD45RAnegCD27neg
+  - CD4Naive
+  - CD4TEMRA
+  note: 'CD4Naive: naive helper T cells (antigen-inexperienced) — upper-right quadrant
+    (CD45RA high, CD27 high). CD4TEMRA: terminally differentiated effector memory
+    CD4 re-expressing CD45RA (rare in CD4) — lower-right quadrant (CD45RA high, CD27
+    low). CD4/CD45RAnegCD27pos: central memory / early effector memory CD4 (further
+    split downstream) — upper-left quadrant (CD45RA low, CD27 high). CD4/CD45RAnegCD27neg:
+    late effector memory CD4 (further split downstream) — lower-left quadrant (CD45RA
+    low, CD27 low). Classical CD45RA vs CD27 four-quadrant layout.'
+  tips: 'CD4Naive: CD45RA+ CD27+. CD4TEMRA: CD45RA+ CD27-. CD4/CD45RAnegCD27pos: CD45RA-
+    CD27+. CD4/CD45RAnegCD27neg: CD45RA- CD27-.'
+- step: 41
+  parent: Step40_150Nd_CD45RA|154Sm_CD27 == CD4Naive
+  x_marker: 173Yb_HLA-DR
+  y_marker: 161Dy_CD38
+  annotation column name: Step41_173Yb_HLA-DR|161Dy_CD38
+  annotation categories:
+  - CD4Naive/activated
+  - CD4Naive/CD38pos
+  - CD4Naive/activated+CD38pos
+  note: 'CD4Naive/activated: activated naive CD4 T cells — lower-right quadrant (HLA-DR+,
+    CD38-). CD4Naive/CD38pos: proliferating naive CD4 T cells — upper-left quadrant
+    (HLA-DR-, CD38+). CD4Naive/activated+CD38pos: dually activated and proliferating
+    naive CD4 T cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38
+    layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.'
+  tips: 'HLA-DR = activation; CD38 = proliferation. CD4Naive/activated: HLA-DR+ CD38-.
+    CD4Naive/CD38pos: HLA-DR- CD38+. CD4Naive/activated+CD38pos: HLA-DR+ CD38+.'
+- step: 42
+  parent: Step40_150Nd_CD45RA|154Sm_CD27 == CD4/CD45RAnegCD27pos
+  x_marker: 167Er_CD197_CCR7
+  y_marker: 145Nd_CD4
+  annotation column name: Step42_167Er_CD197_CCR7|145Nd_CD4
+  annotation categories:
+  - CD4TEM1
+  - CD4TCM
+  note: 'CD4TCM: central memory helper T cells (lymph-node homing memory) — right
+    band (CCR7 high). CD4TEM1: earliest-stage effector memory CD4 (CD27 retained)
+    — left band (CCR7 low). Split along CCR7.'
+  tips: 'CD4TCM: CCR7+. CD4TEM1: CCR7-. Useful co-markers: CD28 retained in TCM, progressively
+    lost toward late EM; CD45RO confirms memory status.'
+- step: 43
+  parent: Step42_167Er_CD197_CCR7|145Nd_CD4 == CD4TEM1
+  x_marker: 173Yb_HLA-DR
+  y_marker: 161Dy_CD38
+  annotation column name: Step43_173Yb_HLA-DR|161Dy_CD38
+  annotation categories:
+  - CD4TEM1/activated
+  - CD4TEM1/CD38pos
+  - CD4TEM1/activated+CD38pos
+  note: 'CD4TEM1/activated: activated CD4 TEM1 cells — lower-right quadrant (HLA-DR+,
+    CD38-). CD4TEM1/CD38pos: proliferating CD4 TEM1 cells — upper-left quadrant (HLA-DR-,
+    CD38+). CD4TEM1/activated+CD38pos: dually activated and proliferating CD4 TEM1
+    cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the
+    resting (HLA-DR-, CD38-) lower-left quadrant is excluded.'
+  tips: 'HLA-DR = activation; CD38 = proliferation. CD4TEM1/activated: HLA-DR+ CD38-.
+    CD4TEM1/CD38pos: HLA-DR- CD38+. CD4TEM1/activated+CD38pos: HLA-DR+ CD38+.'
+- step: 44
+  parent: Step42_167Er_CD197_CCR7|145Nd_CD4 == CD4TCM
+  x_marker: 173Yb_HLA-DR
+  y_marker: 161Dy_CD38
+  annotation column name: Step44_173Yb_HLA-DR|161Dy_CD38
+  annotation categories:
+  - CD4TCM/activated
+  - CD4TCM/CD38pos
+  - CD4TCM/activated+CD38pos
+  note: 'CD4TCM/activated: activated CD4 central memory cells — lower-right quadrant
+    (HLA-DR+, CD38-). CD4TCM/CD38pos: proliferating CD4 central memory cells — upper-left
+    quadrant (HLA-DR-, CD38+). CD4TCM/activated+CD38pos: dually activated and proliferating
+    CD4 central memory cells — upper-right quadrant (both +). Three-quadrant HLA-DR
+    × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.'
+  tips: 'HLA-DR = activation; CD38 = proliferation. CD4TCM/activated: HLA-DR+ CD38-.
+    CD4TCM/CD38pos: HLA-DR- CD38+. CD4TCM/activated+CD38pos: HLA-DR+ CD38+.'
+- step: 45
+  parent: Step40_150Nd_CD45RA|154Sm_CD27 == CD4/CD45RAnegCD27neg
+  x_marker: 167Er_CD197_CCR7
+  y_marker: 145Nd_CD4
+  annotation column name: Step45_167Er_CD197_CCR7|145Nd_CD4
+  annotation categories:
+  - CD4TEM3
+  - CD4TEM2
+  note: 'CD4TEM2: intermediate-stage effector memory CD4 (CD27 lost, CCR7 retained)
+    — right band (CCR7 high). CD4TEM3: terminally differentiated effector memory CD4
+    (CD27 and CCR7 both lost) — left band (CCR7 low). Split along CCR7.'
+  tips: 'CD4TEM2: CCR7+. CD4TEM3: CCR7-. Useful co-markers: CD28 — early EM often
+    retains CD28; progressive loss from TEM2 → TEM3 toward terminal differentiation.
+    CD45RO+ confirms memory CD4.'
+- step: 46
+  parent: Step45_167Er_CD197_CCR7|145Nd_CD4 == CD4TEM2
+  x_marker: 173Yb_HLA-DR
+  y_marker: 161Dy_CD38
+  annotation column name: Step46_173Yb_HLA-DR|161Dy_CD38
+  annotation categories:
+  - CD4TEM2/activated
+  - CD4TEM2/CD38pos
+  - CD4TEM2/activated+CD38pos
+  note: 'CD4TEM2/activated: activated CD4 TEM2 cells — lower-right quadrant (HLA-DR+,
+    CD38-). CD4TEM2/CD38pos: proliferating CD4 TEM2 cells — upper-left quadrant (HLA-DR-,
+    CD38+). CD4TEM2/activated+CD38pos: dually activated and proliferating CD4 TEM2
+    cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the
+    resting (HLA-DR-, CD38-) lower-left quadrant is excluded.'
+  tips: 'HLA-DR = activation; CD38 = proliferation. CD4TEM2/activated: HLA-DR+ CD38-.
+    CD4TEM2/CD38pos: HLA-DR- CD38+. CD4TEM2/activated+CD38pos: HLA-DR+ CD38+.'
+- step: 47
+  parent: Step45_167Er_CD197_CCR7|145Nd_CD4 == CD4TEM3
+  x_marker: 173Yb_HLA-DR
+  y_marker: 161Dy_CD38
+  annotation column name: Step47_173Yb_HLA-DR|161Dy_CD38
+  annotation categories:
+  - CD4TEM3/activated
+  - CD4TEM3/CD38pos
+  - CD4TEM3/activated+CD38pos
+  note: 'CD4TEM3/activated: activated CD4 TEM3 cells — lower-right quadrant (HLA-DR+,
+    CD38-). CD4TEM3/CD38pos: proliferating CD4 TEM3 cells — upper-left quadrant (HLA-DR-,
+    CD38+). CD4TEM3/activated+CD38pos: dually activated and proliferating CD4 TEM3
+    cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the
+    resting (HLA-DR-, CD38-) lower-left quadrant is excluded.'
+  tips: 'HLA-DR = activation; CD38 = proliferation. CD4TEM3/activated: HLA-DR+ CD38-.
+    CD4TEM3/CD38pos: HLA-DR- CD38+. CD4TEM3/activated+CD38pos: HLA-DR+ CD38+.'
+- step: 48
+  parent: Step40_150Nd_CD45RA|154Sm_CD27 == CD4TEMRA
+  x_marker: 173Yb_HLA-DR
+  y_marker: 161Dy_CD38
+  annotation column name: Step48_173Yb_HLA-DR|161Dy_CD38
+  annotation categories:
+  - CD4TEMRA/activated
+  - CD4TEMRA/CD38pos
+  - CD4TEMRA/activated+CD38pos
+  note: 'CD4TEMRA/activated: activated CD4 TEMRA cells — lower-right quadrant (HLA-DR+,
+    CD38-). CD4TEMRA/CD38pos: proliferating CD4 TEMRA cells — upper-left quadrant
+    (HLA-DR-, CD38+). CD4TEMRA/activated+CD38pos: dually activated and proliferating
+    CD4 TEMRA cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38
+    layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.'
+  tips: 'HLA-DR = activation; CD38 = proliferation. CD4TEMRA/activated: HLA-DR+ CD38-.
+    CD4TEMRA/CD38pos: HLA-DR- CD38+. CD4TEMRA/activated+CD38pos: HLA-DR+ CD38+.'
+- step: 49
+  parent: Step29_145Nd_CD4|146Nd_CD8a == CD4 & Step40_150Nd_CD45RA|154Sm_CD27 != CD4Naive
+  x_marker: 173Yb_HLA-DR
+  y_marker: 161Dy_CD38
+  annotation column name: Step49_173Yb_HLA-DR|161Dy_CD38
+  annotation categories:
+  - nnCD4/activated
+  - nnCD4/CD38pos
+  - nnCD4/activated+CD38pos
+  note: 'Aggregated activation status across all non-naive CD4 T cells (TCM + all
+    TEM stages + TEMRA). nnCD4/activated: activated non-naive CD4 — lower-right quadrant
+    (HLA-DR+, CD38-). nnCD4/CD38pos: proliferating non-naive CD4 — upper-left quadrant
+    (HLA-DR-, CD38+). nnCD4/activated+CD38pos: dually activated and proliferating
+    non-naive CD4 — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout;
+    the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.'
+  tips: 'Aggregate of all non-naive CD4 (TCM + all TEM stages + TEMRA). HLA-DR = activation;
+    CD38 = proliferation. nnCD4/activated: HLA-DR+ CD38-. nnCD4/CD38pos: HLA-DR- CD38+.
+    nnCD4/activated+CD38pos: HLA-DR+ CD38+.'
+- step: 50
+  parent: Step29_145Nd_CD4|146Nd_CD8a == CD4 & Step40_150Nd_CD45RA|154Sm_CD27 != CD4Naive
+  x_marker: 158Gd_CD185_CXCR5
+  y_marker: 145Nd_CD4
+  annotation column name: Step50_158Gd_CD185_CXCR5|145Nd_CD4
+  annotation categories:
+  - nnCD4CXCR5neg
+  - nnCD4CXCR5pos
+  note: 'nnCD4CXCR5pos: T follicular helper cells and Tfh-like cells (B-cell-follicle
+    homing) — right band (CXCR5 high). nnCD4CXCR5neg: non-follicular non-naive helper
+    T cells (parent for Th1/Th17/Th2 polarization downstream) — left band (CXCR5 low).
+    Split along CXCR5.'
+  tips: 'CXCR5 is a B-cell follicle homing receptor; CXCR5+ CD4 cells include T follicular
+    helper (Tfh). nnCD4CXCR5pos: CXCR5+. nnCD4CXCR5neg: CXCR5-. Useful co-markers:
+    CD45RO+ confirms memory CD4 (Tfh are antigen-experienced); PD-1/ICOS are gold-standard
+    Tfh markers but not in this panel.'
+- step: 51
+  parent: Step50_158Gd_CD185_CXCR5|145Nd_CD4 == nnCD4CXCR5pos
+  x_marker: 173Yb_HLA-DR
+  y_marker: 161Dy_CD38
+  annotation column name: Step51_173Yb_HLA-DR|161Dy_CD38
+  annotation categories:
+  - nnCD4CXCR5pos/activated
+  - nnCD4CXCR5pos/CD38pos
+  - nnCD4CXCR5pos/activated+CD38pos
+  note: 'nnCD4CXCR5pos/activated: activated Tfh / Tfh-like cells — lower-right quadrant
+    (HLA-DR+, CD38-). nnCD4CXCR5pos/CD38pos: proliferating Tfh / Tfh-like cells —
+    upper-left quadrant (HLA-DR-, CD38+). nnCD4CXCR5pos/activated+CD38pos: dually
+    activated and proliferating Tfh / Tfh-like cells — upper-right quadrant (both
+    +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left
+    quadrant is excluded.'
+  tips: 'HLA-DR = activation; CD38 = proliferation. nnCD4CXCR5pos/activated: HLA-DR+
+    CD38-. nnCD4CXCR5pos/CD38pos: HLA-DR- CD38+. nnCD4CXCR5pos/activated+CD38pos:
+    HLA-DR+ CD38+.'
+- step: 52
+  parent: Step29_145Nd_CD4|146Nd_CD8a == CD4 & Step40_150Nd_CD45RA|154Sm_CD27 != CD4Naive
+  x_marker: 153Eu_CD25_IL-2Ra
+  y_marker: 176Yb_CD127_IL-7Ra
+  annotation column name: Step52_153Eu_CD25_IL-2Ra|176Yb_CD127_IL-7Ra
+  annotation categories:
+  - Treg
+  note: 'Treg: regulatory T cells (memory/effector Treg only — corresponds to Miyara
+    Fractions II/III; resting CD45RA+ Treg are in CD4Naive and not captured here)
+    — cluster at the lower-right (CD25 high, CD127 low); the rest of the parent (CD25-low
+    / CD127-high conventional T cells) is excluded.'
+  tips: 'Treg: CD25+ CD127-/lo (IL-2Rα-high, IL-7Rα-low — classical Treg signature).
+    Scope caveat: this gate is applied on non-naive CD4 only (parent excludes CD4Naive).
+    It captures memory/effector Treg (Miyara Fraction II/III). Resting CD45RA+ Treg
+    (Miyara Fraction I) are NOT captured here — they fall into CD4Naive by this panel''s
+    design. Useful co-markers: CD45RA distinguishes resting (CD45RA+) vs activated/memory
+    (CD45RA-) Treg; lack of HLA-DR at baseline supports Treg vs contaminating activated
+    CD4.'
+- step: 53
+  parent: Step52_153Eu_CD25_IL-2Ra|176Yb_CD127_IL-7Ra == Treg
+  x_marker: 173Yb_HLA-DR
+  y_marker: 161Dy_CD38
+  annotation column name: Step53_173Yb_HLA-DR|161Dy_CD38
+  annotation categories:
+  - Treg/activated
+  - Treg/CD38pos
+  - Treg/activated+CD38pos
+  note: 'Treg/activated: activated regulatory T cells — lower-right quadrant (HLA-DR+,
+    CD38-). Treg/CD38pos: proliferating regulatory T cells — upper-left quadrant (HLA-DR-,
+    CD38+). Treg/activated+CD38pos: dually activated and proliferating regulatory
+    T cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout;
+    the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.'
+  tips: 'HLA-DR = activation; CD38 = proliferation. Treg/activated: HLA-DR+ CD38-.
+    Treg/CD38pos: HLA-DR- CD38+. Treg/activated+CD38pos: HLA-DR+ CD38+.'
+- step: 54
+  parent: Step50_158Gd_CD185_CXCR5|145Nd_CD4 == nnCD4CXCR5neg
+  x_marker: 141Pr_CD196_CCR6
+  y_marker: 156Gd_CD183_CXCR3
+  annotation column name: Step54_141Pr_CD196_CCR6|156Gd_CD183_CXCR3
+  annotation categories:
+  - Th1
+  - Th17
+  - NonTh1NonTh17
+  note: 'Th1: Type-1 helper T cells (IFNγ producers) — upper-left region (CCR6 low,
+    CXCR3 high). Th17: Type-17 helper T cells (IL-17 producers; may include Th22-like
+    cells) — lower-right region (CCR6 high, CXCR3 low). NonTh1NonTh17: non-Th1, non-Th17
+    effectors — Th2 candidates and uncommitted (Th2 resolved downstream) — lower-left
+    region (both low). Three populations split by CCR6 × CXCR3 chemokine-receptor
+    coordinates.'
+  tips: 'Chemokine receptor panel for Th polarization. Th1: CXCR3+ CCR6-. Th17: CXCR3-
+    CCR6+ (CCR6+ alone may include Th22-like cells — CCR4 co-expression refines classical
+    Th17). NonTh1NonTh17: CXCR3- CCR6-. Useful co-markers: CD45RO+ confirms memory
+    CD4 (Th polarization occurs in the memory compartment); CCR4 further discriminates
+    classical Th17 (CCR6+ CCR4+) from Th22-like (CCR6+ CCR4-, CCR10 not in panel);
+    CD294 (CRTH2) resolves Th2 at the next step.'
+- step: 55
+  parent: Step54_141Pr_CD196_CCR6|156Gd_CD183_CXCR3 == Th1
+  x_marker: 173Yb_HLA-DR
+  y_marker: 161Dy_CD38
+  annotation column name: Step55_173Yb_HLA-DR|161Dy_CD38
+  annotation categories:
+  - Th1/activated
+  - Th1/CD38pos
+  - Th1/activated+CD38pos
+  note: 'Th1/activated: activated Th1 cells — lower-right quadrant (HLA-DR+, CD38-).
+    Th1/CD38pos: proliferating Th1 cells — upper-left quadrant (HLA-DR-, CD38+). Th1/activated+CD38pos:
+    dually activated and proliferating Th1 cells — upper-right quadrant (both +).
+    Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant
+    is excluded.'
+  tips: 'HLA-DR = activation; CD38 = proliferation. Th1/activated: HLA-DR+ CD38-.
+    Th1/CD38pos: HLA-DR- CD38+. Th1/activated+CD38pos: HLA-DR+ CD38+.'
+- step: 56
+  parent: Step54_141Pr_CD196_CCR6|156Gd_CD183_CXCR3 == Th17
+  x_marker: 173Yb_HLA-DR
+  y_marker: 161Dy_CD38
+  annotation column name: Step56_173Yb_HLA-DR|161Dy_CD38
+  annotation categories:
+  - Th17/activated
+  - Th17/CD38pos
+  - Th17/activated+CD38pos
+  note: 'Th17/activated: activated Th17 cells — lower-right quadrant (HLA-DR+, CD38-).
+    Th17/CD38pos: proliferating Th17 cells — upper-left quadrant (HLA-DR-, CD38+).
+    Th17/activated+CD38pos: dually activated and proliferating Th17 cells — upper-right
+    quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-,
+    CD38-) lower-left quadrant is excluded.'
+  tips: 'HLA-DR = activation; CD38 = proliferation. Th17/activated: HLA-DR+ CD38-.
+    Th17/CD38pos: HLA-DR- CD38+. Th17/activated+CD38pos: HLA-DR+ CD38+.'
+- step: 57
+  parent: Step54_141Pr_CD196_CCR6|156Gd_CD183_CXCR3 == NonTh1NonTh17
+  x_marker: 152Sm_CD194_CCR4
+  y_marker: 156Gd_CD183_CXCR3
+  annotation column name: Step57_152Sm_CD194_CCR4|156Gd_CD183_CXCR3
+  annotation categories:
+  - Th2
+  note: 'Th2: Type-2 helper T cells — right band (CCR4 high; CXCR3 stays low because
+    the parent already excluded Th1). The CCR4-low cluster on the left is excluded.'
+  tips: 'Th2: CXCR3- CCR4+ (Th2 express CCR4 and CRTH2; lack CXCR3). CCR4+ is also
+    expressed on Th17, but CCR6+ Th17 were already gated out upstream (Step 54 NonTh1NonTh17),
+    so CCR4+ here specifically marks Th2. Useful co-markers: CD294 (CRTH2) is the
+    gold-standard Th2 marker and is available in this panel — CRTH2+ strongly confirms
+    Th2 identity.'
+- step: 58
+  parent: Step57_152Sm_CD194_CCR4|156Gd_CD183_CXCR3 == Th2
+  x_marker: 173Yb_HLA-DR
+  y_marker: 161Dy_CD38
+  annotation column name: Step58_173Yb_HLA-DR|161Dy_CD38
+  annotation categories:
+  - Th2/activated
+  - Th2/CD38pos
+  - Th2/activated+CD38pos
+  note: 'Th2/activated: activated Th2 cells — lower-right quadrant (HLA-DR+, CD38-).
+    Th2/CD38pos: proliferating Th2 cells — upper-left quadrant (HLA-DR-, CD38+). Th2/activated+CD38pos:
+    dually activated and proliferating Th2 cells — upper-right quadrant (both +).
+    Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant
+    is excluded.'
+  tips: 'HLA-DR = activation; CD38 = proliferation. Th2/activated: HLA-DR+ CD38-.
+    Th2/CD38pos: HLA-DR- CD38+. Th2/activated+CD38pos: HLA-DR+ CD38+.'
+- step: 59
+  parent: Step29_145Nd_CD4|146Nd_CD8a == DNT
+  x_marker: 173Yb_HLA-DR
+  y_marker: 161Dy_CD38
+  annotation column name: Step59_173Yb_HLA-DR|161Dy_CD38
+  annotation categories:
+  - DNT/activated
+  - DNT/CD38pos
+  - DNT/activated+CD38pos
+  note: 'DNT/activated: activated double-negative T cells — lower-right quadrant (HLA-DR+,
+    CD38-). DNT/CD38pos: proliferating double-negative T cells — upper-left quadrant
+    (HLA-DR-, CD38+). DNT/activated+CD38pos: dually activated and proliferating double-negative
+    T cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout;
+    the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.'
+  tips: 'HLA-DR = activation; CD38 = proliferation. DNT/activated: HLA-DR+ CD38-.
+    DNT/CD38pos: HLA-DR- CD38+. DNT/activated+CD38pos: HLA-DR+ CD38+.'
+- step: 60
+  parent: Step29_145Nd_CD4|146Nd_CD8a == DPT
+  x_marker: 173Yb_HLA-DR
+  y_marker: 161Dy_CD38
+  annotation column name: Step60_173Yb_HLA-DR|161Dy_CD38
+  annotation categories:
+  - DPT/activated
+  - DPT/CD38pos
+  - DPT/activated+CD38pos
+  note: 'DPT/activated: activated double-positive T cells — lower-right quadrant (HLA-DR+,
+    CD38-). DPT/CD38pos: proliferating double-positive T cells — upper-left quadrant
+    (HLA-DR-, CD38+). DPT/activated+CD38pos: dually activated and proliferating double-positive
+    T cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout;
+    the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.'
+  tips: 'HLA-DR = activation; CD38 = proliferation. DPT/activated: HLA-DR+ CD38-.
+    DPT/CD38pos: HLA-DR- CD38+. DPT/activated+CD38pos: HLA-DR+ CD38+.'
+- step: 61
+  parent: Step28_164Dy_TCRgd|170Er_CD3 == abT
+  x_marker: 145Nd_CD4
+  y_marker: 151Eu_CD161
+  annotation column name: Step61_145Nd_CD4|151Eu_CD161
+  annotation categories:
+  - MAITNKT
+  note: 'MAITNKT: mucosal-associated invariant T cells and invariant NKT cells (unconventional
+    T-cell populations within αβT) — small cluster at the upper-left (CD4 low, CD161
+    high); the broad CD4+ region on the right and the CD161-low background at the
+    bottom are excluded.'
+  tips: 'MAITNKT: CD161++ AND CD4- within αβT. This gate captures both MAIT and invariant
+    NKT cells based on high CD161 combined with the CD4-negative constraint. The CD4
+    axis is displayed to reveal the CD4 vs non-CD4 split: MAIT cells are predominantly
+    CD8+ or double-negative (CD4-), while invariant NKT cells are more often CD4+
+    or double-negative. Useful co-markers: CD56 co-expression biases toward NKT; Vα7.2
+    TCR is MAIT gold-standard but not in this panel; TCRgd exclusion is already enforced
+    by the αβT parent.'
+- step: 62
+  parent: Step09_172Yb_CD66b|89Y_CD45 == Granulocyte
+  x_marker: 148Nd_CD16
+  y_marker: 166Er_CD294
+  annotation column name: Step62_148Nd_CD16|166Er_CD294
+  annotation categories:
+  - Neutrophil
+  - Eosinophil
+  note: 'Neutrophil: mature neutrophils — large dense blob at the lower-right (CD16
+    high, CD294 low). Eosinophil: eosinophils — dense blob at the upper-left (CD16
+    mid-to-low, CD294 high). Two populations sit on opposite corners with a clear
+    diagonal separation.'
+  tips: 'Neutrophil: CD16+ CD294- (FcγRIII+). Eosinophil: CD16- CD294+ (CRTH2+). Useful
+    co-markers: HLA-DR low confirms granulocyte identity for both subsets (basophil
+    contamination would show HLA-DR- CD123+, but basophils are excluded by the Granulocyte
+    parent already).'

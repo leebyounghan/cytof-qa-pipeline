@@ -1,0 +1,37 @@
+{
+  "task_id": "Lyoplate_bcell__B_CELL_1349_002_P1__step_03",
+  "dataset": "Lyoplate_bcell",
+  "sample": "B_CELL_1349_002_P1",
+  "step": 3,
+  "parent": "Step02_CD3|CD20 == CD19_CD20pos",
+  "x_marker": "IgD",
+  "y_marker": "CD27",
+  "annotation_column": "Step03_IgD|CD27",
+  "categories": [
+    "Naive",
+    "Memory_IgDpos",
+    "Memory_IgDneg",
+    "IgDneg_CD27neg",
+    "Unassigned"
+  ],
+  "note": "Within CD20+ B cells, four-population split on IgD × CD27. Naive: naive B cells — large dense cluster at the lower-right (IgD+, CD27-). Memory_IgDpos: non-switched / IgM memory B cells — upper-right cluster (IgD+, CD27+). Memory_IgDneg: class-switched memory B cells — upper-left cluster (IgD-, CD27+). IgDneg_CD27neg: CD27-negative non-switched B residual (transitional / atypical) — sparse cluster spanning lower-left to mid-left (IgD-, CD27-).",
+  "tips": "Mature B-cell maturation / class-switch state (IgD × CD27 quadrants, widely used Klein/Sanz scheme). Naive: IgD+ CD27- (surface IgM+ IgD+). Memory_IgDpos: IgD+ CD27+ (the IgM-memory vs MZ-like boundary is not strictly resolved by IgD/CD27 alone). Memory_IgDneg: IgD- CD27+. IgDneg_CD27neg: IgD- CD27-. ABCs are classically T-bet+ CD11c+ — neither marker is in this panel; further sub-classification within DN is not possible from this panel alone. Useful co-markers: CD38 further separates transitional B cells (CD38hi CD24hi, resolved in parallel at Step 4), which sit inside the Naive quadrant here.",
+  "gating_context": "Root -> Step02_CD3|CD20(CD19_CD20pos)",
+  "gt_summary": {
+    "n_parent_cells": 2448,
+    "n_cells_per_category": {
+      "Naive": 1489,
+      "Memory_IgDpos": 122,
+      "Memory_IgDneg": 522,
+      "IgDneg_CD27neg": 315,
+      "Unassigned": 0
+    },
+    "population_proportions": {
+      "Naive": 0.6083,
+      "Memory_IgDpos": 0.0498,
+      "Memory_IgDneg": 0.2132,
+      "IgDneg_CD27neg": 0.1287,
+      "Unassigned": 0.0
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "task_id": "FR-FCM-Z74D_tissue__exp_403C_donor_Liver_025_T cells__step_11",
+  "dataset": "FR-FCM-Z74D_tissue",
+  "sample": "exp_403C_donor_Liver_025_T cells",
+  "step": 11,
+  "parent": "Step03_Foxp3|CD127 == tot_Treg",
+  "x_marker": "CCR7",
+  "y_marker": "CD45RA",
+  "annotation_column": "Step11_CCR7|CD45RA",
+  "categories": [
+    "Memory_Treg",
+    "Naive_Treg",
+    "Unassigned"
+  ],
+  "note": "Treg memory / activation status on CCR7 × CD45RA, binary split (CM/EM/EMRA collapsed into a single 'Memory_Treg' bucket). Naive_Treg: resting naive Treg (Miyara Fraction I) — upper-right quadrant (CCR7+, CD45RA+). Memory_Treg: effector / activated Treg (Miyara Fractions II + III aggregated) — broad cluster across the other three quadrants.",
+  "tips": "Treg memory / activation status (binary split). Naive_Treg: CCR7+ CD45RA+. Memory_Treg: all other CCR7/CD45RA quadrants aggregated. This step collapses CM/EM/EMRA into a single 'memory' bucket, unlike the 4-way split used for conventional CD4/CD8 (Steps 2 & 4). Tissue context: Naive_Treg dominates lymphoid tissues (Spleen, LN); non-lymphoid tissues are memory-biased.",
+  "gating_context": "Root -> Step03_Foxp3|CD127(tot_Treg)",
+  "gt_summary": {
+    "n_parent_cells": 759,
+    "n_cells_per_category": {
+      "Memory_Treg": 691,
+      "Naive_Treg": 67,
+      "Unassigned": 1
+    },
+    "population_proportions": {
+      "Memory_Treg": 0.9104,
+      "Naive_Treg": 0.0883,
+      "Unassigned": 0.0013
+    }
+  }
+}

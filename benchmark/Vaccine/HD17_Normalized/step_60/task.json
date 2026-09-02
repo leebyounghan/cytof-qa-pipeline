@@ -1,0 +1,32 @@
+{
+  "task_id": "Vaccine__HD17_Normalized__step_60",
+  "dataset": "Vaccine",
+  "sample": "HD17_Normalized",
+  "step": 60,
+  "parent": "Step29_145Nd_CD4|146Nd_CD8a == DPT",
+  "x_marker": "173Yb_HLA-DR",
+  "y_marker": "161Dy_CD38",
+  "annotation_column": "Step60_173Yb_HLA-DR|161Dy_CD38",
+  "categories": [
+    "DPT/activated",
+    "DPT/CD38pos",
+    "DPT/activated+CD38pos",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step29_145Nd_CD4|146Nd_CD8a(DPT)",
+  "gt_summary": {
+    "n_parent_cells": 99,
+    "n_cells_per_category": {
+      "DPT/activated": 1,
+      "DPT/CD38pos": 17,
+      "DPT/activated+CD38pos": 2,
+      "Unassigned": 79
+    },
+    "population_proportions": {
+      "DPT/activated": 0.0101,
+      "DPT/CD38pos": 0.1717,
+      "DPT/activated+CD38pos": 0.0202,
+      "Unassigned": 0.798
+    }
+  }
+}

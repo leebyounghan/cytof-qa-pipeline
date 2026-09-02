@@ -1,0 +1,28 @@
+{
+  "task_id": "FR-FCM-Z74D_tissue__exp_390C_BM_027_T cells__step_08",
+  "dataset": "FR-FCM-Z74D_tissue",
+  "sample": "exp_390C_BM_027_T cells",
+  "step": 8,
+  "parent": "Step06_CXCR3|CCR6 == non_17_22_1",
+  "x_marker": "CCR4",
+  "y_marker": "CD8",
+  "annotation_column": "Step08_CCR4|CD8",
+  "categories": [
+    "Th2",
+    "Unassigned"
+  ],
+  "note": "Th2 identification within the CXCR3- CCR6- compartment. Th2: Type-2 helper T cells — right cluster (CCR4+); the CCR4-low cluster on the left is unassigned. CCR4 is bimodal — boundary set at the valley between the CCR4- and CCR4+ peaks. CD8 (y) is a purity sanity-check axis (parent is CD4+ CD8-, so events stay at CD8-low); the call is driven by CCR4.",
+  "tips": "Th2 identification within the CXCR3- CCR6- compartment. Th2: CCR4+ (CCR4 is GATA3-driven Th2-associated). Only CCR4+ is labeled — CCR4- in this parent remains unannotated. Axis design caveat: y_marker is CD8 but parent is CD4+ CD8-, so CD8 is a purity sanity-check; the call is driven by CCR4. CCR4 is also expressed on Th17, but CCR6+ cells were already removed by the non_17_22_1 parent. CD294 (CRTH2), GATA3, intracellular IL-4 not in panel.",
+  "gating_context": "Root -> Step06_CXCR3|CCR6(non_17_22_1)",
+  "gt_summary": {
+    "n_parent_cells": 4410,
+    "n_cells_per_category": {
+      "Th2": 986,
+      "Unassigned": 3424
+    },
+    "population_proportions": {
+      "Th2": 0.2236,
+      "Unassigned": 0.7764
+    }
+  }
+}

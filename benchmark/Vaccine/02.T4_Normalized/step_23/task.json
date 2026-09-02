@@ -1,0 +1,29 @@
+{
+  "task_id": "Vaccine__02.T4_Normalized__step_23",
+  "dataset": "Vaccine",
+  "sample": "02.T4_Normalized",
+  "step": 23,
+  "parent": "Step22_163Dy_CD56_NCAM|173Yb_HLA-DR == TotalNK",
+  "x_marker": "155Gd_CD57",
+  "y_marker": "163Dy_CD56_NCAM",
+  "annotation_column": "Step23_155Gd_CD57|163Dy_CD56_NCAM",
+  "categories": [
+    "EarlyNK",
+    "LateNK",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step22_163Dy_CD56_NCAM|173Yb_HLA-DR(TotalNK)",
+  "gt_summary": {
+    "n_parent_cells": 11284,
+    "n_cells_per_category": {
+      "EarlyNK": 4419,
+      "LateNK": 6865,
+      "Unassigned": 0
+    },
+    "population_proportions": {
+      "EarlyNK": 0.3916,
+      "LateNK": 0.6084,
+      "Unassigned": 0.0
+    }
+  }
+}

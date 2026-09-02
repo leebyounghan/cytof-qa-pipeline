@@ -1,0 +1,35 @@
+{
+  "task_id": "Vaccine__07.T4_Normalized__step_09",
+  "dataset": "Vaccine",
+  "sample": "07.T4_Normalized",
+  "step": 9,
+  "parent": "Step08_193Ir_DNA2|89Y_CD45 == CD45",
+  "x_marker": "172Yb_CD66b",
+  "y_marker": "89Y_CD45",
+  "annotation_column": "Step09_172Yb_CD66b|89Y_CD45",
+  "categories": [
+    "Mononuclear",
+    "Granulocyte",
+    "CD66bnegCD45lo",
+    "CD45hiCD66bpos",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step08_193Ir_DNA2|89Y_CD45(CD45)",
+  "gt_summary": {
+    "n_parent_cells": 283118,
+    "n_cells_per_category": {
+      "Mononuclear": 154974,
+      "Granulocyte": 124646,
+      "CD66bnegCD45lo": 370,
+      "CD45hiCD66bpos": 1623,
+      "Unassigned": 1505
+    },
+    "population_proportions": {
+      "Mononuclear": 0.5474,
+      "Granulocyte": 0.4403,
+      "CD66bnegCD45lo": 0.0013,
+      "CD45hiCD66bpos": 0.0057,
+      "Unassigned": 0.0053
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "task_id": "FRDR_covid19__20200501p8_p095n03_H07_009__step_08",
+  "dataset": "FRDR_covid19",
+  "sample": "20200501p8_p095n03_H07_009",
+  "step": 8,
+  "parent": "Step06_CD14|SSC-A == Non_PMN",
+  "x_marker": "Comp-BV786-A",
+  "y_marker": "Comp-Alexa Fluor 700-A",
+  "annotation_column": "Step08_CD19|CD3",
+  "categories": [
+    "B_Cells",
+    "T_Cells",
+    "Non_BT",
+    "Unassigned"
+  ],
+  "note": "Three-way lymphoid split on CD19 × CD3. T_Cells: T-lineage cells — upper region (CD3+, CD19-). B_Cells: mature B-lineage cells — right cluster (CD19+, CD3-). Non_BT: non-B non-T mononuclear cells (feeds the monocyte / DC / basophil branches; NK cells reside here) — lower-left cluster (both CD19 and CD3 low).",
+  "tips": "Lymphocyte lineage split within mononuclear cells. B_Cells: CD19+ CD3-. T_Cells: CD3+ CD19-. Non_BT: CD19- CD3-. In-panel co-marker prior: no other in-panel marker (CD14, CD16, HLA-DR, CD11c, CD123, CD303, CD1c, CD86) is lineage-discriminative for B vs. T — CD3/CD19 are the only lymphoid lineage markers in this panel, so each call is a single positive without an in-panel confirmatory co-marker.",
+  "gating_context": "Root -> Step06_CD14|SSC-A(Non_PMN)",
+  "gt_summary": {
+    "n_parent_cells": 54277,
+    "n_cells_per_category": {
+      "B_Cells": 5883,
+      "T_Cells": 22207,
+      "Non_BT": 25649,
+      "Unassigned": 538
+    },
+    "population_proportions": {
+      "B_Cells": 0.1084,
+      "T_Cells": 0.4091,
+      "Non_BT": 0.4726,
+      "Unassigned": 0.0099
+    }
+  }
+}

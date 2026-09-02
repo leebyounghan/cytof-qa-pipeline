@@ -1,0 +1,31 @@
+{
+  "task_id": "FRDR_covid19__20200610p8_p000n02_D06_008__step_07",
+  "dataset": "FRDR_covid19",
+  "sample": "20200610p8_p000n02_D06_008",
+  "step": 7,
+  "parent": "Step06_CD14|SSC-A == PMN",
+  "x_marker": "Comp-PE-Cy7-A",
+  "y_marker": "FSC-A",
+  "annotation_column": "Step07_CD16|FSC-A",
+  "categories": [
+    "Neutrophils",
+    "Eosinophils",
+    "Unassigned"
+  ],
+  "note": "Granulocyte subsetting within PMN. Neutrophils: dense vertical band at high CD16 (CD16+), spanning a broad FSC range. Eosinophils: smaller vertical band at low CD16 (CD16-); CD16 is bimodal — boundary set at the valley between the two CD16 peaks. The upper saturation edge at the FSC-A axis max is excluded.",
+  "tips": "Granulocyte subsetting within PMN. Neutrophils: CD16+ (FcγRIII-high). Eosinophils: CD16- (eosinophils are classically CD16-negative/low). In-panel co-marker prior: no in-panel marker positively confirms eosinophil identity — CD16 negativity within the high-SSC PMN parent is the sole discriminator, so eosinophils are defined by exclusion. Basophils (CD16- CD123+) are captured via a separate branch at Step 24, not here, and should not contaminate the PMN parent because basophils have lower SSC than granulocytes; CD123 is therefore not needed at this step.",
+  "gating_context": "Root -> Step06_CD14|SSC-A(PMN)",
+  "gt_summary": {
+    "n_parent_cells": 337,
+    "n_cells_per_category": {
+      "Neutrophils": 266,
+      "Eosinophils": 51,
+      "Unassigned": 20
+    },
+    "population_proportions": {
+      "Neutrophils": 0.7893,
+      "Eosinophils": 0.1513,
+      "Unassigned": 0.0593
+    }
+  }
+}

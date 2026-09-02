@@ -1,0 +1,31 @@
+{
+  "task_id": "FR-FCM-Z74D_tissue__exp_390C_Spleen_025_T cells__step_03",
+  "dataset": "FR-FCM-Z74D_tissue",
+  "sample": "exp_390C_Spleen_025_T cells",
+  "step": 3,
+  "parent": "Step01_CD4|CD8 == CD4",
+  "x_marker": "Foxp3",
+  "y_marker": "CD127",
+  "annotation_column": "Step03_Foxp3|CD127",
+  "categories": [
+    "tot_Treg",
+    "non_Treg",
+    "Unassigned"
+  ],
+  "note": "Treg vs conventional CD4 split on Foxp3 × CD127. tot_Treg: total regulatory T cells (CD4 lineage) — distinct cluster at the right (Foxp3+) and toward the lower edge (CD127-low). non_Treg: conventional helper T cells (Treg-excluded CD4 pool; parent for downstream memory and Th-polarization steps) — broad cluster at the left (Foxp3 low/negative).",
+  "tips": "Treg vs conventional CD4 split. tot_Treg: Foxp3+ CD127lo. non_Treg: Foxp3- (any CD127). Useful co-markers: CD25 (IL-2Rα) IS available in this panel — Foxp3+ CD127lo CD25+ is a commonly used operational definition. Helios further stratifies Treg lineage stability downstream (Step 10; see Step 10 for the contested-marker caveat).",
+  "gating_context": "Root -> Step01_CD4|CD8(CD4)",
+  "gt_summary": {
+    "n_parent_cells": 29247,
+    "n_cells_per_category": {
+      "tot_Treg": 1754,
+      "non_Treg": 27486,
+      "Unassigned": 7
+    },
+    "population_proportions": {
+      "tot_Treg": 0.06,
+      "non_Treg": 0.9398,
+      "Unassigned": 0.0002
+    }
+  }
+}

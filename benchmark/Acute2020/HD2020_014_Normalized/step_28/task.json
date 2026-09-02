@@ -1,0 +1,29 @@
+{
+  "task_id": "Acute2020__HD2020_014_Normalized__step_28",
+  "dataset": "Acute2020",
+  "sample": "HD2020_014_Normalized",
+  "step": 28,
+  "parent": "Step27_144Nd_CD19|170Er_CD3 == CD3T",
+  "x_marker": "164Dy_TCRgd",
+  "y_marker": "170Er_CD3",
+  "annotation_column": "Step28_164Dy_TCRgd|170Er_CD3",
+  "categories": [
+    "abT",
+    "gdT",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step27_144Nd_CD19|170Er_CD3(CD3T)",
+  "gt_summary": {
+    "n_parent_cells": 44605,
+    "n_cells_per_category": {
+      "abT": 44263,
+      "gdT": 338,
+      "Unassigned": 4
+    },
+    "population_proportions": {
+      "abT": 0.9923,
+      "gdT": 0.0076,
+      "Unassigned": 0.0001
+    }
+  }
+}

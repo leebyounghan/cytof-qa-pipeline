@@ -1,0 +1,26 @@
+{
+  "task_id": "Vaccine__HD12_Normalized__step_04",
+  "dataset": "Vaccine",
+  "sample": "HD12_Normalized",
+  "step": 4,
+  "parent": "Step03_Time|Center == Cleanup3",
+  "x_marker": "Time",
+  "y_marker": "Offset",
+  "annotation_column": "Step04_Time|Offset",
+  "categories": [
+    "Cleanup4",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step03_Time|Center(Cleanup3)",
+  "gt_summary": {
+    "n_parent_cells": 78884,
+    "n_cells_per_category": {
+      "Cleanup4": 77965,
+      "Unassigned": 919
+    },
+    "population_proportions": {
+      "Cleanup4": 0.9883,
+      "Unassigned": 0.0117
+    }
+  }
+}

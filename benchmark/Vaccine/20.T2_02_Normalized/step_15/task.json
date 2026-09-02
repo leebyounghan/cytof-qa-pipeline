@@ -1,0 +1,26 @@
+{
+  "task_id": "Vaccine__20.T2_02_Normalized__step_15",
+  "dataset": "Vaccine",
+  "sample": "20.T2_02_Normalized",
+  "step": 15,
+  "parent": "Step09_172Yb_CD66b|89Y_CD45 == Mononuclear",
+  "x_marker": "144Nd_CD19",
+  "y_marker": "170Er_CD3",
+  "annotation_column": "Step15_144Nd_CD19|170Er_CD3",
+  "categories": [
+    "NonTNonB",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step09_172Yb_CD66b|89Y_CD45(Mononuclear)",
+  "gt_summary": {
+    "n_parent_cells": 33589,
+    "n_cells_per_category": {
+      "NonTNonB": 7852,
+      "Unassigned": 25737
+    },
+    "population_proportions": {
+      "NonTNonB": 0.2338,
+      "Unassigned": 0.7662
+    }
+  }
+}

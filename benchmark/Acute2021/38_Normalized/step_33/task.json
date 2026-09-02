@@ -1,0 +1,32 @@
+{
+  "task_id": "Acute2021__38_Normalized__step_33",
+  "dataset": "Acute2021",
+  "sample": "38_Normalized",
+  "step": 33,
+  "parent": "Step32_167Er_CD197_CCR7|146Nd_CD8a == CD8TEM1",
+  "x_marker": "173Yb_HLA-DR",
+  "y_marker": "161Dy_CD38",
+  "annotation_column": "Step33_173Yb_HLA-DR|161Dy_CD38",
+  "categories": [
+    "CD8TEM1/activated",
+    "CD8TEM1/CD38pos",
+    "CD8TEM1/activated+CD38pos",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step32_167Er_CD197_CCR7|146Nd_CD8a(CD8TEM1)",
+  "gt_summary": {
+    "n_parent_cells": 1266,
+    "n_cells_per_category": {
+      "CD8TEM1/activated": 0,
+      "CD8TEM1/CD38pos": 259,
+      "CD8TEM1/activated+CD38pos": 809,
+      "Unassigned": 198
+    },
+    "population_proportions": {
+      "CD8TEM1/activated": 0.0,
+      "CD8TEM1/CD38pos": 0.2046,
+      "CD8TEM1/activated+CD38pos": 0.639,
+      "Unassigned": 0.1564
+    }
+  }
+}

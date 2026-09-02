@@ -1,0 +1,34 @@
+{
+  "task_id": "FR-FCM-Z74D_tissue__exp_428_Donor_Lung_029_T cells__step_06",
+  "dataset": "FR-FCM-Z74D_tissue",
+  "sample": "exp_428_Donor_Lung_029_T cells",
+  "step": 6,
+  "parent": "Step05_CXCR5|PD1 == non_Tfh",
+  "x_marker": "CXCR3",
+  "y_marker": "CCR6",
+  "annotation_column": "Step06_CXCR3|CCR6",
+  "categories": [
+    "Th1",
+    "Th17_22",
+    "non_17_22_1",
+    "Unassigned"
+  ],
+  "note": "Chemokine-receptor-based Th polarization on non-Tfh memory CD4 (CXCR3 × CCR6). Th1: Type-1 helper T cells (IFNγ producers; this gate also absorbs the plastic Th1/17 'Th1*' subset) — right region (CXCR3+, any CCR6). Th17_22: IL-17 / IL-22 producing Th cells — upper-left quadrant (CXCR3-, CCR6+). non_17_22_1: Th2 candidates and uncommitted effectors — lower-left quadrant (both CXCR3- and CCR6-).",
+  "tips": "Chemokine-receptor-based Th polarization on non-Tfh memory CD4. Th1: CXCR3+ (any CCR6) — by this definition Th1 also absorbs CXCR3+CCR6+ (Th1/17, IFNγ+IL-17+). Th17_22: CXCR3- CCR6+. non_17_22_1: CXCR3- CCR6-. Design caveat: CXCR3+ Th1 absorbs CXCR3+CCR6+ (Th1*) events, inflating Th1 frequency vs strict CXCR3+CCR6- Th1, and propagates to the Step 9 residency analysis. To isolate Th1/17, add a 4-way CXCR3×CCR6 split. T-bet / RORγt / GATA3 not in panel — chemokine-receptor geometry carries the call. This definition matches the sister FR-FCM-Z74D_hc plan (v2) for cross-cohort comparability.",
+  "gating_context": "Root -> Step05_CXCR5|PD1(non_Tfh)",
+  "gt_summary": {
+    "n_parent_cells": 2626,
+    "n_cells_per_category": {
+      "Th1": 54,
+      "Th17_22": 3,
+      "non_17_22_1": 2563,
+      "Unassigned": 6
+    },
+    "population_proportions": {
+      "Th1": 0.0206,
+      "Th17_22": 0.0011,
+      "non_17_22_1": 0.976,
+      "Unassigned": 0.0023
+    }
+  }
+}

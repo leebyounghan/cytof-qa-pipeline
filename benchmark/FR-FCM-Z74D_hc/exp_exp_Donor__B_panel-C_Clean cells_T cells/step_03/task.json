@@ -1,0 +1,31 @@
+{
+  "task_id": "FR-FCM-Z74D_hc__exp_exp_Donor__B_panel-C_Clean cells_T cells__step_03",
+  "dataset": "FR-FCM-Z74D_hc",
+  "sample": "exp_exp_Donor__B_panel-C_Clean cells_T cells",
+  "step": 3,
+  "parent": "Step01_CD4|CD8 == CD4",
+  "x_marker": "Foxp3",
+  "y_marker": "CD127",
+  "annotation_column": "Step03_Foxp3|CD127",
+  "categories": [
+    "tot_Treg",
+    "non_Treg",
+    "Unassigned"
+  ],
+  "note": "Treg vs conventional CD4 split on Foxp3 × CD127. tot_Treg: total regulatory T cells (CD4 lineage) — distinct cluster at the right (Foxp3+) and toward the lower edge (CD127-low). non_Treg: conventional helper T cells (Treg-excluded CD4 pool; parent for downstream memory and Th-polarization steps) — broad cluster at the left (Foxp3 low/negative).",
+  "tips": "Treg vs conventional CD4 split. tot_Treg: Foxp3+ CD127lo. non_Treg: Foxp3- (any CD127). Category-coverage caveat: Foxp3+ CD127hi events (rare; activated Tconv or recently-induced Treg) do not match either rule and will be unassigned. In-panel co-marker priors: (1) CD25 IS in this panel — a widely used operational Treg definition adds CD25+ (Foxp3+ CD127lo CD25+), which could filter Foxp3+CD127lo CD25- events (often Foxp3-transient Tconv, not stable Treg). (2) Helios is in panel and is applied at Step 10 for lineage-stability stratification. (3) HLA-DR (in panel, unused) has been associated with a highly-suppressive activated Treg subset (Baecher-Allan).",
+  "gating_context": "Root -> Step01_CD4|CD8(CD4)",
+  "gt_summary": {
+    "n_parent_cells": 119871,
+    "n_cells_per_category": {
+      "tot_Treg": 8639,
+      "non_Treg": 110970,
+      "Unassigned": 262
+    },
+    "population_proportions": {
+      "tot_Treg": 0.0721,
+      "non_Treg": 0.9257,
+      "Unassigned": 0.0022
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "task_id": "Vaccine__53.T1_Normalized__step_08",
+  "dataset": "Vaccine",
+  "sample": "53.T1_Normalized",
+  "step": 8,
+  "parent": "Step07_191Ir_DNA1|Event_length == Ir",
+  "x_marker": "193Ir_DNA2",
+  "y_marker": "89Y_CD45",
+  "annotation_column": "Step08_193Ir_DNA2|89Y_CD45",
+  "categories": [
+    "CD45",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step07_191Ir_DNA1|Event_length(Ir)",
+  "gt_summary": {
+    "n_parent_cells": 304966,
+    "n_cells_per_category": {
+      "CD45": 280457,
+      "Unassigned": 24509
+    },
+    "population_proportions": {
+      "CD45": 0.9196,
+      "Unassigned": 0.0804
+    }
+  }
+}

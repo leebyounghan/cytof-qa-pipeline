@@ -1,0 +1,31 @@
+{
+  "task_id": "Bjornson__R15W3_W070515107458_Hu_F_PMAIono__step_06",
+  "dataset": "Bjornson",
+  "sample": "R15W3_W070515107458_Hu_F_PMAIono",
+  "step": 6,
+  "parent": "Step04_CD3_Gd157Di|CD19_Yb173Di == CD3negCD19neg",
+  "x_marker": "CD7_Pr141Di",
+  "y_marker": "HLA-DR_Yb176Di",
+  "annotation_column": "Step06_CD7_Pr141Di|HLA-DR_Yb176Di",
+  "categories": [
+    "NKcells",
+    "HLA-DRposCD7neg",
+    "Unassigned"
+  ],
+  "note": "Within the CD3-CD19- residual, CD7 × HLA-DR splits NK from myeloid APCs. NKcells: NK cells (lymphoid lineage within the non-B non-T residual) — cluster at the lower-right (CD7+, HLA-DR-). HLA-DRposCD7neg: antigen-presenting cells (monocytes and DCs; further parsed downstream) — cluster at the upper-left (CD7-, HLA-DR+). The lower-left (CD7- HLA-DR-) corner contains basophils and other residuals and is not categorized.",
+  "tips": "Within the CD3-CD19- residual, CD7 × HLA-DR separates NK (CD7+, lymphoid) from myeloid APCs (HLA-DR+). NKcells: CD7+ HLA-DR- (CD7 is expressed on most NK cells — strongly on CD56bright NK, more variably on CD56dim NK subsets). HLA-DRposCD7neg: HLA-DR+ CD7-. The CD7- HLA-DR- quadrant (unlabeled) contains basophils and any remaining residual. Useful co-markers: CD56_Lu175Di is the classical NK marker and serves as a sanity check — most NK are CD56+; CD16_Tb159Di marks cytotoxic mature NK (CD56dim CD16+); CD161_Er168Di is expressed on NK cells (particularly CD56bright subset) and provides additional NK confirmation; CD123_Nd148Di is useful for identifying basophils in the unlabeled CD7-HLA-DR- residual (basophils are CD123+ HLA-DR- CD7-); CD33_Nd142Di is typically higher on the HLA-DR+CD7- myeloid fraction and low on NK.",
+  "gating_context": "Root -> Step04_CD3_Gd157Di|CD19_Yb173Di(CD3negCD19neg)",
+  "gt_summary": {
+    "n_parent_cells": 5369,
+    "n_cells_per_category": {
+      "NKcells": 2470,
+      "HLA-DRposCD7neg": 2449,
+      "Unassigned": 450
+    },
+    "population_proportions": {
+      "NKcells": 0.46,
+      "HLA-DRposCD7neg": 0.4561,
+      "Unassigned": 0.0838
+    }
+  }
+}

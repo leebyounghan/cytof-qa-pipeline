@@ -1,0 +1,35 @@
+{
+  "task_id": "Vaccine__16.T4_Normalized__step_29",
+  "dataset": "Vaccine",
+  "sample": "16.T4_Normalized",
+  "step": 29,
+  "parent": "Step28_164Dy_TCRgd|170Er_CD3 == abT",
+  "x_marker": "145Nd_CD4",
+  "y_marker": "146Nd_CD8a",
+  "annotation_column": "Step29_145Nd_CD4|146Nd_CD8a",
+  "categories": [
+    "CD8",
+    "DPT",
+    "DNT",
+    "CD4",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step28_164Dy_TCRgd|170Er_CD3(abT)",
+  "gt_summary": {
+    "n_parent_cells": 101941,
+    "n_cells_per_category": {
+      "CD8": 46017,
+      "DPT": 1067,
+      "DNT": 1905,
+      "CD4": 52420,
+      "Unassigned": 532
+    },
+    "population_proportions": {
+      "CD8": 0.4514,
+      "DPT": 0.0105,
+      "DNT": 0.0187,
+      "CD4": 0.5142,
+      "Unassigned": 0.0052
+    }
+  }
+}

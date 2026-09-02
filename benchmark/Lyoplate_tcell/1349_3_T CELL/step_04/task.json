@@ -1,0 +1,37 @@
+{
+  "task_id": "Lyoplate_tcell__1349_3_T CELL__step_04",
+  "dataset": "Lyoplate_tcell",
+  "sample": "1349_3_T CELL",
+  "step": 4,
+  "parent": "Step02_CD4|CD8 == CD4",
+  "x_marker": "CD38",
+  "y_marker": "HLADR",
+  "annotation_column": "Step04_CD38|HLADR",
+  "categories": [
+    "CD4_Activated",
+    "CD4_38negDRpos",
+    "CD4_38posDRneg",
+    "CD4_38negDRneg",
+    "Unassigned"
+  ],
+  "note": "Strategy on CD38 × HLA-DR for CD4 activation: (1) Find the dense CD38+ cluster on the right (the main CD4 mass). The left edge / shoulder of this cluster is the CD38 threshold; events to the left of this edge form the CD38- side (sparser tail), events at/right of it form the CD38+ side. (2) Within the CD38+ cluster, locate the HLA-DR density peak — use it as the horizontal threshold. Apply the same HLA-DR threshold to the CD38- side. (3) Four-quadrant labels: CD4_Activated = CD38+ AND above HLA-DR threshold (upper-right). CD4_38posDRneg = CD38+ AND below HLA-DR threshold (lower-right; the dominant population). CD4_38negDRpos = CD38- AND above HLA-DR threshold (upper-left). CD4_38negDRneg = CD38- AND below HLA-DR threshold (lower-left).",
+  "tips": "CD4 activation / proliferation state (parallel annotation to Step 3 on the same CD4 parent; activation axes are orthogonal to differentiation). HLA-DR is an activation marker (MHC-II induced on recently-activated T cells); CD38 marks proliferation / metabolic activity. CD4_Activated: CD38+ HLA-DR+ (the CD38+HLA-DR+ signature is more extensively validated in CD8 than in CD4, where markers such as Ki-67, CD25, or ICOS are often used alongside). CD4_38negDRpos: CD38- HLA-DR+. CD4_38posDRneg: CD38+ HLA-DR- (CD38 alone is not an RTE-specific marker — CD31+CD45RA+ is the canonical RTE signature). CD4_38negDRneg: CD38- HLA-DR-.",
+  "gating_context": "Root -> Step02_CD4|CD8(CD4)",
+  "gt_summary": {
+    "n_parent_cells": 56845,
+    "n_cells_per_category": {
+      "CD4_Activated": 1211,
+      "CD4_38negDRpos": 2239,
+      "CD4_38posDRneg": 19153,
+      "CD4_38negDRneg": 34242,
+      "Unassigned": 0
+    },
+    "population_proportions": {
+      "CD4_Activated": 0.0213,
+      "CD4_38negDRpos": 0.0394,
+      "CD4_38posDRneg": 0.3369,
+      "CD4_38negDRneg": 0.6024,
+      "Unassigned": 0.0
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "task_id": "Acute2021__14_Normalized__step_22",
+  "dataset": "Acute2021",
+  "sample": "14_Normalized",
+  "step": 22,
+  "parent": "Step21_168Er_CD14|170Er_CD3 == NonTNonBCD14neg",
+  "x_marker": "163Dy_CD56_NCAM",
+  "y_marker": "173Yb_HLA-DR",
+  "annotation_column": "Step22_163Dy_CD56_NCAM|173Yb_HLA-DR",
+  "categories": [
+    "TotalDC",
+    "TotalNK",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step21_168Er_CD14|170Er_CD3(NonTNonBCD14neg)",
+  "gt_summary": {
+    "n_parent_cells": 1837,
+    "n_cells_per_category": {
+      "TotalDC": 727,
+      "TotalNK": 975,
+      "Unassigned": 135
+    },
+    "population_proportions": {
+      "TotalDC": 0.3958,
+      "TotalNK": 0.5308,
+      "Unassigned": 0.0735
+    }
+  }
+}

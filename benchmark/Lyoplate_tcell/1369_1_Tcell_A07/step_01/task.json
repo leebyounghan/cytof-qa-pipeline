@@ -1,0 +1,28 @@
+{
+  "task_id": "Lyoplate_tcell__1369_1_Tcell_A07__step_01",
+  "dataset": "Lyoplate_tcell",
+  "sample": "1369_1_Tcell_A07",
+  "step": 1,
+  "parent": "ALL",
+  "x_marker": "CD3",
+  "y_marker": "SSC-A",
+  "annotation_column": "Step01_CD3|SSC-A",
+  "categories": [
+    "CD3pos",
+    "Unassigned"
+  ],
+  "note": "CD3pos: T lymphocytes — vertical band at high CD3 (CD3+), spanning a broad SSC-A range; the CD3-low cluster on the left is excluded. CD3 is bimodal — boundary set at the valley between the CD3- and CD3+ peaks.",
+  "tips": "Positive selection of T cells on pre-gated Live singlet lymphocytes. CD3pos: CD3+ (pan-T marker). The y-axis SSC-A serves as a secondary sanity check — T cells sit in the canonical lymphocyte scatter range; CD3+ events with aberrantly high SSC would indicate granulocyte contamination or doublets that slipped through the upstream cleanup. CD3- events (B cells, NK cells, myeloid) are not annotated here because they are not the target of this panel (separate B-cell / Treg / DC panels cover those).",
+  "gating_context": "Root",
+  "gt_summary": {
+    "n_parent_cells": 71190,
+    "n_cells_per_category": {
+      "CD3pos": 51419,
+      "Unassigned": 19771
+    },
+    "population_proportions": {
+      "CD3pos": 0.7223,
+      "Unassigned": 0.2777
+    }
+  }
+}

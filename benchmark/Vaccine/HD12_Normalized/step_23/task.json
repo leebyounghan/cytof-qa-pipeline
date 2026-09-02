@@ -1,0 +1,29 @@
+{
+  "task_id": "Vaccine__HD12_Normalized__step_23",
+  "dataset": "Vaccine",
+  "sample": "HD12_Normalized",
+  "step": 23,
+  "parent": "Step22_163Dy_CD56_NCAM|173Yb_HLA-DR == TotalNK",
+  "x_marker": "155Gd_CD57",
+  "y_marker": "163Dy_CD56_NCAM",
+  "annotation_column": "Step23_155Gd_CD57|163Dy_CD56_NCAM",
+  "categories": [
+    "EarlyNK",
+    "LateNK",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step22_163Dy_CD56_NCAM|173Yb_HLA-DR(TotalNK)",
+  "gt_summary": {
+    "n_parent_cells": 3500,
+    "n_cells_per_category": {
+      "EarlyNK": 2093,
+      "LateNK": 1407,
+      "Unassigned": 0
+    },
+    "population_proportions": {
+      "EarlyNK": 0.598,
+      "LateNK": 0.402,
+      "Unassigned": 0.0
+    }
+  }
+}

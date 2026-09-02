@@ -1,0 +1,26 @@
+{
+  "task_id": "Vaccine__HD2_Normalized__step_20",
+  "dataset": "Vaccine",
+  "sample": "HD2_Normalized",
+  "step": 20,
+  "parent": "Step19_173Yb_HLA-DR|143Nd_CD123_IL-3R == HLADRloCD123lo",
+  "x_marker": "151Eu_CD161",
+  "y_marker": "176Yb_CD127_IL-7Ra",
+  "annotation_column": "Step20_151Eu_CD161|176Yb_CD127_IL-7Ra",
+  "categories": [
+    "ILC",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step19_173Yb_HLA-DR|143Nd_CD123_IL-3R(HLADRloCD123lo)",
+  "gt_summary": {
+    "n_parent_cells": 758,
+    "n_cells_per_category": {
+      "ILC": 103,
+      "Unassigned": 655
+    },
+    "population_proportions": {
+      "ILC": 0.1359,
+      "Unassigned": 0.8641
+    }
+  }
+}

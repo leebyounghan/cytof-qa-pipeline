@@ -1,0 +1,28 @@
+{
+  "task_id": "FRDR_covid19__20200528p8_p129n04_G05_008__step_23",
+  "dataset": "FRDR_covid19",
+  "sample": "20200528p8_p129n04_G05_008",
+  "step": 23,
+  "parent": "Step08_CD19|CD3 == Non_BT",
+  "x_marker": "Comp-BV421-A",
+  "y_marker": "Comp-BV510-A",
+  "annotation_column": "Step23_CD14|HLADR",
+  "categories": [
+    "HLADRn_CD14n",
+    "Unassigned"
+  ],
+  "note": "Parallel branch off Non_BT (sibling to the monocyte/DC branch). HLADRn_CD14n: HLA-DR-, CD14- — basophil-candidate compartment (still contains residual NK cells; basophils are positively identified at Step 24) — dense cluster at the lower-left (both CD14 and HLA-DR low); the right cluster (CD14+ and/or HLA-DR+ monocytes/DCs) is excluded.",
+  "tips": "Parallel branch off Non_BT (sibling to the monocyte/DC branch starting at Step 10) — enrich the HLA-DR-negative, CD14-negative compartment. HLADRn_CD14n: HLA-DR- CD14- (basophils are HLA-DR- and CD14-; this gate removes monocytes and DCs, but most NK cells are also HLA-DR- CD14- and remain in this parent alongside basophils). Residual NK-cell contamination is filtered at Step 24 by CD123+ selection (basophils CD123+, NK CD123-).",
+  "gating_context": "Root -> Step08_CD19|CD3(Non_BT)",
+  "gt_summary": {
+    "n_parent_cells": 5285,
+    "n_cells_per_category": {
+      "HLADRn_CD14n": 3498,
+      "Unassigned": 1787
+    },
+    "population_proportions": {
+      "HLADRn_CD14n": 0.6619,
+      "Unassigned": 0.3381
+    }
+  }
+}

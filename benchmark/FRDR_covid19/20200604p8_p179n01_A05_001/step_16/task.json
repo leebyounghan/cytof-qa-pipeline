@@ -1,0 +1,31 @@
+{
+  "task_id": "FRDR_covid19__20200604p8_p179n01_A05_001__step_16",
+  "dataset": "FRDR_covid19",
+  "sample": "20200604p8_p179n01_A05_001",
+  "step": 16,
+  "parent": "Step15_CD16|CD14 == HLADRp_CD16n",
+  "x_marker": "Comp-FITC-A",
+  "y_marker": "Comp-PerCP-Cy5-5-A",
+  "annotation_column": "Step16_CD303|CD123",
+  "categories": [
+    "pDC",
+    "Non_pDC",
+    "Unassigned"
+  ],
+  "note": "Plasmacytoid vs. non-plasmacytoid DC split on CD303 × CD123. pDC: dense cluster at the upper-right (CD303+, CD123+) — canonical double-positive pDC signature, well separated from the rest. Non_pDC: broad cloud at the lower-left (CD303-, CD123-) — feeds the myeloid DC branch downstream.",
+  "tips": "Plasmacytoid vs. non-plasmacytoid DC split. pDC: CD303+ CD123+ (CD303/BDCA-2 is lineage-specific, CD123/IL-3Rα confirms; this double-positive combination is canonical pDC identity). Non_pDC: CD303- CD123-. In-panel co-marker prior: CD123 alone is not pDC-specific within PBMC — basophils are also CD123+ — so the CD303 axis is essential. In this gating tree basophils are already excluded upstream by HLA-DR+ at Step 14 (basophils are HLA-DR-, captured separately at Step 23), so CD123+ events reaching Step 16 should almost entirely be pDCs.",
+  "gating_context": "Root -> Step15_CD16|CD14(HLADRp_CD16n)",
+  "gt_summary": {
+    "n_parent_cells": 556,
+    "n_cells_per_category": {
+      "pDC": 86,
+      "Non_pDC": 462,
+      "Unassigned": 8
+    },
+    "population_proportions": {
+      "pDC": 0.1547,
+      "Non_pDC": 0.8309,
+      "Unassigned": 0.0144
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "task_id": "Lyoplate_DC__lot 1349_D6_D06__step_02",
+  "dataset": "Lyoplate_DC",
+  "sample": "lot 1349_D6_D06",
+  "step": 2,
+  "parent": "Step01_CD14|Lineage == Lin_neg_CD14pos",
+  "x_marker": "CD11c",
+  "y_marker": "CD16",
+  "annotation_column": "Step02_CD11c|CD16",
+  "categories": [
+    "CD14pos_CD16pos",
+    "Unassigned"
+  ],
+  "note": "Within the parent (Lin- CD14+; CD14+ already enforced upstream), the events form a dense vertical column on the right (CD11c+) with CD16 spanning low-to-high. CD14pos_CD16pos: CD14+ CD16+ monocytes — captured as the top sliver of this column above the CD16 peak (anchor on the dense CD16 peak inside the CD11c+ column; the boundary sits at the upper shoulder of that peak, and only events above this boundary are CD14pos_CD16pos). The bulk below (CD16-low to mid, including the CD16 peak itself) is excluded.",
+  "tips": "Identify the CD16+ (non-classical / intermediate) monocyte subset within CD14+ monocytes. CD14pos_CD16pos: CD14+ CD16+ (encompasses both intermediate CD14++CD16+ and non-classical CD14+CD16++; refined 3-subset gating would require a CD14 vs CD16 quadrant that is not performed here). CD16-negative events (classical monocytes CD14++CD16-) are not explicitly labeled in this step. Axis design caveat: x_marker is CD11c, but CD11c is not used as a discriminator here — the CD16+ call is driven by CD16 on y; CD11c is shown as a display / sanity-check axis to confirm monocyte identity (monocytes are typically CD11c+, so events should cluster at CD11c-positive).",
+  "gating_context": "Root -> Step01_CD14|Lineage(Lin_neg_CD14pos)",
+  "gt_summary": {
+    "n_parent_cells": 36036,
+    "n_cells_per_category": {
+      "CD14pos_CD16pos": 1021,
+      "Unassigned": 35015
+    },
+    "population_proportions": {
+      "CD14pos_CD16pos": 0.0283,
+      "Unassigned": 0.9717
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "task_id": "FRDR_covid19__20200416p8_p054n01_D05_004__step_24",
+  "dataset": "FRDR_covid19",
+  "sample": "20200416p8_p054n01_D05_004",
+  "step": 24,
+  "parent": "Step23_CD14|HLADR == HLADRn_CD14n",
+  "x_marker": "Comp-PE-Cy7-A",
+  "y_marker": "Comp-PerCP-Cy5-5-A",
+  "annotation_column": "Step24_CD16|CD123",
+  "categories": [
+    "Basophils",
+    "Unassigned"
+  ],
+  "note": "Positive identification of basophils within the HLA-DR- CD14- compartment. Basophils: well-separated cluster at the upper-left (CD123+, CD16-) — canonical basophil signature combined with HLA-DR- and CD14- enforced by the upstream parents. The remaining lower events (CD123-low) are excluded; CD16 (x) serves as a negative purity check (basophils stay at CD16-low).",
+  "tips": "Positive identification of basophils within the HLA-DR- CD14- compartment. Basophils: CD123+ (IL-3Rα-high; combined with HLA-DR- and CD14- enforced by upstream parents, this is a canonical basophil signature). In-panel co-marker prior: CD16 is displayed on x as a negative purity check — basophils are CD16-, so events should cluster at CD16-low; visible CD16+ residuals would suggest NK-cell contamination escaping Step 23. The positive call is driven by CD123 on y. No more specific basophil marker is in this panel.",
+  "gating_context": "Root -> Step23_CD14|HLADR(HLADRn_CD14n)",
+  "gt_summary": {
+    "n_parent_cells": 3571,
+    "n_cells_per_category": {
+      "Basophils": 510,
+      "Unassigned": 3061
+    },
+    "population_proportions": {
+      "Basophils": 0.1428,
+      "Unassigned": 0.8572
+    }
+  }
+}

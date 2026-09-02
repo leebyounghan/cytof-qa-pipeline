@@ -1,0 +1,31 @@
+{
+  "task_id": "FRDR_covid19__20200610p8_p206n01_F05_010__step_06",
+  "dataset": "FRDR_covid19",
+  "sample": "20200610p8_p206n01_F05_010",
+  "step": 6,
+  "parent": "Step05_CD86|L_D == Live",
+  "x_marker": "Comp-BV421-A",
+  "y_marker": "SSC-A",
+  "annotation_column": "Step06_CD14|SSC-A",
+  "categories": [
+    "PMN",
+    "Non_PMN",
+    "Unassigned"
+  ],
+  "note": "Split polymorphonuclear from mononuclear leukocytes on CD14 × SSC. PMN: granulocytes — upper cluster at high SSC and CD14-low (granulocytes have large granular cytoplasm → high SSC, and are CD14-low). Non_PMN: mononuclear leukocytes — lower cluster at low-to-mid SSC (lymphocytes, monocytes, DCs; includes CD14+ monocytes resolved downstream).",
+  "tips": "Split polymorphonuclear (granulocytes) from mononuclear leukocytes. PMN: SSC-high and CD14-negative (granulocytes have large granular cytoplasm → high SSC, and are CD14-low). Non_PMN: SSC-lower (lymphocytes, monocytes, DCs; includes CD14+ monocytes resolved downstream). In-panel co-marker prior: there is no positive granulocyte lineage marker in this panel, so PMN is defined by scatter morphology plus CD14-negativity; the remaining in-panel markers (CD3, CD19, HLA-DR, CD11c, CD1c, CD303, CD123, CD86, CD16) do not add discriminative power at this split — CD16 is reserved for the downstream neutrophil / eosinophil separation at Step 7.",
+  "gating_context": "Root -> Step05_CD86|L_D(Live)",
+  "gt_summary": {
+    "n_parent_cells": 86937,
+    "n_cells_per_category": {
+      "PMN": 51802,
+      "Non_PMN": 34641,
+      "Unassigned": 494
+    },
+    "population_proportions": {
+      "PMN": 0.5959,
+      "Non_PMN": 0.3985,
+      "Unassigned": 0.0057
+    }
+  }
+}

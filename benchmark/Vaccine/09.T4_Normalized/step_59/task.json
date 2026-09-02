@@ -1,0 +1,32 @@
+{
+  "task_id": "Vaccine__09.T4_Normalized__step_59",
+  "dataset": "Vaccine",
+  "sample": "09.T4_Normalized",
+  "step": 59,
+  "parent": "Step29_145Nd_CD4|146Nd_CD8a == DNT",
+  "x_marker": "173Yb_HLA-DR",
+  "y_marker": "161Dy_CD38",
+  "annotation_column": "Step59_173Yb_HLA-DR|161Dy_CD38",
+  "categories": [
+    "DNT/activated",
+    "DNT/CD38pos",
+    "DNT/activated+CD38pos",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step29_145Nd_CD4|146Nd_CD8a(DNT)",
+  "gt_summary": {
+    "n_parent_cells": 2644,
+    "n_cells_per_category": {
+      "DNT/activated": 3,
+      "DNT/CD38pos": 949,
+      "DNT/activated+CD38pos": 439,
+      "Unassigned": 1253
+    },
+    "population_proportions": {
+      "DNT/activated": 0.0011,
+      "DNT/CD38pos": 0.3589,
+      "DNT/activated+CD38pos": 0.166,
+      "Unassigned": 0.4739
+    }
+  }
+}

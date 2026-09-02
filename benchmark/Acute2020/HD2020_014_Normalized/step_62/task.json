@@ -1,0 +1,29 @@
+{
+  "task_id": "Acute2020__HD2020_014_Normalized__step_62",
+  "dataset": "Acute2020",
+  "sample": "HD2020_014_Normalized",
+  "step": 62,
+  "parent": "Step09_172Yb_CD66b|89Y_CD45 == Granulocyte",
+  "x_marker": "148Nd_CD16",
+  "y_marker": "166Er_CD294",
+  "annotation_column": "Step62_148Nd_CD16|166Er_CD294",
+  "categories": [
+    "Neutrophil",
+    "Eosinophil",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step09_172Yb_CD66b|89Y_CD45(Granulocyte)",
+  "gt_summary": {
+    "n_parent_cells": 88499,
+    "n_cells_per_category": {
+      "Neutrophil": 67667,
+      "Eosinophil": 18800,
+      "Unassigned": 2032
+    },
+    "population_proportions": {
+      "Neutrophil": 0.7646,
+      "Eosinophil": 0.2124,
+      "Unassigned": 0.023
+    }
+  }
+}

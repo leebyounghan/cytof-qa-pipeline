@@ -1,0 +1,35 @@
+{
+  "task_id": "Acute2021__HD6_Normalized__step_29",
+  "dataset": "Acute2021",
+  "sample": "HD6_Normalized",
+  "step": 29,
+  "parent": "Step28_164Dy_TCRgd|170Er_CD3 == abT",
+  "x_marker": "145Nd_CD4",
+  "y_marker": "146Nd_CD8a",
+  "annotation_column": "Step29_145Nd_CD4|146Nd_CD8a",
+  "categories": [
+    "CD8",
+    "DPT",
+    "DNT",
+    "CD4",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step28_164Dy_TCRgd|170Er_CD3(abT)",
+  "gt_summary": {
+    "n_parent_cells": 40045,
+    "n_cells_per_category": {
+      "CD8": 10092,
+      "DPT": 322,
+      "DNT": 405,
+      "CD4": 29044,
+      "Unassigned": 182
+    },
+    "population_proportions": {
+      "CD8": 0.252,
+      "DPT": 0.008,
+      "DNT": 0.0101,
+      "CD4": 0.7253,
+      "Unassigned": 0.0045
+    }
+  }
+}

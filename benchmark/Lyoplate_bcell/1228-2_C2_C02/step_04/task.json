@@ -1,0 +1,28 @@
+{
+  "task_id": "Lyoplate_bcell__1228-2_C2_C02__step_04",
+  "dataset": "Lyoplate_bcell",
+  "sample": "1228-2_C2_C02",
+  "step": 4,
+  "parent": "Step02_CD3|CD20 == CD19_CD20pos",
+  "x_marker": "CD38",
+  "y_marker": "CD24",
+  "annotation_column": "Step04_CD38|CD24",
+  "categories": [
+    "Transitional",
+    "Unassigned"
+  ],
+  "note": "Transitional: transitional B cells — small dense cluster at the upper-right (CD38 high, CD24 high), well separated above the broader CD24-mid CD38-mid bulk; the rest is unassigned.",
+  "tips": "Transitional B-cell identification (independent of the IgD/CD27 axis used at Step 3 — parallel annotation on the same parent). Transitional: CD38hi CD24hi. Overlap caveat: transitional B cells are IgD+ CD27-, so they also fall into the `Naive` bin at Step 3 — Step 3 and Step 4 produce overlapping labels on the same cells by design, not as an artifact (downstream analyses that need a Naive-without-Transitional pool should compute `Naive AND NOT Transitional` via boolean operation). Useful co-markers: IgM is typically high on transitional B but is not in this panel.",
+  "gating_context": "Root -> Step02_CD3|CD20(CD19_CD20pos)",
+  "gt_summary": {
+    "n_parent_cells": 6389,
+    "n_cells_per_category": {
+      "Transitional": 459,
+      "Unassigned": 5930
+    },
+    "population_proportions": {
+      "Transitional": 0.0718,
+      "Unassigned": 0.9282
+    }
+  }
+}

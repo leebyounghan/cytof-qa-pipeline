@@ -1,0 +1,437 @@
+name: FRDR_covid19
+panel: Panel 8 (Myeloid)
+instrument: BD LSRFortessa X20
+n_steps: 24
+n_samples: 223
+cofactor: 150.0
+channel_marker_map:
+  FSC-A: FSC-A
+  FSC-H: FSC-H
+  FSC-W: FSC-W
+  SSC-A: SSC-A
+  SSC-H: SSC-H
+  SSC-W: SSC-W
+  Comp-FITC-A: CD303
+  Comp-PerCP-Cy5-5-A: CD123
+  Comp-APC-A: CD1c
+  Comp-Alexa Fluor 700-A: CD3
+  Comp-APC-Cy7-A: L/D
+  Comp-BV421-A: CD14
+  Comp-BV510-A: hladr
+  Comp-BV650-A: CD11c
+  Comp-BV786-A: CD19
+  Comp-PE-A: CD86
+  Comp-PE-Cy7-A: CD16
+  Time: Time
+gating_plan:
+- step: 1
+  parent: ALL
+  x_marker: Time
+  y_marker: Comp-APC-A
+  annotation column name: Step01_Time|CD1c
+  annotation categories:
+  - Time_stable
+  note: 'Time_stable: events acquired during a stable acquisition window (drift, fluid
+    disturbances, channel-stability outliers excluded) — broad horizontal band on
+    the CD1c (y) axis spanning the bulk of the time axis; the bright-CD1c upper band
+    and start/end drift regions are excluded.'
+  tips: 'Time stability gate. The Time x-axis excludes drift / fluid-disturbance regions
+    at the start or end of the run (clogs, air bubbles, sample-end artifacts). The
+    y-axis (Comp-APC-A, CD1c) serves: (1) channel-stability QC — a fluorescence channel
+    plotted vs. time reveals time-localized drift (laser warmup, cytometer instability,
+    sample evaporation); (2) vertical outlier exclusion — events that spike abnormally
+    high (electronic noise) within an otherwise stable time window are removed by
+    polygon. Any bright/stable fluorescence channel could serve the y-axis role; CD1c
+    is used here for convenience.'
+- step: 2
+  parent: Step01_Time|CD1c == Time_stable
+  x_marker: FSC-A
+  y_marker: SSC-A
+  annotation column name: Step02_FSC-A|SSC-A
+  annotation categories:
+  - Cells
+  note: 'Cells: intact white blood cells (lymphocytes, monocytes, and granulocytes
+    captured as one envelope) — broad WBC blob in the middle of the FSC × SSC plane
+    spanning the lymphocyte (low FSC/SSC), monocyte (mid), and granulocyte (high SSC)
+    clusters as a single inclusive envelope. The lower-left debris corner and a thin
+    upper saturation band at the SSC-A axis max are excluded.'
+  tips: 'Forward/side scatter cleanup to isolate intact white blood cells. Cells:
+    events within a broad WBC scatter envelope spanning the lymphocyte (FSC-low /
+    SSC-low), monocyte (FSC-mid / SSC-mid), and granulocyte (FSC-mid-to-high / SSC-high)
+    clusters as a single polygon. Excluded: lower-left debris (RBC fragments, platelets,
+    dead-cell remnants, free fluorochrome / dye aggregates near the SSC baseline)
+    and upper-right aggregates (cell clumps and large doublets that pre-empt the dedicated
+    singlet gates at Steps 3–4). The three WBC clusters often touch on the FSC × SSC
+    plane, so the gate is drawn as one inclusive envelope.'
+- step: 3
+  parent: Step02_FSC-A|SSC-A == Cells
+  x_marker: SSC-H
+  y_marker: SSC-A
+  annotation column name: Step03_SSC-H|SSC-A
+  annotation categories:
+  - Singlets1
+  note: 'Singlets1: single cells (first doublet/aggregate exclusion) — events on the
+    linear SSC-H ≈ SSC-A diagonal; off-diagonal events above the diagonal (SSC-A inflated
+    relative to SSC-H, indicating coincident events / aggregates) and the SSC-A saturation
+    edge at the top are excluded.'
+  tips: First singlet discrimination on the SSC-H × SSC-A diagonal — singlet events
+    fall on the linear diagonal; doublets/aggregates deviate because area scales faster
+    than height when two events are coincident.
+- step: 4
+  parent: Step03_SSC-H|SSC-A == Singlets1
+  x_marker: SSC-W
+  y_marker: SSC-A
+  annotation column name: Step04_SSC-W|SSC-A
+  annotation categories:
+  - Singlets2
+  note: 'Singlets2: single cells (second-pass doublet exclusion via pulse width) —
+    vertical band at narrow SSC-W (the bulk of events sit in this band); the high-SSC-W
+    tail to the right (residual doublets with inflated pulse width) is excluded.'
+  tips: Second singlet discrimination on SSC-W × SSC-A — SSC-W (pulse width) flags
+    residual doublets that passed the H-vs-A gate; true singlets have a narrow, stereotyped
+    pulse width while doublets show inflated width.
+- step: 5
+  parent: Step04_SSC-W|SSC-A == Singlets2
+  x_marker: Comp-PE-A
+  y_marker: Comp-APC-Cy7-A
+  annotation column name: Step05_CD86|L_D
+  annotation categories:
+  - Live
+  note: 'Live: viable cells — only events with extremely high L/D (dead cells) at
+    the very top are excluded; the bulk of events from upstream cleanup pass as Live.
+    The L/D axis (y) functions as a top-edge exclusion only, not as a strict viability
+    gate.'
+  tips: 'Nominal viability gate. In this dataset''s expert-curated workspace, the
+    gate at this step does not enforce a strict L/D-based exclusion — effectively
+    all events passing Step 4 are labeled Live. The L/D channel (Comp-APC-Cy7-A, y)
+    and CD86 channel (Comp-PE-A, x) are retained on the plot for visual QC of staining
+    quality and dead-cell distribution, but they are not used to drop events. Possible
+    reasons: whole-blood RBC-lysis preparations typically have very low dead-cell
+    fractions, and/or downstream analysis was judged not to be sensitive to residual
+    L/D-positive contamination. Note: any L/D-positive contamination is carried into
+    all subsequent populations.'
+- step: 6
+  parent: Step05_CD86|L_D == Live
+  x_marker: Comp-BV421-A
+  y_marker: SSC-A
+  annotation column name: Step06_CD14|SSC-A
+  annotation categories:
+  - PMN
+  - Non_PMN
+  note: 'Split polymorphonuclear from mononuclear leukocytes on CD14 × SSC. PMN: granulocytes
+    — upper cluster at high SSC and CD14-low (granulocytes have large granular cytoplasm
+    → high SSC, and are CD14-low). Non_PMN: mononuclear leukocytes — lower cluster
+    at low-to-mid SSC (lymphocytes, monocytes, DCs; includes CD14+ monocytes resolved
+    downstream).'
+  tips: 'Split polymorphonuclear (granulocytes) from mononuclear leukocytes. PMN:
+    SSC-high and CD14-negative (granulocytes have large granular cytoplasm → high
+    SSC, and are CD14-low). Non_PMN: SSC-lower (lymphocytes, monocytes, DCs; includes
+    CD14+ monocytes resolved downstream). In-panel co-marker prior: there is no positive
+    granulocyte lineage marker in this panel, so PMN is defined by scatter morphology
+    plus CD14-negativity; the remaining in-panel markers (CD3, CD19, HLA-DR, CD11c,
+    CD1c, CD303, CD123, CD86, CD16) do not add discriminative power at this split
+    — CD16 is reserved for the downstream neutrophil / eosinophil separation at Step
+    7.'
+- step: 7
+  parent: Step06_CD14|SSC-A == PMN
+  x_marker: Comp-PE-Cy7-A
+  y_marker: FSC-A
+  annotation column name: Step07_CD16|FSC-A
+  annotation categories:
+  - Neutrophils
+  - Eosinophils
+  note: 'Granulocyte subsetting within PMN. Neutrophils: dense vertical band at high
+    CD16 (CD16+), spanning a broad FSC range. Eosinophils: smaller vertical band at
+    low CD16 (CD16-); CD16 is bimodal — boundary set at the valley between the two
+    CD16 peaks. The upper saturation edge at the FSC-A axis max is excluded.'
+  tips: 'Granulocyte subsetting within PMN. Neutrophils: CD16+ (FcγRIII-high). Eosinophils:
+    CD16- (eosinophils are classically CD16-negative/low). In-panel co-marker prior:
+    no in-panel marker positively confirms eosinophil identity — CD16 negativity within
+    the high-SSC PMN parent is the sole discriminator, so eosinophils are defined
+    by exclusion. Basophils (CD16- CD123+) are captured via a separate branch at Step
+    24, not here, and should not contaminate the PMN parent because basophils have
+    lower SSC than granulocytes; CD123 is therefore not needed at this step.'
+- step: 8
+  parent: Step06_CD14|SSC-A == Non_PMN
+  x_marker: Comp-BV786-A
+  y_marker: Comp-Alexa Fluor 700-A
+  annotation column name: Step08_CD19|CD3
+  annotation categories:
+  - B_Cells
+  - T_Cells
+  - Non_BT
+  note: 'Three-way lymphoid split on CD19 × CD3. T_Cells: T-lineage cells — upper
+    region (CD3+, CD19-). B_Cells: mature B-lineage cells — right cluster (CD19+,
+    CD3-). Non_BT: non-B non-T mononuclear cells (feeds the monocyte / DC / basophil
+    branches; NK cells reside here) — lower-left cluster (both CD19 and CD3 low).'
+  tips: 'Lymphocyte lineage split within mononuclear cells. B_Cells: CD19+ CD3-. T_Cells:
+    CD3+ CD19-. Non_BT: CD19- CD3-. In-panel co-marker prior: no other in-panel marker
+    (CD14, CD16, HLA-DR, CD11c, CD123, CD303, CD1c, CD86) is lineage-discriminative
+    for B vs. T — CD3/CD19 are the only lymphoid lineage markers in this panel, so
+    each call is a single positive without an in-panel confirmatory co-marker.'
+- step: 9
+  parent: Step08_CD19|CD3 == B_Cells
+  x_marker: Comp-PE-A
+  y_marker: Comp-Alexa Fluor 700-A
+  annotation column name: Step09_CD86|CD3
+  annotation categories:
+  - B_cells_CD86p
+  note: 'B_cells_CD86p: activated B cells (antigen-engaged with co-stimulatory licensing)
+    — right cluster (CD86+), separated from the larger CD86- cloud on the left. CD3
+    (y) is a purity sanity-check axis (parent already CD3-, so events stay at CD3-low);
+    the activation call is driven by CD86 on x.'
+  tips: 'B-cell activation readout. B_cells_CD86p: CD86+ (CD86 is up-regulated on
+    antigen-engaged B cells as a T-cell co-stimulatory ligand). Axis design caveat:
+    y_marker is CD3, but parent is already CD3- by the B_Cells gate at Step 8 — CD3
+    on y is a purity sanity-check axis (events should cluster at CD3-low); the activation
+    call is driven by CD86 on x. In-panel co-marker prior: HLA-DR (Comp-BV510-A) is
+    constitutively high on B cells and is further up-regulated on activated B cells
+    — complementary activation/APC-licensing readout.'
+- step: 10
+  parent: Step08_CD19|CD3 == Non_BT
+  x_marker: Comp-PE-Cy7-A
+  y_marker: Comp-BV421-A
+  annotation column name: Step10_CD16|CD14
+  annotation categories:
+  - Classical_monocytes
+  - Intermediate_monocytes
+  - Patrolling_monocytes
+  - Non_monocytes
+  note: 'Canonical three-way monocyte subsetting on CD14 × CD16, with four populations
+    forming distinct clusters. Classical_monocytes: horizontal blob along the upper
+    band (CD14 high, CD16 low-to-mid; CD14++ CD16-/lo). Intermediate_monocytes: small
+    cluster at the upper-right (CD14 high, CD16 high). Patrolling_monocytes: cluster
+    at the mid-right (CD14 mid/dim, CD16 high) — sits below the Intermediate cluster
+    along the right edge. Non_monocytes: broad lower band at CD14 low, often with
+    two density centers — a left center at CD16 low and a right center at CD16 high
+    (CD14-low residual including some CD16+ non-monocyte events). Feeds the DC branch
+    downstream.'
+  tips: 'Canonical three-way monocyte subsetting on CD14 × CD16. Classical_monocytes:
+    CD14++ CD16-. Intermediate_monocytes: CD14++ CD16+. Patrolling_monocytes: CD14+
+    CD16++. Non_monocytes: CD14-low. Useful co-markers: HLA-DR confirms monocyte identity
+    (all subsets are HLA-DR+) and is used at Step 14 to enrich the DC branch within
+    Non_monocytes.'
+- step: 11
+  parent: Step10_CD16|CD14 == Classical_monocytes
+  x_marker: Comp-PE-A
+  y_marker: SSC-A
+  annotation column name: Step11_CD86|SSC
+  annotation categories:
+  - CM_CD86p
+  note: 'CM_CD86p: activated classical monocytes — right cluster (CD86+); the CD86-low
+    cluster on the left is excluded. CD86 is bimodal — boundary at the valley between
+    the CD86- and CD86+ peaks. SSC (y) is a context/display axis (no SSC-based call).
+    Naming caveat: ''CM'' here = ''Classical Monocyte'', not ''Central Memory''.'
+  tips: 'Activation readout for classical monocytes. CM_CD86p: CD86+. Naming caveat:
+    the prefix `CM` here stands for ''Classical Monocyte'' — not ''Central Memory''
+    as in T-cell panels of other cohorts. In-panel co-marker prior: HLA-DR (Comp-BV510-A)
+    is expressed on all monocytes and is typically further up-regulated with CD86
+    on activated/inflammatory monocytes — complementary activation readout.'
+- step: 12
+  parent: Step10_CD16|CD14 == Intermediate_monocytes
+  x_marker: Comp-PE-A
+  y_marker: SSC-A
+  annotation column name: Step12_CD86|SSC
+  annotation categories:
+  - IM_CD86p
+  note: 'IM_CD86p: activated intermediate monocytes — sparse cluster at high CD86;
+    this gate captures the CD86+ tail of the parent intermediate-monocyte population
+    (a rare compartment, so the GT often shows essentially the entire parent labeled).'
+  tips: 'Activation readout for intermediate monocytes. IM_CD86p: CD86+. In-panel
+    co-marker prior: HLA-DR (Comp-BV510-A) is characteristically highest on intermediate
+    monocytes among the three subsets at baseline and tends to co-move with CD86 on
+    inflammatory activation; HLA-DR-low with CD86-normal has been reported in severe
+    COVID-19 — useful as an in-panel cross-check for monocyte dysregulation.'
+- step: 13
+  parent: Step10_CD16|CD14 == Patrolling_monocytes
+  x_marker: Comp-PE-A
+  y_marker: FSC-A
+  annotation column name: Step13_CD86|FSC
+  annotation categories:
+  - PM_CD86p
+  note: 'PM_CD86p: activated patrolling (non-classical) monocytes — sparse cluster
+    at high CD86; like the intermediate-monocyte branch, the parent population is
+    small so the gate captures essentially the entire CD86+ tail.'
+  tips: 'Activation readout for patrolling (non-classical) monocytes. PM_CD86p: CD86+.
+    Patrolling monocytes are normally less APC-competent than classical monocytes.
+    In-panel co-marker prior: HLA-DR (Comp-BV510-A) tends to co-move with CD86 on
+    activation — complementary readout.'
+- step: 14
+  parent: Step10_CD16|CD14 == Non_monocytes
+  x_marker: Comp-BV510-A
+  y_marker: SSC-A
+  annotation column name: Step14_HLADR|SSC
+  annotation categories:
+  - HLADRp
+  note: 'Enrich HLA-DR+ APCs (DC candidates) within the Non_monocytes fraction. HLADRp:
+    dense right cluster (HLA-DR+); the HLA-DR-low cluster on the left is excluded.
+    HLA-DR is bimodal — boundary at the valley between the HLA-DR- and HLA-DR+ peaks.
+    SSC (y) is a display axis (no SSC-based call).'
+  tips: 'Enrich HLA-DR+ APCs within the Non_monocytes fraction — entry to the DC branch.
+    HLADRp: HLA-DR+ (DCs are uniformly HLA-DR-high; remaining HLA-DR- events in this
+    parent include residual NK cells, basophils with low HLA-DR, or other lineages
+    routed out here). DC identity is confirmed downstream — CD11c+ at Step 18 for
+    mDCs and CD303+/CD123+ at Step 16 for pDCs. The HLA-DR- events dropped here are
+    correctly captured by the Step 23 basophil-candidate branch off the same Non_BT
+    parent.'
+- step: 15
+  parent: Step14_HLADR|SSC == HLADRp
+  x_marker: Comp-PE-Cy7-A
+  y_marker: Comp-BV421-A
+  annotation column name: Step15_CD16|CD14
+  annotation categories:
+  - HLADRp_CD16n
+  note: 'Remove residual CD16+ contaminants from the DC candidate pool. HLADRp_CD16n:
+    left cluster (CD16-, CD14 stays low because the parent already enforced CD14-low);
+    the CD16+ tail on the right (residual CD16+ monocytes that spilled through) is
+    excluded. CD14 (y) is a display/purity axis showing the parent gate''s CD14-low
+    quality.'
+  tips: 'Remove residual CD16+ contaminants from the DC candidate pool. HLADRp_CD16n:
+    CD16- (classical DC populations are CD16-low; CD16+ events here are typically
+    residual CD16+ monocytes that spilled through Non_monocytes, or CD16+ NK-like
+    cells with HLA-DR expression). In-panel co-marker prior: y_marker CD14 (Comp-BV421-A)
+    is shown as a display/purity axis — Non_monocytes parent has already enforced
+    CD14-low; visible CD14+ residuals here help diagnose upstream gate quality but
+    CD14 is not used for the call.'
+- step: 16
+  parent: Step15_CD16|CD14 == HLADRp_CD16n
+  x_marker: Comp-FITC-A
+  y_marker: Comp-PerCP-Cy5-5-A
+  annotation column name: Step16_CD303|CD123
+  annotation categories:
+  - pDC
+  - Non_pDC
+  note: 'Plasmacytoid vs. non-plasmacytoid DC split on CD303 × CD123. pDC: dense cluster
+    at the upper-right (CD303+, CD123+) — canonical double-positive pDC signature,
+    well separated from the rest. Non_pDC: broad cloud at the lower-left (CD303-,
+    CD123-) — feeds the myeloid DC branch downstream.'
+  tips: 'Plasmacytoid vs. non-plasmacytoid DC split. pDC: CD303+ CD123+ (CD303/BDCA-2
+    is lineage-specific, CD123/IL-3Rα confirms; this double-positive combination is
+    canonical pDC identity). Non_pDC: CD303- CD123-. In-panel co-marker prior: CD123
+    alone is not pDC-specific within PBMC — basophils are also CD123+ — so the CD303
+    axis is essential. In this gating tree basophils are already excluded upstream
+    by HLA-DR+ at Step 14 (basophils are HLA-DR-, captured separately at Step 23),
+    so CD123+ events reaching Step 16 should almost entirely be pDCs.'
+- step: 17
+  parent: Step16_CD303|CD123 == pDC
+  x_marker: Comp-PE-A
+  y_marker: FSC-A
+  annotation column name: Step17_CD86|FSC
+  annotation categories:
+  - pDC_CD86p
+  note: 'pDC_CD86p: activated / co-stimulatory-licensed plasmacytoid DCs — right cluster
+    (CD86+); the CD86-low cluster on the left is excluded.'
+  tips: 'Activation readout for pDCs. pDC_CD86p: CD86+. pDCs are major type-I IFN
+    producers in antiviral responses. In-panel co-marker prior: HLA-DR (Comp-BV510-A)
+    is constitutively high on pDCs (already enforced by Step 14 parent) and is further
+    up-regulated on maturation — complementary licensing readout.'
+- step: 18
+  parent: Step16_CD303|CD123 == Non_pDC
+  x_marker: Comp-BV650-A
+  y_marker: FSC-A
+  annotation column name: Step18_CD11c|FSC
+  annotation categories:
+  - mDC
+  note: 'mDC: myeloid (conventional) dendritic cells — main cluster spanning mid-to-high
+    CD11c (CD11c+); a small cluster at low CD11c (CD11c-) on the far left is excluded.'
+  tips: 'Positive selection of myeloid DCs within Non_pDC. mDC: CD11c+ (integrin αX;
+    pan-myeloid DC marker; conventional DCs are CD11c-high). The remaining CD11c-
+    events are not annotated. In-panel co-marker prior: HLA-DR (Comp-BV510-A, from
+    Step 14 parent) is uniformly high on mDCs — events should cluster at HLA-DR-high;
+    HLA-DR-dim CD11c+ events would be atypical and suggest residual NK-like contamination.'
+- step: 19
+  parent: Step18_CD11c|FSC == mDC
+  x_marker: Comp-APC-A
+  y_marker: FSC-A
+  annotation column name: Step19_CD1c|FSC
+  annotation categories:
+  - mDC1
+  - mDC2
+  note: 'Myeloid DC subsetting by CD1c (BDCA-1). mDC1 (as labeled in this panel):
+    right cluster (CD1c+). mDC2 (as labeled in this panel): left cluster (CD1c-).
+    Two well-separated clusters along the CD1c axis. Nomenclature caveat: in canonical
+    convention CD1c+ is cDC2, not cDC1 — the label mapping in this panel may be inverted
+    relative to convention.'
+  tips: 'Myeloid DC subsetting by CD1c (BDCA-1). As labeled in this file: mDC1 = CD1c+,
+    mDC2 = CD1c-. Nomenclature caveat: in the canonical cDC1 / cDC2 convention, cDC1
+    = CD141+ (BDCA-3+) cross-presenting DCs and cDC2 = CD1c+ (BDCA-1+) inflammatory
+    DCs — so the CD1c+ subset is conventionally cDC2, not cDC1. The label mapping
+    in this panel (CD1c+ → mDC1) appears inverted relative to the canonical convention;
+    whether this is intentional (lab-specific naming) or an error should be verified
+    with the panel author. CD141 is not in this panel, so a true cDC1 gate cannot
+    be established.'
+- step: 20
+  parent: Step18_CD11c|FSC == mDC
+  x_marker: Comp-PE-A
+  y_marker: FSC-A
+  annotation column name: Step20_CD86|FSC
+  annotation categories:
+  - mDC_CD86p
+  note: 'mDC_CD86p: activated mDCs aggregated across both subtypes — right cluster
+    (CD86+); the CD86-low cluster on the left is excluded.'
+  tips: 'Aggregate activation readout for all mDCs. mDC_CD86p: CD86+. In-panel co-marker
+    prior: HLA-DR (Comp-BV510-A, from Step 14 parent) is up-regulated on mDC maturation
+    alongside CD86 — complementary licensing readout.'
+- step: 21
+  parent: Step19_CD1c|FSC == mDC1
+  x_marker: Comp-PE-A
+  y_marker: SSC-A
+  annotation column name: Step21_CD86|SSC
+  annotation categories:
+  - mDC1_CD86p
+  note: 'mDC1_CD86p: activated mDC1 subset (CD1c+ as labeled in this panel) — right
+    cluster (CD86+); the CD86-low cluster on the left is excluded. Subject to the
+    Step 19 nomenclature caveat.'
+  tips: 'Activation readout for the mDC1 subset (CD1c+ as labeled in this panel).
+    mDC1_CD86p: CD86+. Subject to the Step 19 nomenclature caveat. In-panel co-marker
+    prior: HLA-DR tends to co-move with CD86 on DCs.'
+- step: 22
+  parent: Step19_CD1c|FSC == mDC2
+  x_marker: Comp-PE-A
+  y_marker: SSC-A
+  annotation column name: Step22_CD86|SSC
+  annotation categories:
+  - mDC2_CD86p
+  note: 'mDC2_CD86p: activated mDC2 subset (CD1c- as labeled in this panel) — right
+    cluster (CD86+); the CD86-low cluster on the left is excluded. Subject to the
+    Step 19 nomenclature caveat.'
+  tips: 'Activation readout for the mDC2 subset (CD1c- as labeled in this panel).
+    mDC2_CD86p: CD86+. Subject to the Step 19 nomenclature caveat. In-panel co-marker
+    prior: HLA-DR tends to co-move with CD86 on DCs.'
+- step: 23
+  parent: Step08_CD19|CD3 == Non_BT
+  x_marker: Comp-BV421-A
+  y_marker: Comp-BV510-A
+  annotation column name: Step23_CD14|HLADR
+  annotation categories:
+  - HLADRn_CD14n
+  note: 'Parallel branch off Non_BT (sibling to the monocyte/DC branch). HLADRn_CD14n:
+    HLA-DR-, CD14- — basophil-candidate compartment (still contains residual NK cells;
+    basophils are positively identified at Step 24) — dense cluster at the lower-left
+    (both CD14 and HLA-DR low); the right cluster (CD14+ and/or HLA-DR+ monocytes/DCs)
+    is excluded.'
+  tips: 'Parallel branch off Non_BT (sibling to the monocyte/DC branch starting at
+    Step 10) — enrich the HLA-DR-negative, CD14-negative compartment. HLADRn_CD14n:
+    HLA-DR- CD14- (basophils are HLA-DR- and CD14-; this gate removes monocytes and
+    DCs, but most NK cells are also HLA-DR- CD14- and remain in this parent alongside
+    basophils). Residual NK-cell contamination is filtered at Step 24 by CD123+ selection
+    (basophils CD123+, NK CD123-).'
+- step: 24
+  parent: Step23_CD14|HLADR == HLADRn_CD14n
+  x_marker: Comp-PE-Cy7-A
+  y_marker: Comp-PerCP-Cy5-5-A
+  annotation column name: Step24_CD16|CD123
+  annotation categories:
+  - Basophils
+  note: 'Positive identification of basophils within the HLA-DR- CD14- compartment.
+    Basophils: well-separated cluster at the upper-left (CD123+, CD16-) — canonical
+    basophil signature combined with HLA-DR- and CD14- enforced by the upstream parents.
+    The remaining lower events (CD123-low) are excluded; CD16 (x) serves as a negative
+    purity check (basophils stay at CD16-low).'
+  tips: 'Positive identification of basophils within the HLA-DR- CD14- compartment.
+    Basophils: CD123+ (IL-3Rα-high; combined with HLA-DR- and CD14- enforced by upstream
+    parents, this is a canonical basophil signature). In-panel co-marker prior: CD16
+    is displayed on x as a negative purity check — basophils are CD16-, so events
+    should cluster at CD16-low; visible CD16+ residuals would suggest NK-cell contamination
+    escaping Step 23. The positive call is driven by CD123 on y. No more specific
+    basophil marker is in this panel.'

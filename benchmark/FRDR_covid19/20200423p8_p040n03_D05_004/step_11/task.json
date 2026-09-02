@@ -1,0 +1,28 @@
+{
+  "task_id": "FRDR_covid19__20200423p8_p040n03_D05_004__step_11",
+  "dataset": "FRDR_covid19",
+  "sample": "20200423p8_p040n03_D05_004",
+  "step": 11,
+  "parent": "Step10_CD16|CD14 == Classical_monocytes",
+  "x_marker": "Comp-PE-A",
+  "y_marker": "SSC-A",
+  "annotation_column": "Step11_CD86|SSC",
+  "categories": [
+    "CM_CD86p",
+    "Unassigned"
+  ],
+  "note": "CM_CD86p: activated classical monocytes — right cluster (CD86+); the CD86-low cluster on the left is excluded. CD86 is bimodal — boundary at the valley between the CD86- and CD86+ peaks. SSC (y) is a context/display axis (no SSC-based call). Naming caveat: 'CM' here = 'Classical Monocyte', not 'Central Memory'.",
+  "tips": "Activation readout for classical monocytes. CM_CD86p: CD86+. Naming caveat: the prefix `CM` here stands for 'Classical Monocyte' — not 'Central Memory' as in T-cell panels of other cohorts. In-panel co-marker prior: HLA-DR (Comp-BV510-A) is expressed on all monocytes and is typically further up-regulated with CD86 on activated/inflammatory monocytes — complementary activation readout.",
+  "gating_context": "Root -> Step10_CD16|CD14(Classical_monocytes)",
+  "gt_summary": {
+    "n_parent_cells": 4341,
+    "n_cells_per_category": {
+      "CM_CD86p": 4331,
+      "Unassigned": 10
+    },
+    "population_proportions": {
+      "CM_CD86p": 0.9977,
+      "Unassigned": 0.0023
+    }
+  }
+}

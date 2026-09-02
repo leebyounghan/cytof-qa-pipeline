@@ -1,0 +1,26 @@
+{
+  "task_id": "Vaccine__07.T1_Normalized__step_17",
+  "dataset": "Vaccine",
+  "sample": "07.T1_Normalized",
+  "step": 17,
+  "parent": "Step16_163Dy_CD56_NCAM|171Yb_CD20 == NonBNonNK",
+  "x_marker": "147Sm_CD11c",
+  "y_marker": "168Er_CD14",
+  "annotation_column": "Step17_147Sm_CD11c|168Er_CD14",
+  "categories": [
+    "TotalMonocyte",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step16_163Dy_CD56_NCAM|171Yb_CD20(NonBNonNK)",
+  "gt_summary": {
+    "n_parent_cells": 16570,
+    "n_cells_per_category": {
+      "TotalMonocyte": 13431,
+      "Unassigned": 3139
+    },
+    "population_proportions": {
+      "TotalMonocyte": 0.8106,
+      "Unassigned": 0.1894
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "task_id": "Lyoplate_tcell__lot 1369_A7_A07__step_06",
+  "dataset": "Lyoplate_tcell",
+  "sample": "lot 1369_A7_A07",
+  "step": 6,
+  "parent": "Step02_CD4|CD8 == CD8",
+  "x_marker": "CD38",
+  "y_marker": "HLADR",
+  "annotation_column": "Step06_CD38|HLADR",
+  "categories": [
+    "CD8_Activated",
+    "CD8_38negDRpos",
+    "CD8_38posDRneg",
+    "CD8_38negDRneg",
+    "Unassigned"
+  ],
+  "note": "Strategy on CD38 × HLA-DR for CD8 activation: (1) Find the dense main cluster — it splits along CD38 into two dense clouds: a left dense cloud (CD38-) = CD8_38negDRneg (the dominant population) and a right dense cloud (CD38+) = CD8_38posDRneg. These two dense clouds together form the lower (HLA-DR mid/low) band. (2) Above these dense clouds, the HLA-DR-high region forms a sparser cloud. Apply the same CD38 threshold from (1) to split this upper sparse cloud: CD38- side = CD8_38negDRpos (upper-left); CD38+ side = CD8_Activated (upper-right).",
+  "tips": "CD8 activation / proliferation state (parallel annotation to Step 5 on the CD8 parent; mirror of Step 4 for CD8). HLA-DR = activation; CD38 = proliferation. CD8_Activated: CD38+ HLA-DR+. CD8_38negDRpos: CD38- HLA-DR+. CD8_38posDRneg: CD38+ HLA-DR-. CD8_38negDRneg: CD38- HLA-DR-.",
+  "gating_context": "Root -> Step02_CD4|CD8(CD8)",
+  "gt_summary": {
+    "n_parent_cells": 11421,
+    "n_cells_per_category": {
+      "CD8_Activated": 221,
+      "CD8_38negDRpos": 534,
+      "CD8_38posDRneg": 888,
+      "CD8_38negDRneg": 9778,
+      "Unassigned": 0
+    },
+    "population_proportions": {
+      "CD8_Activated": 0.0194,
+      "CD8_38negDRpos": 0.0468,
+      "CD8_38posDRneg": 0.0778,
+      "CD8_38negDRneg": 0.8561,
+      "Unassigned": 0.0
+    }
+  }
+}

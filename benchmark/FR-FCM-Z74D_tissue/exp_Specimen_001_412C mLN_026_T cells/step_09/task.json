@@ -1,0 +1,37 @@
+{
+  "task_id": "FR-FCM-Z74D_tissue__exp_Specimen_001_412C mLN_026_T cells__step_09",
+  "dataset": "FR-FCM-Z74D_tissue",
+  "sample": "exp_Specimen_001_412C mLN_026_T cells",
+  "step": 9,
+  "parent": "Step06_CXCR3|CCR6 == Th1",
+  "x_marker": "CD127",
+  "y_marker": "CD69",
+  "annotation_column": "Step09_CD127|CD69",
+  "categories": [
+    "Th1_CD127p_CD69p",
+    "Th1_CD127p_CD69n",
+    "Th1_CD127n_CD69p",
+    "Th1_CD127n_CD69n",
+    "Unassigned"
+  ],
+  "note": "Strategy on CD127 × CD69 — the tissue-specific sub-gate of this cohort. Two clusters along CD127 plus a CD69+/- split: (1) CD127 is bimodal — dense CD127+ cluster on the right, sparser CD127- cluster on the left. (2) CD69 splits each side into an upper (CD69+) band and a lower (CD69-) band. Th1_CD127p_CD69p: tissue-resident Th1 with homeostatic signaling retained (Trm-like Th1) — upper-right quadrant (CD127+, CD69+). Th1_CD127p_CD69n: non-resident / circulating memory Th1 — lower-right quadrant (CD127+, CD69-). Th1_CD127n_CD69p: tissue-resident Th1 with homeostatic receptor down-regulated — upper-left quadrant (CD127-, CD69+). Th1_CD127n_CD69n: non-resident, non-memory-maintenance Th1 — lower-left quadrant (both -). Tissue caveat: in non-lymphoid tissues CD69+ marks residency and the upper band is well populated; in blood samples (412C_Blood, 423_Pre-blood) CD69+ is sparse and reflects early activation rather than residency. Parent caveat: this Th1 compartment includes the plastic CXCR3+CCR6+ Th1/17 subset.",
+  "tips": "Th1 residency / memory-maintenance state (CD127 × CD69 quadrants) — the key tissue-specific sub-gate of this cohort. Parent caveat: Step 6 'Th1' includes CXCR3+CCR6+ (Th1/17 plastic) events. CD127 (IL-7Rα) is a homeostatic / memory-maintenance receptor. CD69 in non-lymphoid tissues is widely used as a Trm marker (rather than purely early activation as in blood); together with CD103 it forms a core Trm signature, though CD69 alone is not sufficient and CD103-negative Trm populations exist (e.g. liver, airway). Th1_CD127p_CD69p: CD127+ CD69+. Th1_CD127p_CD69n: CD127+ CD69-. Th1_CD127n_CD69p: CD127- CD69+. Th1_CD127n_CD69n: CD127- CD69-. CD103 IS in panel — combining CD69+CD103+ further supports a core Trm phenotype. In Blood samples (412C_Blood, 423_Pre-blood), CD69+ should be read as early activation, not residency.",
+  "gating_context": "Root -> Step06_CXCR3|CCR6(Th1)",
+  "gt_summary": {
+    "n_parent_cells": 439,
+    "n_cells_per_category": {
+      "Th1_CD127p_CD69p": 250,
+      "Th1_CD127p_CD69n": 119,
+      "Th1_CD127n_CD69p": 47,
+      "Th1_CD127n_CD69n": 20,
+      "Unassigned": 3
+    },
+    "population_proportions": {
+      "Th1_CD127p_CD69p": 0.5695,
+      "Th1_CD127p_CD69n": 0.2711,
+      "Th1_CD127n_CD69p": 0.1071,
+      "Th1_CD127n_CD69n": 0.0456,
+      "Unassigned": 0.0068
+    }
+  }
+}

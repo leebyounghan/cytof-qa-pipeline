@@ -1,0 +1,34 @@
+{
+  "task_id": "FR-FCM-Z74D_hc__exp_exp_Donor__A_panel-C_Clean cells_T cells__step_05",
+  "dataset": "FR-FCM-Z74D_hc",
+  "sample": "exp_exp_Donor__A_panel-C_Clean cells_T cells",
+  "step": 5,
+  "parent": "Step04_CCR7|CD45RA in CM_CD4,EM_CD4,EMRA_CD4",
+  "x_marker": "CXCR5",
+  "y_marker": "PD-1",
+  "annotation_column": "Step05_CXCR5|PD1",
+  "categories": [
+    "Tfh",
+    "Tfh_hi_PD1",
+    "non_Tfh",
+    "Unassigned"
+  ],
+  "note": "Strategy on CXCR5 × PD-1 — three populations stacked vertically within the CXCR5+ right cluster, plus the entire CXCR5- bulk: (1) CXCR5 is bimodal — locate the dense CXCR5+ cluster on the right. (2) Within the CXCR5+ cluster, find the PD-1 density peak. Tfh (resting / circulating Tfh) occupies the band from the PD-1 peak upward; Tfh_hi_PD1 (activated germinal-center-like Tfh) is the top sliver above this band (PD-1 very high). (3) non_Tfh (non-follicular memory helper T cells) = the entire CXCR5- left cluster PLUS the events in the CXCR5+ right cluster that sit BELOW the PD-1 peak.",
+  "tips": "T follicular helper identification on memory CD4. CXCR5 is the B-cell follicle homing receptor and the canonical Tfh marker. PD-1 further stratifies Tfh activation state (germinal-center Tfh are PD-1 high). Tfh: CXCR5+ PD-1 intermediate. Tfh_hi_PD1: CXCR5+ PD-1 high. non_Tfh: CXCR5-. Terminology clarification: 'PD-1 intermediate' here should be read as 'not PD-1 high' (covers PD-1 low and mid) so that all CXCR5+ events are assigned to one of the two Tfh bins. Scope: parent is memory CD4 non-Treg (CM+EM+EMRA aggregated); Naive_CD4 and Treg are excluded — Tfh are antigen-experienced. cTfh can be subtyped using CXCR3/CCR6 (in panel) into cTfh1/2/17 — currently not exploited. ICOS and BCL6 (gold-standard Tfh markers) are NOT in panel.",
+  "gating_context": "Root -> Step04_CCR7|CD45RA(CM_CD4,EM_CD4,EMRA_CD4)",
+  "gt_summary": {
+    "n_parent_cells": 28351,
+    "n_cells_per_category": {
+      "Tfh": 2996,
+      "Tfh_hi_PD1": 1240,
+      "non_Tfh": 23981,
+      "Unassigned": 134
+    },
+    "population_proportions": {
+      "Tfh": 0.1057,
+      "Tfh_hi_PD1": 0.0437,
+      "non_Tfh": 0.8459,
+      "Unassigned": 0.0047
+    }
+  }
+}

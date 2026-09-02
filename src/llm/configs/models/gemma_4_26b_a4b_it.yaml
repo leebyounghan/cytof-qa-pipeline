@@ -1,0 +1,34 @@
+# Gemma 4-26B-A4B-it (MoE: 4B active / 26B total, instruct-tuned).
+# Aligned with Qwen 3.6-27B (the comparable peer) for fair benchmarking.
+#
+# Differences from Qwen — model-intrinsic, not knob choices:
+#   * No vLLM reasoning_parser available for Gemma (Qwen uses 'qwen3').
+#     Thinking trace stays inside message.content; --strip-think extractor
+#     slices past it on the client side.
+#   * No vLLM thinking_token_budget for Gemma (not supported by this
+#     architecture). Total generation budget (max_tokens) is matched
+#     instead — Gemma may use more or fewer thinking tokens within it.
+#   * enable_expert_parallel=true because the MoE has 16 experts per layer.
+#   * top_k=64 (Gemma generation_config.json default; Qwen uses 20).
+model:
+  hf_id: google/gemma-4-26B-A4B-it
+  served_name: Gemma4-26B-A4B-it
+
+server:
+  data_parallel_size: 2
+  tensor_parallel_size: 2
+  max_model_len: 65536
+  gpu_memory_utilization: 0.9
+  enable_prefix_caching: true
+  trust_remote_code: true
+  enable_expert_parallel: true
+
+generation:
+  max_tokens: 32768
+  strip_think: true
+  temperature: 1.0
+  top_p: 0.95
+  top_k: 64
+  presence_penalty: 0.0
+  thinking: "on"
+  concurrency: 256

@@ -1,0 +1,28 @@
+{
+  "task_id": "FRDR_covid19__20200422p8_p081n01_C05_003__step_18",
+  "dataset": "FRDR_covid19",
+  "sample": "20200422p8_p081n01_C05_003",
+  "step": 18,
+  "parent": "Step16_CD303|CD123 == Non_pDC",
+  "x_marker": "Comp-BV650-A",
+  "y_marker": "FSC-A",
+  "annotation_column": "Step18_CD11c|FSC",
+  "categories": [
+    "mDC",
+    "Unassigned"
+  ],
+  "note": "mDC: myeloid (conventional) dendritic cells — main cluster spanning mid-to-high CD11c (CD11c+); a small cluster at low CD11c (CD11c-) on the far left is excluded.",
+  "tips": "Positive selection of myeloid DCs within Non_pDC. mDC: CD11c+ (integrin αX; pan-myeloid DC marker; conventional DCs are CD11c-high). The remaining CD11c- events are not annotated. In-panel co-marker prior: HLA-DR (Comp-BV510-A, from Step 14 parent) is uniformly high on mDCs — events should cluster at HLA-DR-high; HLA-DR-dim CD11c+ events would be atypical and suggest residual NK-like contamination.",
+  "gating_context": "Root -> Step16_CD303|CD123(Non_pDC)",
+  "gt_summary": {
+    "n_parent_cells": 218,
+    "n_cells_per_category": {
+      "mDC": 185,
+      "Unassigned": 33
+    },
+    "population_proportions": {
+      "mDC": 0.8486,
+      "Unassigned": 0.1514
+    }
+  }
+}

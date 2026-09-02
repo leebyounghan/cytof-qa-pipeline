@@ -1,0 +1,26 @@
+{
+  "task_id": "Acute2021__3_Normalized__step_17",
+  "dataset": "Acute2021",
+  "sample": "3_Normalized",
+  "step": 17,
+  "parent": "Step16_163Dy_CD56_NCAM|171Yb_CD20 == NonBNonNK",
+  "x_marker": "147Sm_CD11c",
+  "y_marker": "168Er_CD14",
+  "annotation_column": "Step17_147Sm_CD11c|168Er_CD14",
+  "categories": [
+    "TotalMonocyte",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step16_163Dy_CD56_NCAM|171Yb_CD20(NonBNonNK)",
+  "gt_summary": {
+    "n_parent_cells": 2132,
+    "n_cells_per_category": {
+      "TotalMonocyte": 1954,
+      "Unassigned": 178
+    },
+    "population_proportions": {
+      "TotalMonocyte": 0.9165,
+      "Unassigned": 0.0835
+    }
+  }
+}

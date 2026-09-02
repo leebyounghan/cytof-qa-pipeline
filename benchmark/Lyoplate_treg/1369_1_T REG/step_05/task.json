@@ -1,0 +1,37 @@
+{
+  "task_id": "Lyoplate_treg__1369_1_T REG__step_05",
+  "dataset": "Lyoplate_treg",
+  "sample": "1369_1_T REG",
+  "step": 5,
+  "parent": "Step03_CD25|CD127 == Treg",
+  "x_marker": "CCR4",
+  "y_marker": "CD45RO",
+  "annotation_column": "Step05_CCR4|CD45RO",
+  "categories": [
+    "CCR4neg_CD45ROpos",
+    "CCR4pos_CD45ROpos",
+    "CCR4pos_CD45ROneg",
+    "CCR4neg_CD45ROneg",
+    "Unassigned"
+  ],
+  "note": "Treg subsetting on CCR4 × CD45RO, four-quadrant layout. CCR4pos_CD45ROpos: skin-homing memory Treg — upper-right quadrant (CCR4+, CD45RO+). CCR4pos_CD45ROneg: skin-homing naive-like Treg — lower-right quadrant (CCR4+, CD45RO-). CCR4neg_CD45ROpos: non-skin-homing memory Treg — upper-left quadrant (CCR4-, CD45RO+). CCR4neg_CD45ROneg: non-skin-homing naive-like Treg — lower-left quadrant (both -).",
+  "tips": "Treg memory / homing quadrants (parallel annotation to Step 4 on the same Treg parent). CD45RO is the classical memory-T-cell marker (inverse of CD45RA); CD45RO+ marks antigen-experienced Treg. CCR4 again marks tissue-homing capacity. CCR4pos_CD45ROpos: CCR4+ CD45RO+. CCR4pos_CD45ROneg: CCR4+ CD45RO-. CCR4neg_CD45ROpos: CCR4- CD45RO+. CCR4neg_CD45ROneg: CCR4- CD45RO- (the original Miyara scheme is defined on CD45RA × Foxp3/CD25 rather than CD45RO; CD45RA is not in panel, so the resting/memory split relies on CD45RO alone).",
+  "gating_context": "Root -> Step03_CD25|CD127(Treg)",
+  "gt_summary": {
+    "n_parent_cells": 4387,
+    "n_cells_per_category": {
+      "CCR4neg_CD45ROpos": 752,
+      "CCR4pos_CD45ROpos": 1956,
+      "CCR4pos_CD45ROneg": 102,
+      "CCR4neg_CD45ROneg": 1577,
+      "Unassigned": 0
+    },
+    "population_proportions": {
+      "CCR4neg_CD45ROpos": 0.1714,
+      "CCR4pos_CD45ROpos": 0.4459,
+      "CCR4pos_CD45ROneg": 0.0233,
+      "CCR4neg_CD45ROneg": 0.3595,
+      "Unassigned": 0.0
+    }
+  }
+}

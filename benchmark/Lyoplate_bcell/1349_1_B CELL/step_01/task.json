@@ -1,0 +1,31 @@
+{
+  "task_id": "Lyoplate_bcell__1349_1_B CELL__step_01",
+  "dataset": "Lyoplate_bcell",
+  "sample": "1349_1_B CELL",
+  "step": 1,
+  "parent": "ALL",
+  "x_marker": "CD3",
+  "y_marker": "CD19",
+  "annotation_column": "Step01_CD3|CD19",
+  "categories": [
+    "CD19pos",
+    "CD3pos",
+    "Unassigned"
+  ],
+  "note": "Three populations on CD3 × CD19. CD19pos: B cells — distinct cluster at the upper-left (CD19+, CD3-). CD3pos: T cells — distinct cluster at the lower-right (CD3+, CD19-). The double-negative center cluster is unassigned. CD3 and CD19 are bimodal — boundaries set at the valley between the positive and negative peaks of each axis.",
+  "tips": "Lymphocyte lineage split on pre-gated Live singlet lymphocytes. CD19pos: CD19+ CD3-. CD3pos: CD3+ CD19-. CD3- CD19- events (NK cells, residual non-B/T lineages) are not annotated at this step because the remainder is not a defined cell type for this panel's purpose.",
+  "gating_context": "Root",
+  "gt_summary": {
+    "n_parent_cells": 178052,
+    "n_cells_per_category": {
+      "CD19pos": 31742,
+      "CD3pos": 115122,
+      "Unassigned": 31188
+    },
+    "population_proportions": {
+      "CD19pos": 0.1783,
+      "CD3pos": 0.6466,
+      "Unassigned": 0.1752
+    }
+  }
+}

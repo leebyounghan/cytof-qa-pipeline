@@ -1,0 +1,33 @@
+# Cell-o1 (ncbi/Cell-o1) — Qwen2.5-7B-base SFT+RL-tuned for batch-exclusive
+# cell-type assignment. Used as backbone-swap baseline for Table 2.
+#
+# NOT a Qwen3 thinking model: <think>...</think><answer>...</answer> are
+# emitted as plain text tokens, NOT via reasoning_parser. So no
+# `reasoning_parser`, no `thinking_token_budget`. `strip_think` (plain
+# regex on output text) IS applied so downstream JSON parser sees only
+# the <answer> block.
+#
+# Sampling matched to other Table 2 open-source rows (T=1.0, top_p=0.95,
+# top_k=20) for fair comparison — README ships do_sample=False; we
+# deliberately keep our standard sampling to match the table protocol.
+model:
+  hf_id: ncbi/Cell-o1
+  served_name: Cell-o1
+
+server:
+  data_parallel_size: 8
+  tensor_parallel_size: 1
+  max_model_len: 32768
+  gpu_memory_utilization: 0.95
+  enable_prefix_caching: true
+  trust_remote_code: true
+  enable_expert_parallel: false
+
+generation:
+  max_tokens: 8192
+  strip_think: true
+  temperature: 1.0
+  top_p: 0.95
+  top_k: 20
+  presence_penalty: 1.5
+  concurrency: 256

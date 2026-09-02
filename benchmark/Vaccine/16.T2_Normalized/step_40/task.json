@@ -1,0 +1,35 @@
+{
+  "task_id": "Vaccine__16.T2_Normalized__step_40",
+  "dataset": "Vaccine",
+  "sample": "16.T2_Normalized",
+  "step": 40,
+  "parent": "Step29_145Nd_CD4|146Nd_CD8a == CD4",
+  "x_marker": "150Nd_CD45RA",
+  "y_marker": "154Sm_CD27",
+  "annotation_column": "Step40_150Nd_CD45RA|154Sm_CD27",
+  "categories": [
+    "CD4/CD45RAnegCD27pos",
+    "CD4/CD45RAnegCD27neg",
+    "CD4Naive",
+    "CD4TEMRA",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step29_145Nd_CD4|146Nd_CD8a(CD4)",
+  "gt_summary": {
+    "n_parent_cells": 32444,
+    "n_cells_per_category": {
+      "CD4/CD45RAnegCD27pos": 8567,
+      "CD4/CD45RAnegCD27neg": 1029,
+      "CD4Naive": 22430,
+      "CD4TEMRA": 200,
+      "Unassigned": 218
+    },
+    "population_proportions": {
+      "CD4/CD45RAnegCD27pos": 0.2641,
+      "CD4/CD45RAnegCD27neg": 0.0317,
+      "CD4Naive": 0.6913,
+      "CD4TEMRA": 0.0062,
+      "Unassigned": 0.0067
+    }
+  }
+}

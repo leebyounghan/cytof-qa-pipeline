@@ -1,0 +1,37 @@
+{
+  "task_id": "FR-FCM-Z74D_hc__exp_exp_Donor__A_panel-B_Clean cells_T cells__step_09",
+  "dataset": "FR-FCM-Z74D_hc",
+  "sample": "exp_exp_Donor__A_panel-B_Clean cells_T cells",
+  "step": 9,
+  "parent": "Step06_CXCR3|CCR6 == Th1",
+  "x_marker": "CD127",
+  "y_marker": "PD-1",
+  "annotation_column": "Step09_CD127|PD1",
+  "categories": [
+    "Th1_CD127p_PD1p",
+    "Th1_CD127p_PD1n",
+    "Th1_CD127n_PD1p",
+    "Th1_CD127n_PD1n",
+    "Unassigned"
+  ],
+  "note": "Strategy on CD127 × PD-1: (1) Find the dense CD127+ cluster on the right; events at CD127 below the left edge of this cluster (a sparse, scattered CD127- region) form the CD127- side. (2) Within the CD127+ cluster, locate the PD-1 density peak — use it as the horizontal threshold. Above the PD-1 peak = Th1_CD127p_PD1p (recently activated, still memory-competent Th1; upper-right). Below the PD-1 peak = Th1_CD127p_PD1n (resting homeostatic memory Th1; lower-right, the dominant population). (3) Apply the same PD-1 threshold to the sparse CD127- region: above the threshold = Th1_CD127n_PD1p (chronically-activated effector Th1; upper-left); below the threshold = Th1_CD127n_PD1n (terminally differentiated / post-effector Th1; lower-left). Parent caveat: this Th1 compartment includes the plastic CXCR3+CCR6+ Th1/17 subset.",
+  "tips": "Th1 activation/exhaustion state (CD127 × PD-1 quadrants). Parent note: under the Step 6 definition, 'Th1' includes CXCR3+CCR6+ (Th1/17 plastic) events — distributions here reflect a mixture of classical Th1 and Th1/17. CD127 (IL-7Rα) is a homeostatic / memory-maintenance receptor; PD-1 marks activation, and at sustained high levels is associated with exhaustion-related phenotypes (PD-1 alone is not sufficient to define exhaustion). Th1_CD127p_PD1n: CD127+ PD-1-. Th1_CD127p_PD1p: CD127+ PD-1+. Th1_CD127n_PD1p: CD127- PD-1+. Th1_CD127n_PD1n: CD127- PD-1-. In-panel co-marker priors for orthogonal activation-axis refinement (currently unused): HLA-DR (canonical late activation), CD25 (early activation, IL-2Rα), CD69 (very early activation).",
+  "gating_context": "Root -> Step06_CXCR3|CCR6(Th1)",
+  "gt_summary": {
+    "n_parent_cells": 6881,
+    "n_cells_per_category": {
+      "Th1_CD127p_PD1p": 1766,
+      "Th1_CD127p_PD1n": 4253,
+      "Th1_CD127n_PD1p": 328,
+      "Th1_CD127n_PD1n": 212,
+      "Unassigned": 322
+    },
+    "population_proportions": {
+      "Th1_CD127p_PD1p": 0.2566,
+      "Th1_CD127p_PD1n": 0.6181,
+      "Th1_CD127n_PD1p": 0.0477,
+      "Th1_CD127n_PD1n": 0.0308,
+      "Unassigned": 0.0468
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "task_id": "FRDR_covid19__20200529p8_p169n01_A05_001__step_05",
+  "dataset": "FRDR_covid19",
+  "sample": "20200529p8_p169n01_A05_001",
+  "step": 5,
+  "parent": "Step04_SSC-W|SSC-A == Singlets2",
+  "x_marker": "Comp-PE-A",
+  "y_marker": "Comp-APC-Cy7-A",
+  "annotation_column": "Step05_CD86|L_D",
+  "categories": [
+    "Live",
+    "Unassigned"
+  ],
+  "note": "Live: viable cells — only events with extremely high L/D (dead cells) at the very top are excluded; the bulk of events from upstream cleanup pass as Live. The L/D axis (y) functions as a top-edge exclusion only, not as a strict viability gate.",
+  "tips": "Nominal viability gate. In this dataset's expert-curated workspace, the gate at this step does not enforce a strict L/D-based exclusion — effectively all events passing Step 4 are labeled Live. The L/D channel (Comp-APC-Cy7-A, y) and CD86 channel (Comp-PE-A, x) are retained on the plot for visual QC of staining quality and dead-cell distribution, but they are not used to drop events. Possible reasons: whole-blood RBC-lysis preparations typically have very low dead-cell fractions, and/or downstream analysis was judged not to be sensitive to residual L/D-positive contamination. Note: any L/D-positive contamination is carried into all subsequent populations.",
+  "gating_context": "Root -> Step04_SSC-W|SSC-A(Singlets2)",
+  "gt_summary": {
+    "n_parent_cells": 29086,
+    "n_cells_per_category": {
+      "Live": 27878,
+      "Unassigned": 1208
+    },
+    "population_proportions": {
+      "Live": 0.9585,
+      "Unassigned": 0.0415
+    }
+  }
+}

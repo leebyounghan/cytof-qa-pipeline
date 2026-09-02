@@ -1,0 +1,29 @@
+{
+  "task_id": "Vaccine__42.T1_Normalized__step_19",
+  "dataset": "Vaccine",
+  "sample": "42.T1_Normalized",
+  "step": 19,
+  "parent": "Step16_163Dy_CD56_NCAM|171Yb_CD20 == NonBNonNK",
+  "x_marker": "173Yb_HLA-DR",
+  "y_marker": "143Nd_CD123_IL-3R",
+  "annotation_column": "Step19_173Yb_HLA-DR|143Nd_CD123_IL-3R",
+  "categories": [
+    "Basophil",
+    "HLADRloCD123lo",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step16_163Dy_CD56_NCAM|171Yb_CD20(NonBNonNK)",
+  "gt_summary": {
+    "n_parent_cells": 18469,
+    "n_cells_per_category": {
+      "Basophil": 1774,
+      "HLADRloCD123lo": 2049,
+      "Unassigned": 14646
+    },
+    "population_proportions": {
+      "Basophil": 0.0961,
+      "HLADRloCD123lo": 0.1109,
+      "Unassigned": 0.793
+    }
+  }
+}

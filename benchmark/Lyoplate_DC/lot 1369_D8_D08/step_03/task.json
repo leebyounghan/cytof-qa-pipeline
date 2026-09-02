@@ -1,0 +1,37 @@
+{
+  "task_id": "Lyoplate_DC__lot 1369_D8_D08__step_03",
+  "dataset": "Lyoplate_DC",
+  "sample": "lot 1369_D8_D08",
+  "step": 3,
+  "parent": "Step01_CD14|Lineage == Lin_neg_CD14neg",
+  "x_marker": "CD16",
+  "y_marker": "CD56",
+  "annotation_column": "Step03_CD16|CD56",
+  "categories": [
+    "CD16neg_CD56pos",
+    "CD16pos_CD56pos",
+    "CD16pos_CD56neg",
+    "CD16neg_CD56neg",
+    "Unassigned"
+  ],
+  "note": "Four-quadrant split on CD16 × CD56 within Lin- CD14- compartment. CD16neg_CD56pos: CD56+ NK cells — upper-left quadrant (CD16-, CD56+). CD16pos_CD56pos: CD16+ CD56+ NK / NKT cells — upper-right quadrant. CD16pos_CD56neg: CD16+ CD56- (mostly cytotoxic NK or contamination) — lower-right quadrant. CD16neg_CD56neg: CD16- CD56- residual (contains DC candidates) — lower-left quadrant; feeds the DC branch downstream.",
+  "tips": "NK subsetting (by CD16 × CD56) plus DC-precursor routing within the CD14- compartment. CD16neg_CD56pos: CD56+ CD16-. CD16pos_CD56pos: CD56+ CD16+. CD16pos_CD56neg: CD16+ CD56-. CD16neg_CD56neg: CD16- CD56-. Useful co-markers: NKp46 / NKG2A / granzyme B would strengthen NK identity but are not in this panel.",
+  "gating_context": "Root -> Step01_CD14|Lineage(Lin_neg_CD14neg)",
+  "gt_summary": {
+    "n_parent_cells": 20080,
+    "n_cells_per_category": {
+      "CD16neg_CD56pos": 2905,
+      "CD16pos_CD56pos": 13007,
+      "CD16pos_CD56neg": 2210,
+      "CD16neg_CD56neg": 1958,
+      "Unassigned": 0
+    },
+    "population_proportions": {
+      "CD16neg_CD56pos": 0.1447,
+      "CD16pos_CD56pos": 0.6478,
+      "CD16pos_CD56neg": 0.1101,
+      "CD16neg_CD56neg": 0.0975,
+      "Unassigned": 0.0
+    }
+  }
+}

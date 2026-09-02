@@ -1,0 +1,28 @@
+{
+  "task_id": "FRDR_covid19__20200612p8_p225n01_G03_010__step_13",
+  "dataset": "FRDR_covid19",
+  "sample": "20200612p8_p225n01_G03_010",
+  "step": 13,
+  "parent": "Step10_CD16|CD14 == Patrolling_monocytes",
+  "x_marker": "Comp-PE-A",
+  "y_marker": "FSC-A",
+  "annotation_column": "Step13_CD86|FSC",
+  "categories": [
+    "PM_CD86p",
+    "Unassigned"
+  ],
+  "note": "PM_CD86p: activated patrolling (non-classical) monocytes — sparse cluster at high CD86; like the intermediate-monocyte branch, the parent population is small so the gate captures essentially the entire CD86+ tail.",
+  "tips": "Activation readout for patrolling (non-classical) monocytes. PM_CD86p: CD86+. Patrolling monocytes are normally less APC-competent than classical monocytes. In-panel co-marker prior: HLA-DR (Comp-BV510-A) tends to co-move with CD86 on activation — complementary readout.",
+  "gating_context": "Root -> Step10_CD16|CD14(Patrolling_monocytes)",
+  "gt_summary": {
+    "n_parent_cells": 478,
+    "n_cells_per_category": {
+      "PM_CD86p": 130,
+      "Unassigned": 348
+    },
+    "population_proportions": {
+      "PM_CD86p": 0.272,
+      "Unassigned": 0.728
+    }
+  }
+}

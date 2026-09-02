@@ -1,0 +1,37 @@
+{
+  "task_id": "FR-FCM-Z74D_hc__exp_exp_Donor__B_panel-B_Clean cells_T cells__step_01",
+  "dataset": "FR-FCM-Z74D_hc",
+  "sample": "exp_exp_Donor__B_panel-B_Clean cells_T cells",
+  "step": 1,
+  "parent": "ALL",
+  "x_marker": "CD4",
+  "y_marker": "CD8",
+  "annotation_column": "Step01_CD4|CD8",
+  "categories": [
+    "CD4",
+    "CD8",
+    "CD4p_CD8p",
+    "CD4n_CD8n",
+    "Unassigned"
+  ],
+  "note": "CD4: helper T cells — lower-right quadrant (CD4+, CD8-). CD8: cytotoxic T cells — upper-left quadrant (CD4-, CD8+). CD4p_CD8p: double-positive T cells (rare; often thymic emigrants or activated transitional) — upper-right quadrant. CD4n_CD8n: double-negative T cells (includes γδT, MAIT, iNKT) — lower-left quadrant. Both CD4 and CD8 are bimodal — quadrant boundaries set at the valley between the positive and negative peaks of each axis.",
+  "tips": "CD4/CD8 quadrant split on pre-gated T cells (CD3+ enforced upstream by the 'T cells' FCS gate). CD4: CD4+ CD8-. CD8: CD4- CD8+. CD4p_CD8p: CD4+ CD8+. CD4n_CD8n: CD4- CD8-. In-panel co-marker priors: no lineage-resolving TCR / invariant-T markers in this panel, so DNT remains an unresolved mixture. The DPT bucket is heterogeneous; some studies describe CD127/CD45RA sub-structure within DPT (e.g. CD127+CD45RA+ thymic-emigrant-like vs CD127lo CD45RA- activated transitional), so in-panel CD127/CD45RA axes could cross-validate or further characterize the DPT call if its size warrants.",
+  "gating_context": "Root",
+  "gt_summary": {
+    "n_parent_cells": 307481,
+    "n_cells_per_category": {
+      "CD4": 124533,
+      "CD8": 50062,
+      "CD4p_CD8p": 742,
+      "CD4n_CD8n": 74705,
+      "Unassigned": 57439
+    },
+    "population_proportions": {
+      "CD4": 0.405,
+      "CD8": 0.1628,
+      "CD4p_CD8p": 0.0024,
+      "CD4n_CD8n": 0.243,
+      "Unassigned": 0.1868
+    }
+  }
+}

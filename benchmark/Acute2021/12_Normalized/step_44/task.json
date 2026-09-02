@@ -1,0 +1,32 @@
+{
+  "task_id": "Acute2021__12_Normalized__step_44",
+  "dataset": "Acute2021",
+  "sample": "12_Normalized",
+  "step": 44,
+  "parent": "Step42_167Er_CD197_CCR7|145Nd_CD4 == CD4TCM",
+  "x_marker": "173Yb_HLA-DR",
+  "y_marker": "161Dy_CD38",
+  "annotation_column": "Step44_173Yb_HLA-DR|161Dy_CD38",
+  "categories": [
+    "CD4TCM/activated",
+    "CD4TCM/CD38pos",
+    "CD4TCM/activated+CD38pos",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step42_167Er_CD197_CCR7|145Nd_CD4(CD4TCM)",
+  "gt_summary": {
+    "n_parent_cells": 357,
+    "n_cells_per_category": {
+      "CD4TCM/activated": 0,
+      "CD4TCM/CD38pos": 24,
+      "CD4TCM/activated+CD38pos": 10,
+      "Unassigned": 323
+    },
+    "population_proportions": {
+      "CD4TCM/activated": 0.0,
+      "CD4TCM/CD38pos": 0.0672,
+      "CD4TCM/activated+CD38pos": 0.028,
+      "Unassigned": 0.9048
+    }
+  }
+}

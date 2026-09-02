@@ -1,0 +1,26 @@
+{
+  "task_id": "Acute2020__994574_Normalized__step_14",
+  "dataset": "Acute2020",
+  "sample": "994574_Normalized",
+  "step": 14,
+  "parent": "Step12_144Nd_CD19|171Yb_CD20 == CD20neg",
+  "x_marker": "154Sm_CD27",
+  "y_marker": "161Dy_CD38",
+  "annotation_column": "Step14_154Sm_CD27|161Dy_CD38",
+  "categories": [
+    "Plasmablast",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step12_144Nd_CD19|171Yb_CD20(CD20neg)",
+  "gt_summary": {
+    "n_parent_cells": 473,
+    "n_cells_per_category": {
+      "Plasmablast": 46,
+      "Unassigned": 427
+    },
+    "population_proportions": {
+      "Plasmablast": 0.0973,
+      "Unassigned": 0.9027
+    }
+  }
+}

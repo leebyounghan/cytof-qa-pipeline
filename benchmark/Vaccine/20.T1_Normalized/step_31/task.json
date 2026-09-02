@@ -1,0 +1,32 @@
+{
+  "task_id": "Vaccine__20.T1_Normalized__step_31",
+  "dataset": "Vaccine",
+  "sample": "20.T1_Normalized",
+  "step": 31,
+  "parent": "Step30_150Nd_CD45RA|154Sm_CD27 == CD8Naive",
+  "x_marker": "173Yb_HLA-DR",
+  "y_marker": "161Dy_CD38",
+  "annotation_column": "Step31_173Yb_HLA-DR|161Dy_CD38",
+  "categories": [
+    "CD8Naive/activated",
+    "CD8Naive/CD38pos",
+    "CD8Naive/activated+CD38pos",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step30_150Nd_CD45RA|154Sm_CD27(CD8Naive)",
+  "gt_summary": {
+    "n_parent_cells": 2813,
+    "n_cells_per_category": {
+      "CD8Naive/activated": 0,
+      "CD8Naive/CD38pos": 882,
+      "CD8Naive/activated+CD38pos": 32,
+      "Unassigned": 1899
+    },
+    "population_proportions": {
+      "CD8Naive/activated": 0.0,
+      "CD8Naive/CD38pos": 0.3135,
+      "CD8Naive/activated+CD38pos": 0.0114,
+      "Unassigned": 0.6751
+    }
+  }
+}

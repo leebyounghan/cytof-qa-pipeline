@@ -1,0 +1,29 @@
+{
+  "task_id": "Acute2020__HD2020_028_Normalized__step_24",
+  "dataset": "Acute2020",
+  "sample": "HD2020_028_Normalized",
+  "step": 24,
+  "parent": "Step22_163Dy_CD56_NCAM|173Yb_HLA-DR == TotalDC",
+  "x_marker": "147Sm_CD11c",
+  "y_marker": "143Nd_CD123_IL-3R",
+  "annotation_column": "Step24_147Sm_CD11c|143Nd_CD123_IL-3R",
+  "categories": [
+    "pDC",
+    "cDC",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step22_163Dy_CD56_NCAM|173Yb_HLA-DR(TotalDC)",
+  "gt_summary": {
+    "n_parent_cells": 1023,
+    "n_cells_per_category": {
+      "pDC": 111,
+      "cDC": 884,
+      "Unassigned": 28
+    },
+    "population_proportions": {
+      "pDC": 0.1085,
+      "cDC": 0.8641,
+      "Unassigned": 0.0274
+    }
+  }
+}

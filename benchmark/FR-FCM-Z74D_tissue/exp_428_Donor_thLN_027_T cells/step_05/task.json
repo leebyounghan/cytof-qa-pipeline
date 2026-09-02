@@ -1,0 +1,34 @@
+{
+  "task_id": "FR-FCM-Z74D_tissue__exp_428_Donor_thLN_027_T cells__step_05",
+  "dataset": "FR-FCM-Z74D_tissue",
+  "sample": "exp_428_Donor_thLN_027_T cells",
+  "step": 5,
+  "parent": "Step04_CCR7|CD45RA in CM_CD4,EM_CD4,EMRA_CD4",
+  "x_marker": "CXCR5",
+  "y_marker": "PD-1",
+  "annotation_column": "Step05_CXCR5|PD1",
+  "categories": [
+    "Tfh",
+    "Tfh_hi_PD1",
+    "non_Tfh",
+    "Unassigned"
+  ],
+  "note": "Strategy on CXCR5 × PD-1 — three populations stacked vertically within the CXCR5+ right cluster, plus the entire CXCR5- bulk: (1) CXCR5 is bimodal — locate the dense CXCR5+ cluster on the right. (2) Within the CXCR5+ cluster, find the PD-1 density peak. Tfh (resting / circulating Tfh) occupies the band from the PD-1 peak upward; Tfh_hi_PD1 (activated germinal-center-like Tfh) is the top sliver above this band (PD-1 very high). (3) non_Tfh (non-follicular memory helper T cells) = the entire CXCR5- left cluster PLUS the events in the CXCR5+ right cluster that sit BELOW the PD-1 peak.",
+  "tips": "T follicular helper identification on memory CD4. CXCR5 is the B-cell follicle homing receptor and the canonical Tfh marker; PD-1 stratifies Tfh activation (germinal-center Tfh are PD-1 high). Tfh: CXCR5+ PD-1 intermediate. Tfh_hi_PD1: CXCR5+ PD-1 high. non_Tfh: CXCR5-. Scope: parent is memory CD4 non-Treg (CM+EM+EMRA); Naive_CD4 and Treg are excluded. Tissue context: Tfh_hi_PD1 is most enriched in secondary lymphoid tissues (tLN, mLN, Spleen) where germinal centers form. ICOS and BCL6 are additional widely used Tfh markers but not in panel.",
+  "gating_context": "Root -> Step04_CCR7|CD45RA(CM_CD4,EM_CD4,EMRA_CD4)",
+  "gt_summary": {
+    "n_parent_cells": 59113,
+    "n_cells_per_category": {
+      "Tfh": 8224,
+      "Tfh_hi_PD1": 849,
+      "non_Tfh": 49744,
+      "Unassigned": 296
+    },
+    "population_proportions": {
+      "Tfh": 0.1391,
+      "Tfh_hi_PD1": 0.0144,
+      "non_Tfh": 0.8415,
+      "Unassigned": 0.005
+    }
+  }
+}

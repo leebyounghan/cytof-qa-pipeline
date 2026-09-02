@@ -1,0 +1,37 @@
+{
+  "task_id": "FR-FCM-Z74D_hc__exp_exp_Donor__A_panel-A_Clean cells_T cells__step_02",
+  "dataset": "FR-FCM-Z74D_hc",
+  "sample": "exp_exp_Donor__A_panel-A_Clean cells_T cells",
+  "step": 2,
+  "parent": "Step01_CD4|CD8 == CD8",
+  "x_marker": "CCR7",
+  "y_marker": "CD45RA",
+  "annotation_column": "Step02_CCR7|CD45RA",
+  "categories": [
+    "Naive_CD8",
+    "CM_CD8",
+    "EM_CD8",
+    "EMRA_CD8",
+    "Unassigned"
+  ],
+  "note": "Classical Sallusto/Lanzavecchia CD8 memory layout on CCR7 × CD45RA. Strategy: (1) Naive_CD8 anchors on the dense blob at the upper-right corner (CCR7 very high, CD45RA high) — antigen-inexperienced naive cytotoxic T cells. (2) EMRA_CD8 sits immediately to the left of Naive_CD8 in the upper CD45RA band — terminally differentiated cytotoxic T cells. (3) In the lower CD45RA band (memory cells), CCR7 is bimodal — locate the CCR7+ peak; CM_CD8 (central memory; lymph-node homing) sits at/right of this peak, EM_CD8 (effector memory) sits to its left. CCR7 (and sometimes CD45RA) can be trimodal in this panel, so density peaks — not fixed thresholds — anchor the gate.",
+  "tips": "Classical Sallusto/Lanzavecchia CD8 memory scheme (CCR7 × CD45RA). Naive_CD8: CCR7+ CD45RA+. CM_CD8: CCR7+ CD45RA-. EM_CD8: CCR7- CD45RA-. EMRA_CD8: CCR7- CD45RA+. In-panel co-marker priors (available for QC / downstream refinement, not gated here): (1) CD127 (IL-7Rα) — homeostatic memory marker; Naive/CM tend to be CD127+, EM/EMRA tend toward decreased CD127; useful as an orthogonal memory-axis QC. (2) PD-1 — naïve should be PD-1 negative; PD-1+ within Naive_CD8 flags contamination or TSCM-like events (true TSCM needs CD95, not in panel). (3) HLA-DR and CD25 (in panel, currently unused) mark recent activation and could refine 'activated memory' within CM/EM. Classical refinement markers NOT in panel: CD45RO, CD27, CD28, CD95, CD57, KLRG1.",
+  "gating_context": "Root -> Step01_CD4|CD8(CD8)",
+  "gt_summary": {
+    "n_parent_cells": 63891,
+    "n_cells_per_category": {
+      "Naive_CD8": 11726,
+      "CM_CD8": 14631,
+      "EM_CD8": 20251,
+      "EMRA_CD8": 15057,
+      "Unassigned": 2226
+    },
+    "population_proportions": {
+      "Naive_CD8": 0.1835,
+      "CM_CD8": 0.229,
+      "EM_CD8": 0.317,
+      "EMRA_CD8": 0.2357,
+      "Unassigned": 0.0348
+    }
+  }
+}

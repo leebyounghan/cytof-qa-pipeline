@@ -1,0 +1,37 @@
+{
+  "task_id": "FR-FCM-Z74D_hc__exp_exp_Donor__A_panel-C_Clean cells_T cells__step_12",
+  "dataset": "FR-FCM-Z74D_hc",
+  "sample": "exp_exp_Donor__A_panel-C_Clean cells_T cells",
+  "step": 12,
+  "parent": "Step03_Foxp3|CD127 == tot_Treg",
+  "x_marker": "CCR4",
+  "y_marker": "CD69",
+  "annotation_column": "Step12_CCR4|CD69",
+  "categories": [
+    "Treg_CCR4p_CD69p",
+    "Treg_CCR4p_CD69n",
+    "Treg_CCR4n_CD69p",
+    "Treg_CCR4n_CD69n",
+    "Unassigned"
+  ],
+  "note": "Strategy on CCR4 × CD69 — anchor on the two dense CD69- clusters: (1) In the lower (CD69-) band, two dense clusters separate along CCR4 — the left dense cluster (CCR4-) is Treg_CCR4n_CD69n (resting non-skin-homing Treg); the right dense cluster (CCR4+) is Treg_CCR4p_CD69n (skin-homing Treg, not activated). (2) Above these dense clusters the CD69+ region is sparse and scattered; apply the same CCR4 boundary: left of the boundary = Treg_CCR4n_CD69p (activated Treg without skin-homing bias); right of the boundary = Treg_CCR4p_CD69p (activated skin-homing Treg).",
+  "tips": "Treg tissue-homing / activation-residency quadrants. CCR4 marks skin/mucosa-homing capacity; CD69 is an early-activation marker and (in tissue contexts) a tissue-residency marker. Treg_CCR4p_CD69p: CCR4+ CD69+. Treg_CCR4p_CD69n: CCR4+ CD69-. Treg_CCR4n_CD69p: CCR4- CD69+. Treg_CCR4n_CD69n: CCR4- CD69-. Note: CD69 interpretation differs between peripheral-blood and tissue samples — in blood it primarily reflects early activation; in tissue it is commonly associated with residency (relevant for the sister FR-FCM-Z74D_tissue cohort). In-panel co-marker priors for tissue-residency refinement: CD103 (integrin αE; CD103+CD69+ is a core TRM signature), HLA-DR (Baecher-Allan suppressive Treg), CCR6/CXCR3/CCR10 for tissue-tropism (gut, Th1-like, skin).",
+  "gating_context": "Root -> Step03_Foxp3|CD127(tot_Treg)",
+  "gt_summary": {
+    "n_parent_cells": 6570,
+    "n_cells_per_category": {
+      "Treg_CCR4p_CD69p": 39,
+      "Treg_CCR4p_CD69n": 4982,
+      "Treg_CCR4n_CD69p": 4,
+      "Treg_CCR4n_CD69n": 1448,
+      "Unassigned": 97
+    },
+    "population_proportions": {
+      "Treg_CCR4p_CD69p": 0.0059,
+      "Treg_CCR4p_CD69n": 0.7583,
+      "Treg_CCR4n_CD69p": 0.0006,
+      "Treg_CCR4n_CD69n": 0.2204,
+      "Unassigned": 0.0148
+    }
+  }
+}

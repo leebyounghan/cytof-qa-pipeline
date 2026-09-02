@@ -1,0 +1,157 @@
+name: FR-FCM-Z74D_hc
+panel: T cell HC panel
+instrument: ''
+n_steps: 12
+n_samples: 6
+cofactor: 150.0
+channel_marker_map:
+  CCR10: CCR10
+  CXCR3: CXCR3
+  CD25: CD25
+  CXCR5: CXCR5
+  CCR7: CCR7
+  CD3: CD3
+  CD8: CD8
+  CD69: CD69
+  CD4: CD4
+  CD103: CD103
+  HLA-DR: HLA-DR
+  CCR4: CCR4
+  CCR6: CCR6
+  PD-1: PD-1
+  CD45RA: CD45RA
+  Foxp3: Foxp3
+  Helios: Helios
+  CD127: CD127
+gating_plan:
+- step: 1
+  parent: ALL
+  x_marker: CD4
+  y_marker: CD8
+  annotation column name: Step01_CD4|CD8
+  annotation categories:
+  - CD4
+  - CD8
+  - CD4p_CD8p
+  - CD4n_CD8n
+  note: 'CD4: helper T cells. CD8: cytotoxic T cells. CD4p_CD8p: double-positive T cells (rare; often thymic emigrants or activated transitional). CD4n_CD8n: double-negative T cells (includes γδT, MAIT, iNKT — unresolved in this panel).'
+  tips: 'CD4/CD8 quadrant split on pre-gated T cells (CD3+ enforced upstream by the ''T cells'' FCS gate). CD4: CD4+ CD8-. CD8: CD4- CD8+. CD4p_CD8p: CD4+ CD8+. CD4n_CD8n: CD4- CD8-. In-panel co-marker priors: no lineage-resolving TCR / invariant-T markers in this panel, so DNT remains an unresolved mixture. The DPT bucket is heterogeneous; some studies describe CD127/CD45RA sub-structure within DPT (e.g. CD127+CD45RA+ thymic-emigrant-like vs CD127lo CD45RA- activated transitional), so in-panel CD127/CD45RA axes could cross-validate or further characterize the DPT call if its size warrants.'
+- step: 2
+  parent: Step01_CD4|CD8 == CD8
+  x_marker: CCR7
+  y_marker: CD45RA
+  annotation column name: Step02_CCR7|CD45RA
+  annotation categories:
+  - Naive_CD8
+  - CM_CD8
+  - EM_CD8
+  - EMRA_CD8
+  note: 'Naive_CD8: naive cytotoxic T cells (antigen-inexperienced). CM_CD8: central memory cytotoxic T cells (lymph-node homing memory). EM_CD8: effector memory cytotoxic T cells. EMRA_CD8: terminally differentiated cytotoxic T cells.'
+  tips: 'Classical Sallusto/Lanzavecchia CD8 memory scheme (CCR7 × CD45RA). Naive_CD8: CCR7+ CD45RA+. CM_CD8: CCR7+ CD45RA-. EM_CD8: CCR7- CD45RA-. EMRA_CD8: CCR7- CD45RA+. In-panel co-marker priors (available for QC / downstream refinement, not gated here): (1) CD127 (IL-7Rα) — homeostatic memory marker; Naive/CM tend to be CD127+, EM/EMRA tend toward decreased CD127; useful as an orthogonal memory-axis QC. (2) PD-1 — naïve should be PD-1 negative; PD-1+ within Naive_CD8 flags contamination or TSCM-like events (true TSCM needs CD95, not in panel). (3) HLA-DR and CD25 (in panel, currently unused) mark recent activation and could refine ''activated memory'' within CM/EM. Classical refinement markers NOT in panel: CD45RO, CD27, CD28, CD95, CD57, KLRG1.'
+- step: 3
+  parent: Step01_CD4|CD8 == CD4
+  x_marker: Foxp3
+  y_marker: CD127
+  annotation column name: Step03_Foxp3|CD127
+  annotation categories:
+  - tot_Treg
+  - non_Treg
+  note: 'tot_Treg: total regulatory T cells (CD4 lineage). non_Treg: conventional helper T cells (Treg-excluded CD4 pool; serves as the parent for downstream memory and Th-polarization steps).'
+  tips: 'Treg vs conventional CD4 split. tot_Treg: Foxp3+ CD127lo. non_Treg: Foxp3- (any CD127). Category-coverage caveat: Foxp3+ CD127hi events (rare; activated Tconv or recently-induced Treg) do not match either rule and will be unassigned. In-panel co-marker priors: (1) CD25 IS in this panel — a widely used operational Treg definition adds CD25+ (Foxp3+ CD127lo CD25+), which could filter Foxp3+CD127lo CD25- events (often Foxp3-transient Tconv, not stable Treg). (2) Helios is in panel and is applied at Step 10 for lineage-stability stratification. (3) HLA-DR (in panel, unused) has been associated with a highly-suppressive activated Treg subset (Baecher-Allan).'
+- step: 4
+  parent: Step03_Foxp3|CD127 == non_Treg
+  x_marker: CCR7
+  y_marker: CD45RA
+  annotation column name: Step04_CCR7|CD45RA
+  annotation categories:
+  - Naive_CD4
+  - CM_CD4
+  - EM_CD4
+  - EMRA_CD4
+  note: 'Naive_CD4: naive helper T cells (antigen-inexperienced; non-Treg). CM_CD4: central memory helper T cells (lymph-node homing memory). EM_CD4: effector memory helper T cells. EMRA_CD4: terminally differentiated helper T cells (rare in CD4 compared to CD8). Memory subsets (CM, EM, EMRA) feed downstream Tfh annotation.'
+  tips: 'CD4 non-Treg memory subsets (Sallusto/Lanzavecchia, CCR7 × CD45RA). Naive_CD4: CCR7+ CD45RA+. CM_CD4: CCR7+ CD45RA-. EM_CD4: CCR7- CD45RA-. EMRA_CD4: CCR7- CD45RA+. In-panel co-marker priors (QC / downstream refinement, not gated here): (1) CD127 — Naive/CM are CD127+, EM/EMRA tend lower; consistent with use at Step 9. (2) PD-1 — Naive_CD4 should be PD-1-; PD-1+ inside Naive_CD4 flags contamination. (3) HLA-DR / CD25 / CD69 (all in panel, unused) for activated-memory sub-labeling. CD45RO is NOT in panel (use CD45RA as its reciprocal).'
+- step: 5
+  parent: Step04_CCR7|CD45RA in CM_CD4,EM_CD4,EMRA_CD4
+  x_marker: CXCR5
+  y_marker: PD-1
+  annotation column name: Step05_CXCR5|PD1
+  annotation categories:
+  - Tfh
+  - Tfh_hi_PD1
+  - non_Tfh
+  note: 'Tfh: T follicular helper cells (resting / circulating Tfh; B-cell-follicle-homing helper T cells). Tfh_hi_PD1: activated germinal-center-like Tfh (highly activated subset). non_Tfh: non-follicular memory helper T cells (feeds downstream Th1/Th17/Th22/Th2 polarization).'
+  tips: 'T follicular helper identification on memory CD4. CXCR5 is the B-cell follicle homing receptor and the canonical Tfh marker. PD-1 further stratifies Tfh activation state (germinal-center Tfh are PD-1 high). Tfh: CXCR5+ PD-1 intermediate. Tfh_hi_PD1: CXCR5+ PD-1 high. non_Tfh: CXCR5-. Terminology clarification: ''PD-1 intermediate'' here should be read as ''not PD-1 high'' (covers PD-1 low and mid) so that all CXCR5+ events are assigned to one of the two Tfh bins. Scope: parent is memory CD4 non-Treg (CM+EM+EMRA aggregated); Naive_CD4 and Treg are excluded — Tfh are antigen-experienced. cTfh can be subtyped using CXCR3/CCR6 (in panel) into cTfh1/2/17 — currently not exploited. ICOS and BCL6 (gold-standard Tfh markers) are NOT in panel.'
+- step: 6
+  parent: Step05_CXCR5|PD1 == non_Tfh
+  x_marker: CXCR3
+  y_marker: CCR6
+  annotation column name: Step06_CXCR3|CCR6
+  annotation categories:
+  - Th1
+  - Th17_22
+  - non_17_22_1
+  note: 'Th1: Type-1 helper T cells, IFNγ producers (this gate also absorbs the plastic Th1/17 [''Th1*''] subset; feeds downstream activation-state stratification). Th17_22: IL-17 / IL-22 producing helper T cells without Th1 co-polarization (split into Th17 vs Th22 downstream). non_17_22_1: Th2 candidates and uncommitted effectors (Th2 resolved downstream).'
+  tips: 'Chemokine-receptor-based Th polarization on non-Tfh memory CD4. Th1: CXCR3+ (any CCR6) — by this definition Th1 also absorbs the plastic Th1/17 subset (CXCR3+CCR6+, IFNγ+IL-17+). Th17_22: CXCR3- CCR6+. non_17_22_1: CXCR3- CCR6-. Design caveat: CXCR3+ Th1 absorbs CXCR3+CCR6+ (Th1*) events, inflating Th1 frequency vs strict CXCR3+CCR6- Th1. The downstream Th1 activation-state analysis (Step 9) is performed on this mixed Th1 compartment. To isolate Th1/17, add a CXCR3+CCR6+ label here (4-way split). No Th-lineage TFs in panel (T-bet / RORγt / GATA3 absent), so chemokine-receptor geometry carries the call.'
+- step: 7
+  parent: Step06_CXCR3|CCR6 == Th17_22
+  x_marker: CCR10
+  y_marker: CCR4
+  annotation column name: Step07_CCR10|CCR4
+  annotation categories:
+  - Th17
+  - Th22
+  note: 'Th17: classical IL-17-producing Th17 cells (skin/mucosa homing). Th22: IL-22-producing Th22 cells (skin homing).'
+  tips: 'Splitting the CCR6+ compartment (now restricted to CXCR3- CCR6+ by Step 6, so Th1/17 plasticity events do not reach this step). Th17: CCR4+ CCR10-. Th22: CCR10+ (any CCR4) — Th22 is typically CCR4+ as well. Category coverage: CCR4- CCR10- events in this parent are unassigned. Functional IL-17/IL-22 intracellular stains are NOT in panel.'
+- step: 8
+  parent: Step06_CXCR3|CCR6 == non_17_22_1
+  x_marker: CCR4
+  y_marker: CD8
+  annotation column name: Step08_CCR4|CD8
+  annotation categories:
+  - Th2
+  note: 'Th2: Type-2 helper T cells.'
+  tips: 'Th2 identification within the CXCR3- CCR6- compartment. Th2: CCR4+ (CCR4 is the GATA3-driven Th2-associated chemokine receptor). Only CCR4+ is labeled — CCR4- in this parent remains unannotated because the remainder is not a defined cell type. Axis design caveat: y_marker is CD8 but parent is CD4+ CD8-, so CD8 serves as a purity sanity-check axis; the call is driven by CCR4. CCR4 is also expressed on Th17, but CCR6+ cells were already removed upstream by the non_17_22_1 parent, so CCR4+ here specifically marks Th2. CRTH2/CD294 and GATA3 absent from panel.'
+- step: 9
+  parent: Step06_CXCR3|CCR6 == Th1
+  x_marker: CD127
+  y_marker: PD-1
+  annotation column name: Step09_CD127|PD1
+  annotation categories:
+  - Th1_CD127p_PD1p
+  - Th1_CD127p_PD1n
+  - Th1_CD127n_PD1p
+  - Th1_CD127n_PD1n
+  note: 'Th1_CD127p_PD1n: resting homeostatic memory Th1. Th1_CD127p_PD1p: recently activated, still memory-competent Th1. Th1_CD127n_PD1p: chronically-activated effector Th1 (loss of homeostatic receptor with sustained inhibitory receptor). Th1_CD127n_PD1n: terminally differentiated / post-effector Th1.'
+  tips: 'Th1 activation/exhaustion state (CD127 × PD-1 quadrants). Parent note: under the Step 6 definition, ''Th1'' includes CXCR3+CCR6+ (Th1/17 plastic) events — distributions here reflect a mixture of classical Th1 and Th1/17. CD127 (IL-7Rα) is a homeostatic / memory-maintenance receptor; PD-1 marks activation, and at sustained high levels is associated with exhaustion-related phenotypes (PD-1 alone is not sufficient to define exhaustion). Th1_CD127p_PD1n: CD127+ PD-1-. Th1_CD127p_PD1p: CD127+ PD-1+. Th1_CD127n_PD1p: CD127- PD-1+. Th1_CD127n_PD1n: CD127- PD-1-. In-panel co-marker priors for orthogonal activation-axis refinement (currently unused): HLA-DR (canonical late activation), CD25 (early activation, IL-2Rα), CD69 (very early activation).'
+- step: 10
+  parent: Step03_Foxp3|CD127 == tot_Treg
+  x_marker: Helios
+  y_marker: Foxp3
+  annotation column name: Step10_Helios|Foxp3
+  annotation categories:
+  - Treg_Heliosp
+  - Treg_Heliosn
+  note: 'Treg_Heliosp: stable-lineage Treg (enriched for thymus-derived Treg). Treg_Heliosn: peripherally-induced or less-stable Treg (may include recently-converted conventional CD4).'
+  tips: 'Treg lineage stratification by Helios (Ikaros family TF IKZF2). Treg_Heliosp: Helios+ — note that Helios as a strict thymic-origin marker is contested; Helios expression can also be induced in peripherally-generated Treg under certain activation conditions [Gottschalk et al. 2012, Akimova et al.], so ''Helios+'' is best read as ''enriched for stable-lineage Treg'' rather than a definitive tTreg marker. Treg_Heliosn: Helios-. The Foxp3 y-axis is a parent-gate visual QC only — parent is already Foxp3+, so all events should sit at Foxp3-high; the call is driven by Helios on x. In-panel co-marker priors: CD25 bright supports stable Treg; CD45RA+ CCR7+ (Step 11) corresponds to Miyara Fraction I-like, and Helios+ CD45RA+ corresponds to a stable Treg phenotype.'
+- step: 11
+  parent: Step03_Foxp3|CD127 == tot_Treg
+  x_marker: CCR7
+  y_marker: CD45RA
+  annotation column name: Step11_CCR7|CD45RA
+  annotation categories:
+  - Memory_Treg
+  - Naive_Treg
+  note: 'Naive_Treg: resting naive Treg (corresponds to Miyara Fraction I). Memory_Treg: effector / activated Treg (mixture of Miyara Fractions II and III; CM/EM/EMRA collapsed into one bucket).'
+  tips: 'Treg memory / activation status (binary split). Naive_Treg: CCR7+ CD45RA+. Memory_Treg: all other CCR7/CD45RA quadrants aggregated. This step collapses CM/EM/EMRA into a single ''memory'' bucket, unlike the 4-way split used for conventional CD4/CD8 (Steps 2 & 4). In-panel co-marker priors to formalize Miyara fractions (all in panel, not currently gated): Foxp3 intensity (low vs high) splits CD45RA- Memory_Treg into Fr II (Foxp3-high effector Treg) and Fr III (Foxp3-low non-suppressive); CD25 brightness reinforces Fr II.'
+- step: 12
+  parent: Step03_Foxp3|CD127 == tot_Treg
+  x_marker: CCR4
+  y_marker: CD69
+  annotation column name: Step12_CCR4|CD69
+  annotation categories:
+  - Treg_CCR4p_CD69p
+  - Treg_CCR4p_CD69n
+  - Treg_CCR4n_CD69p
+  - Treg_CCR4n_CD69n
+  note: 'Treg_CCR4p_CD69p: activated skin/mucosa-homing Treg with residency-like phenotype. Treg_CCR4p_CD69n: skin/mucosa-homing Treg, not activated/resident. Treg_CCR4n_CD69p: activated Treg without skin-homing bias. Treg_CCR4n_CD69n: resting non-skin-homing Treg.'
+  tips: 'Treg tissue-homing / activation-residency quadrants. CCR4 marks skin/mucosa-homing capacity; CD69 is an early-activation marker and (in tissue contexts) a tissue-residency marker. Treg_CCR4p_CD69p: CCR4+ CD69+. Treg_CCR4p_CD69n: CCR4+ CD69-. Treg_CCR4n_CD69p: CCR4- CD69+. Treg_CCR4n_CD69n: CCR4- CD69-. Note: CD69 interpretation differs between peripheral-blood and tissue samples — in blood it primarily reflects early activation; in tissue it is commonly associated with residency (relevant for the sister FR-FCM-Z74D_tissue cohort). In-panel co-marker priors for tissue-residency refinement: CD103 (integrin αE; CD103+CD69+ is a core TRM signature), HLA-DR (Baecher-Allan suppressive Treg), CCR6/CXCR3/CCR10 for tissue-tropism (gut, Th1-like, skin).'

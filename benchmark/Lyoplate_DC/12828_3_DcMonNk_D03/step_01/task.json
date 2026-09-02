@@ -1,0 +1,31 @@
+{
+  "task_id": "Lyoplate_DC__12828_3_DcMonNk_D03__step_01",
+  "dataset": "Lyoplate_DC",
+  "sample": "12828_3_DcMonNk_D03",
+  "step": 1,
+  "parent": "ALL",
+  "x_marker": "CD14",
+  "y_marker": "Lineage",
+  "annotation_column": "Step01_CD14|Lineage",
+  "categories": [
+    "Lin_neg_CD14pos",
+    "Lin_neg_CD14neg",
+    "Unassigned"
+  ],
+  "note": "Within Lineage-negative parent, split by CD14. Lin_neg_CD14pos: lineage-negative monocytes — cluster at the lower-right (CD14+, Lineage low/negative). Lin_neg_CD14neg: lineage-negative non-monocytes — cluster at the lower-left (CD14-, Lineage low/negative); feeds the DC branch downstream. The Lineage-positive band at the top is excluded.",
+  "tips": "Separate monocytes from the DC/NK candidate pool, while excluding T/B cells via the Lineage dump channel. Lin_neg_CD14pos: Lineage below the dump-channel high-cut, CD14+ (i.e., not strictly Lineage-negative; the Lineage dump uses a high-threshold to exclude T/B cells, so events below that cut are kept regardless of absolute level). Lin_neg_CD14neg: Lineage below high-cut, CD14-. Lineage-high events (T, B cells that passed the scatter pre-gate) are excluded because they are not targets of this panel. Useful co-markers: HLA-DR would provide positive confirmation of APC identity and is used downstream at Step 4.",
+  "gating_context": "Root",
+  "gt_summary": {
+    "n_parent_cells": 66265,
+    "n_cells_per_category": {
+      "Lin_neg_CD14pos": 21823,
+      "Lin_neg_CD14neg": 8780,
+      "Unassigned": 35662
+    },
+    "population_proportions": {
+      "Lin_neg_CD14pos": 0.3293,
+      "Lin_neg_CD14neg": 0.1325,
+      "Unassigned": 0.5382
+    }
+  }
+}

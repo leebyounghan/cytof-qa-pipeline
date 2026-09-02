@@ -1,0 +1,954 @@
+# Per-(cohort, step_int) note overrides — FAIR version.
+#
+# This is the MINIMAL-prescription variant. The note carries ONLY
+# information that the histogram alone does not encode:
+#
+#   - Per-category biology (what cell type the label maps to).
+#   - Pre-gating context that flips axis interpretation: the "negative"
+#     labels in this panel sit at MID-axis, NOT at axis-zero (a fact
+#     the histogram cannot reveal without knowing the parent gating).
+#   - RELATIVE spatial order between named clusters (which is left of
+#     which on each axis), not absolute positions.
+#   - Panel-specific facts: an axis is non-discriminative at this
+#     step; a quadrant is intrinsically empty; two sub-clusters sit at
+#     opposite corners (multi-rect topology).
+#
+# What is INTENTIONALLY NOT in the note:
+#
+#   - Boundary placement instructions ("place x_min at the valley",
+#     "y_max at the shoulder") — the system prompt covers this.
+#   - Fallback heuristics for distribution shifts.
+#   - Robustness clauses about depletion.
+#   - Proportion estimates / quadrant priors.
+#   - Tightness self-checks tied to assumed rarity.
+#
+# Format note: do NOT include the "Unassigned: ..." line — the
+# formatter appends it automatically.
+
+Bjornson:
+  1: |
+    Ir = nucleated events (intact-nucleus events; viability is not assessed at this step).
+    DNA1 axis: bimodal — DNA1- background vs DNA1+ nucleated cells.
+    Event_length axis is non-discriminative at this step (the workflow filters only on DNA1+).
+
+  2: |
+    CD45 = leukocytes. The DNA2-hyperbright right tail (doublets / damaged or hyperploid nuclei) is excluded from CD45.
+
+  3: |
+    CD66 × CD45.
+    - Granulocyte: CD66+ cluster.
+    - CD45hiCD66lo: CD66 low.
+    Both span the full CD45 range.
+    The double-low (CD66- CD45-low) lower-left corner is sparse and falls in Unassigned.
+
+  4: |
+    CD3 × CD19 — three-way lymphoid split.
+    - Tcells: CD3+, CD19-.
+    - Bcells: CD3-, CD19+.
+    - CD3negCD19neg: CD3 low AND CD19 low — but the cluster sits ABOVE the origin (CD19 is low-to-intermediate, distinctly above zero), NOT at strict (0, 0).
+    The CD3+ CD19+ corner is essentially empty.
+
+  5: |
+    CD4 × CD8 — two diagonal-quadrant populations.
+    - CD4Tcells: CD4+, CD8-.
+    - CD8Tcells: CD4-, CD8+.
+    DPT (double-positive) and DNT / MAIT / NKT (double-negative) populations are NOT named at this step and fall in Unassigned.
+
+  6: |
+    Within the CD3-CD19- residual, CD7 × HLA-DR splits NK from myeloid APCs.
+    - NKcells: CD7+, HLA-DR-.
+    - HLA-DRposCD7neg: CD7-, HLA-DR+.
+    The CD7- HLA-DR- corner contains basophils + residuals and falls in Unassigned.
+
+  7: |
+    CD16 × CD11b within the CD3-CD19- residual.
+    - Monocytes: broad CD11b+ across the FULL CD16 range — CD16 does not discriminate Monocytes here.
+    - CD11bnegCD16neg: small lower-left cluster.
+    Caveat: a small CD11b-low CD16+ non-classical-monocyte tail in the workflow's polygon will be under-covered by a rectangle on the dominant CD11b+ blob — that minor under-coverage is acceptable.
+
+  8: |
+    DCs = total dendritic cells, with TWO sub-clusters at OPPOSITE corners of CD11c × CD123:
+      (a) cDC at the lower-right (CD11c+, CD123-)
+      (b) pDC at the upper-left (CD11c-, CD123+)
+    The lower-left CD11c- CD123- corner is Unassigned residual. A single rectangle covering both sub-clusters would also include this empty corner — this is the canonical multi-rectangle case (one rectangle per sub-cluster).
+
+Lyoplate_bcell:
+  1: |
+    Three populations on CD3 × CD19. CD19pos: B cells — distinct cluster at the upper-left (CD19+, CD3-). CD3pos: T cells — distinct cluster at the lower-right (CD3+, CD19-). The double-negative center cluster is unassigned. CD3 and CD19 are bimodal — boundaries set at the valley between the positive and negative peaks of each axis.
+
+  2: |
+    CD3 × CD20 within CD19+ B cells.
+    **Critical scale note**: in this Flow panel ALL CD19+ B cells already express HIGH CD20, so CD20+ cells form a dense BAND near the TOP of the CD20 axis. CD20- cells are scattered well below this band — the "negative" label is RELATIVE, NOT at CD20 ≈ 0.
+    - CD19_CD20pos: the dense top band.
+    - CD19_CD20neg: cells below the dense top band.
+    CD3 is non-discriminative here (B cells are all CD3-).
+
+  3: |
+    IgD × CD27 within CD20+ B cells — four-population split.
+    **Critical scale note**: ALL parent cells already co-express MODERATE-to-HIGH IgD and CD27 — every cluster sits in the upper portion of each axis. The "negative" labels are RELATIVE position WITHIN the parent's narrow upper-axis range, NOT at axis-zero.
+    Spatial layout (RELATIVE):
+    - Naive: IgD-positive (right on IgD), CD27 LOWER than the Memory clusters above it (but still well above axis-min).
+    - Memory_IgDpos: same right side on IgD as Naive, CD27 high.
+    - Memory_IgDneg: IgD-low, CD27 high.
+    - IgDneg_CD27neg: IgD-low, CD27 low (relative — same range as Naive's CD27).
+
+  4: |
+    CD38 × CD24 within CD20+ B cells.
+    - Transitional: a small dense cluster at the **upper-right** beyond the broader CD38-mid CD24-mid bulk that fills the rest of the parent (both markers higher than the bulk).
+
+  5: |
+    CD38 × CD27 within CD20- B-lineage residual.
+    - Plasmablasts: at the **upper-right** of CD38 × CD27 (both markers high), separated from sparse low-CD38 / low-CD27 background scatter. The parent here is small and the populations overlap somewhat in both markers.
+
+Lyoplate_DC:
+  1: |
+    Within Lineage-negative parent, split by CD14. Lin_neg_CD14pos: lineage-negative monocytes — cluster at the lower-right (CD14+, Lineage low/negative). Lin_neg_CD14neg: lineage-negative non-monocytes — cluster at the lower-left (CD14-, Lineage low/negative); feeds the DC branch downstream. The Lineage-positive band at the top is excluded.
+
+  2: |
+    CD11c × CD16 within Lin- CD14+ parent.
+    **Critical scale note**: ALL parent cells already share HIGH CD11c (parent constraint), so the parent forms a tight vertical column on the right of CD11c. CD11c is non-discriminative at this step — only CD16 discriminates.
+    - CD14pos_CD16pos: a small CD16-high subpopulation sitting at the TOP of the dense vertical column.
+    Note: there are stray cells at very low CD11c that are NOT part of the parent population — do not extend a gate to include them.
+
+  3: |
+    CD16 × CD56 within Lin- CD14- compartment — four-quadrant split.
+    **Critical scale note**: the "neg" labels are RELATIVE — both axes have most cells at moderate values, NOT near zero.
+    - CD16neg_CD56pos: upper-LEFT (low CD16, high CD56).
+    - CD16pos_CD56pos: upper-RIGHT.
+    - CD16pos_CD56neg: lower-RIGHT.
+    - CD16neg_CD56neg: lower-LEFT.
+
+  4: |
+    HLADRpos: HLA-DR-positive APCs — upper cluster (HLA-DR high) spanning a broad SSC-A range; the HLA-DR-low cluster at the lower-left is excluded. HLA-DR is bimodal — boundary set at the valley between the HLA-DR- and HLA-DR+ peaks.
+
+  5: |
+    CD11c × CD123 within HLA-DR+ Lin- CD14- CD16- CD56- compartment.
+    **Critical scale note**: the cluster names are MISLEADING — three of the four named categories sit at moderately HIGH CD11c. They separate by RELATIVE position only.
+    Spatial layout (RELATIVE):
+    - mDC: HIGHEST CD11c on this plane; CD123 mid-low.
+    - pDC: high CD123 (a horizontal band at the top of CD123); CD11c high but slightly LEFT of mDC.
+    - CD11cneg_CD123neg: just to the LEFT of mDC at lower CD11c, mid-low CD123 (with a sparse scattered tail down to very-low CD11c).
+    - CD11cpos_CD123pos: a tiny cluster at the extreme upper-right corner where mDC meets pDC; very rare.
+
+Lyoplate_tcell:
+  1: |
+    CD3pos: T lymphocytes — vertical band at high CD3 (CD3+), spanning a broad SSC-A range; the CD3-low cluster on the left is excluded. CD3 is bimodal — boundary set at the valley between the CD3- and CD3+ peaks.
+
+  2: |
+    CD4 × CD8 within CD3+ T cells — four-quadrant split.
+    **Critical panel topology**: CD4 (named) cells form a TIGHT VERTICAL BAND at the EXTREME RIGHT of the CD4 axis (CD4 in the upper ~q85–q95). CD8 (named) cells likewise form a TIGHT HORIZONTAL BAND at the EXTREME TOP of the CD8 axis. DNT — though it has moderately-elevated CD4 (mid-axis CD4) and broad CD8 — is NOT labeled as CD4 here. The CD4+/- boundary lies at the LOWER SHOULDER of the right tight band, NOT at the histogram valley further left. Same on CD8.
+    - CD4 (helper T): tight band at extreme RIGHT of CD4 axis (CD4 in the upper tail), CD8 below the top band.
+    - CD8 (cytotoxic T): tight band at extreme TOP of CD8 axis (CD8 in the upper tail), CD4 below the right band.
+    - DNT: cells with moderate CD4 (mid-axis) AND CD8 below the top band — sits LEFT of the CD4 band and BELOW the CD8 band.
+    - DPT: tight upper-right corner (BOTH bands intersect).
+
+  3: |
+    CCR7 × CD45RA within CD4 — four memory subsets.
+    **Critical panel topology**: CD4_Naive forms a TIGHT BLOB at the EXTREME UPPER-RIGHT corner (CCR7 in the upper q85+, CD45RA in the upper q85+). CCR7 and CD45RA each show a single dominant bulk on their 1D histogram with a sparse top/right tail; the "-neg" / low side (EM, CM) extends across most of the axis range, while the "high" side (Naive, Effector) is the tight tail. Boundaries sit at the UPPER SHOULDER OF THE DOMINANT BULK on each axis, NOT at any mid-axis valley.
+    Spatial layout (RELATIVE):
+    - CD4_Naive: upper-right tight blob (CCR7 highest, CD45RA highest).
+    - CD4_Effector_Memory (EM): lower-LEFT — covers the broad mid-low region of both axes.
+    - CD4_Central_Memory (CM): lower-RIGHT — CCR7 high (within the right band), CD45RA low (broad).
+    - CD4_Effector: upper region, slightly LEFT of Naive on CCR7 (a smaller tight blob just left of Naive at high CD45RA).
+
+  4: |
+    CD38 × HLA-DR within CD4 — four-quadrant split for activation.
+    **Critical panel topology**: CD4_38negDRneg is the DOMINANT bulk — broad on both axes, covering nearly the full axis range below the tight upper tails. The "+pos" clusters (CD38pos, HLADRpos) are TIGHT NARROW TAILS at the EXTREME RIGHT (CD38) and EXTREME TOP (HLA-DR) of the axes, beyond the dominant bulk. The CD38 +/- boundary sits at the UPPER SHOULDER OF THE DOMINANT BULK (NOT at a mid-axis valley between low-background and the bulk — that valley is far too low). Same for HLA-DR.
+    - CD4_38negDRneg: the dominant bulk — broad CD38 (everything left of the +pos tail) AND broad HLA-DR (everything below the +pos tail).
+    - CD4_38posDRneg: tight RIGHT tail of CD38 axis, HLA-DR below the top tail.
+    - CD4_38negDRpos: tight TOP tail of HLA-DR axis, CD38 below the right tail.
+    - CD4_Activated (38posDRpos): tight UPPER-RIGHT corner where both tight tails intersect.
+
+  5: |
+    CCR7 × CD45RA within CD8 — same schema as step 3 with CD8 prefix.
+    **Critical panel topology**: same as step 3 — CD8_Naive sits as a tight upper-right blob; the +/- boundaries on CCR7 and CD45RA sit at the UPPER SHOULDER OF THE DOMINANT BULK on each axis, not at a mid-axis valley.
+    Spatial layout (RELATIVE):
+    - CD8_Naive: tight upper-right blob (typically the dominant subset within CD8).
+    - CD8_Effector_Memory (EM): lower-LEFT — broad mid-low on both axes.
+    - CD8_Central_Memory (CM): lower-RIGHT — CCR7 high, CD45RA low (broad).
+    - CD8_Effector: small tight blob at the top, just LEFT of CD8_Naive on CCR7.
+
+  6: |
+    CD38 × HLA-DR within CD8 — same schema as step 4 with CD8 prefix.
+    **Critical panel topology**: same as step 4. CD8_38negDRneg is the DOMINANT bulk (vast majority of CD8 cells) covering nearly the full axis range below the tight upper tails. The +pos tails on CD38 and HLA-DR are TIGHT NARROW BANDS at the axis extreme. Boundaries sit at the UPPER SHOULDER OF THE DOMINANT BULK on each axis, NOT at any mid-axis valley.
+    - CD8_38negDRneg: the dominant bulk.
+    - CD8_38negDRpos: tight TOP tail of HLA-DR axis.
+    - CD8_38posDRneg: tight RIGHT tail of CD38 axis.
+    - CD8_Activated: tight UPPER-RIGHT corner where both tails intersect.
+
+Lyoplate_treg:
+  1: |
+    CD3pos: T lymphocytes — vertical band at high CD3 (CD3+), spanning a broad SSC-A range; the CD3-low cluster on the left is excluded. CD3 is bimodal — boundary set at the valley between the CD3- and CD3+ peaks.
+
+  2: |
+    CD4pos: helper T cells — distinct horizontal band at high CD4 (CD4+); the CD4-low / CD4-mid cluster (CD8 T cells, DNT, etc.) below is excluded. CD3 (x) is a parent-purity sanity-check axis (parent already CD3+, all events at CD3-high).
+
+  3: |
+    CD25 × CD127 within CD4+ T cells — Treg identification.
+    **Critical scale note**: both CD25 and CD127 axis values cluster in the upper portion of the axis range — the "CD127 low/negative" Treg cluster sits at MID-axis CD127, NOT at axis-zero.
+    - Treg: CD25 HIGH (relative to the conventional CD4 cluster) AND CD127 LOWER than the conventional CD4 cluster's CD127 mid-high band — sits in the lower-RIGHT of the (CD25, CD127) populated region.
+
+  4: |
+    CCR4 × HLA-DR within Treg — four-quadrant layout.
+    **Critical scale note**: the parent is small, and all clusters sit at MODERATE-to-HIGH values on both axes — CCR4neg cells are NOT at CCR4 = 0; HLADRneg cells are NOT at HLA-DR = 0.
+    - CCR4pos_HLADRneg: CCR4 high, HLA-DR low (relative).
+    - CCR4neg_HLADRneg: both low (relative).
+    - CCR4pos_HLADRpos: both high.
+    - CCR4neg_HLADRpos: CCR4 low, HLA-DR high.
+
+  5: |
+    CCR4 × CD45RO within Treg — four-quadrant layout. Same scale-note as step 4 (CD45RO axis often starts above 1 because most Tregs are memory cells; "CD45RO low" is RELATIVE).
+    - CCR4pos_CD45ROpos: both high.
+    - CCR4neg_CD45ROneg: both low (relative).
+    - CCR4neg_CD45ROpos: CCR4 low, CD45RO high.
+    - CCR4pos_CD45ROneg: CCR4 high, CD45RO low.
+
+FRDR_covid19:
+  1: |
+    Time_stable: events acquired during a stable acquisition window (drift, fluid disturbances, channel-stability outliers excluded) — broad horizontal band on the CD1c (y) axis spanning the bulk of the time axis; the bright-CD1c upper band and start/end drift regions are excluded.
+
+  2: |
+    Cells: intact white blood cells (lymphocytes, monocytes, and granulocytes captured as one envelope) — broad WBC blob in the middle of the FSC × SSC plane spanning the lymphocyte (low FSC/SSC), monocyte (mid), and granulocyte (high SSC) clusters as a single inclusive envelope. The lower-left debris corner and a thin upper saturation band at the SSC-A axis max are excluded.
+
+  3: |
+    Singlets1: single cells (first doublet/aggregate exclusion) — events on the linear SSC-H ≈ SSC-A diagonal; off-diagonal events above the diagonal (SSC-A inflated relative to SSC-H, indicating coincident events / aggregates) and the SSC-A saturation edge at the top are excluded.
+
+  4: |
+    Singlets2: single cells (second-pass doublet exclusion via pulse width) — vertical band at narrow SSC-W (the bulk of events sit in this band); the high-SSC-W tail to the right (residual doublets with inflated pulse width) is excluded.
+
+  5: |
+    Live: viable cells — only events with extremely high L/D (dead cells) at the very top are excluded; the bulk of events from upstream cleanup pass as Live. The L/D axis (y) functions as a top-edge exclusion only, not as a strict viability gate.
+
+  6: |
+    CD14 × SSC-A within Live cells — split granulocytes from mononuclear leukocytes.
+    **Critical scale note**: in this Flow panel BOTH PMN and Non_PMN sit at LOW CD14 (granulocytes are CD14-low; lymphocytes are also CD14-low; monocytes within Non_PMN are CD14-mid). CD14 axis is non-discriminative at this step. The discriminator is SSC-A (granulocytes have high SSC-A from their granular cytoplasm; mononuclear cells have low SSC-A).
+    - PMN (granulocytes): SSC-A HIGH.
+    - Non_PMN (lymphocytes, monocytes, DCs): SSC-A LOW.
+
+  7: |
+    CD16 × FSC-A within PMN — granulocyte subsetting.
+    - Neutrophils: CD16 HIGH.
+    - Eosinophils: CD16 LOW.
+    FSC-A is non-discriminative at this step.
+
+  8: |
+    CD19 × CD3 within Non_PMN — three-way lymphoid split.
+    **Critical scale note**: in this Flow panel both axes are bimodal with the "negative" cluster at MID-axis values, NOT at axis-zero.
+    - T_Cells: CD3 HIGH, CD19 low.
+    - B_Cells: CD19 HIGH, CD3 low.
+    - Non_BT: CD19 low-to-mid AND CD3 low — the cluster sits ABOVE the origin (NOT at strict zero).
+    The CD19+ CD3+ corner is essentially empty.
+
+  9: |
+    B_cells_CD86p: activated B cells (antigen-engaged with co-stimulatory licensing) — right cluster (CD86+), separated from the larger CD86- cloud on the left. CD3 (y) is a purity sanity-check axis (parent already CD3-, so events stay at CD3-low); the activation call is driven by CD86 on x.
+
+  10: |
+    CD16 × CD14 within Non_BT — canonical 4-pop monocyte subsetting alongside a Non_monocytes residual.
+    Spatial layout (RELATIVE):
+    - Classical_monocytes: CD14 HIGH, CD16 LOW-to-mid.
+    - Intermediate_monocytes: CD14 HIGH, CD16 HIGH.
+    - Patrolling_monocytes: CD14 MID, CD16 HIGH (between Intermediate above and the Non_monocytes bulk below on CD14).
+    - Non_monocytes: CD14 LOW, CD16 broad — the bulk at the bottom of the CD14 axis (NK cells / non-monocyte residual).
+
+  11: |
+    CM_CD86p: activated classical monocytes — right cluster (CD86+); the CD86-low cluster on the left is excluded. CD86 is bimodal — boundary at the valley between the CD86- and CD86+ peaks. SSC (y) is a context/display axis (no SSC-based call). Naming caveat: 'CM' here = 'Classical Monocyte', not 'Central Memory'.
+
+  12: |
+    IM_CD86p: activated intermediate monocytes — sparse cluster at high CD86; this gate captures the CD86+ tail of the parent intermediate-monocyte population (a rare compartment, so the GT often shows essentially the entire parent labeled).
+
+  13: |
+    PM_CD86p: activated patrolling (non-classical) monocytes — sparse cluster at high CD86; like the intermediate-monocyte branch, the parent population is small so the gate captures essentially the entire CD86+ tail.
+
+  14: |
+    HLADR × SSC-A within Non_monocytes — enrich HLA-DR+ APCs (DC candidates).
+    - HLADRp: HLA-DR HIGH (right tail of the HLA-DR axis, beyond the dominant HLA-DR-low bulk).
+    SSC-A is non-discriminative at this step.
+
+  15: |
+    Remove residual CD16+ contaminants from the DC candidate pool. HLADRp_CD16n: left cluster (CD16-, CD14 stays low because the parent already enforced CD14-low); the CD16+ tail on the right (residual CD16+ monocytes that spilled through) is excluded. CD14 (y) is a display/purity axis showing the parent gate's CD14-low quality.
+
+  16: |
+    Plasmacytoid vs. non-plasmacytoid DC split on CD303 × CD123. pDC: dense cluster at the upper-right (CD303+, CD123+) — canonical double-positive pDC signature, well separated from the rest. Non_pDC: broad cloud at the lower-left (CD303-, CD123-) — feeds the myeloid DC branch downstream.
+
+  17: |
+    pDC_CD86p: activated / co-stimulatory-licensed plasmacytoid DCs — right cluster (CD86+); the CD86-low cluster on the left is excluded.
+
+  18: |
+    mDC: myeloid (conventional) dendritic cells — main cluster spanning mid-to-high CD11c (CD11c+); a small cluster at low CD11c (CD11c-) on the far left is excluded.
+
+  19: |
+    Myeloid DC subsetting by CD1c (BDCA-1). mDC1 (as labeled in this panel): right cluster (CD1c+). mDC2 (as labeled in this panel): left cluster (CD1c-). Two well-separated clusters along the CD1c axis. Nomenclature caveat: in canonical convention CD1c+ is cDC2, not cDC1 — the label mapping in this panel may be inverted relative to convention.
+
+  20: |
+    mDC_CD86p: activated mDCs aggregated across both subtypes — right cluster (CD86+); the CD86-low cluster on the left is excluded.
+
+  21: |
+    mDC1_CD86p: activated mDC1 subset (CD1c+ as labeled in this panel) — right cluster (CD86+); the CD86-low cluster on the left is excluded. Subject to the Step 19 nomenclature caveat.
+
+  22: |
+    mDC2_CD86p: activated mDC2 subset (CD1c- as labeled in this panel) — right cluster (CD86+); the CD86-low cluster on the left is excluded. Subject to the Step 19 nomenclature caveat.
+
+  23: |
+    CD14 × HLA-DR — the HLADRn_CD14n compartment (basophil candidates + residual NK cells, parallel branch off Non_BT).
+    **Critical scale note**: in this Flow panel the dominant HLADRn_CD14n cluster sits at MID-LOW CD14 and MID-LOW HLA-DR — NOT at axis-zero on either axis. The excluded mass at HIGHER CD14 and/or HIGHER HLA-DR (upper-right of the populated region) is what's being stripped here.
+    - HLADRn_CD14n: HLA-DR low AND CD14 low (relative — both in the lower portion of each axis, but above zero).
+
+  24: |
+    Positive identification of basophils within the HLA-DR- CD14- compartment. Basophils: well-separated cluster at the upper-left (CD123+, CD16-) — canonical basophil signature combined with HLA-DR- and CD14- enforced by the upstream parents. The remaining lower events (CD123-low) are excluded; CD16 (x) serves as a negative purity check (basophils stay at CD16-low).
+
+Acute2020:
+  1: |
+    Cleanup1: real cells (calibration beads excluded) — broad lower band at low 140Ce_Bead, spanning the full time axis. Bead: calibration beads — tight upper band at high 140Ce_Bead, well separated from Cleanup1 by a clear gap.
+
+  2: |
+    Cleanup2: clean singlet events (doublets, partial events, and acquisition artifacts excluded) — broad mid-range band on Residual, spanning the full time axis; the thin bottom-edge band is excluded.
+
+  3: |
+    Cleanup3: properly-centered events with well-formed ion clouds — dense horizontal band at mid-to-high Center, spanning the full time axis; outliers far from this dense band are excluded.
+
+  4: |
+    Cleanup4: events with normal baseline (acquisition artifacts excluded) — dense horizontal band at mid-range Offset, spanning the full time axis; outliers above and below this dense band are excluded.
+
+  5: |
+    Cleanup5: singlet events (wide-pulse doublets and aggregates excluded) — dense horizontal band at mid-range Width, spanning the full time axis; outliers far from this dense band are excluded.
+
+  6: |
+    Cleanup6: live cells (dead cells excluded) — concentrated at low 103Rh_Live_Dead with density fading upward, spanning the full time axis; the high-Rh dead-cell tail at the top is excluded.
+
+  7: |
+    Ir: nucleated real cells — dense vertical blob at high 191Ir_DNA1 spanning a broad Event_length range; the low-DNA1, low-Event_length cluster at the lower-left is excluded.
+
+  8: |
+    193Ir_DNA2 × 89Y_CD45 — leukocyte gate that simultaneously trims doublets and debris.
+    Parent is already DNA1+ (intact-nucleus events from step 7); this step selects CD45+ leukocytes within that parent.
+    **Critical scale note**: the CD45 island sits at MID-to-HIGH DNA2 AND LOW-to-HIGH CD45 — NOT at either axis extreme on the DNA2 axis, and spanning nearly the full CD45 range above the bottom floor strip.
+    - CD45: leukocytes — dense oval island in the mid-to-high DNA2 / low-to-high CD45 region.
+    Unassigned wraps the CD45 island on three sides:
+      (a) extremely high-DNA2 right tail (doublets / damaged or hyperploid nuclei),
+      (b) low-DNA2 left tail (debris / non-live),
+      (c) low-CD45 bottom floor strip at CD45 ≈ 0 (non-immune events) — a distinct thin horizontal band beneath the island.
+
+  9: |
+    Mononuclear: lymphocytes, monocytes, and dendritic cells (the parent for B-cell, T-cell, NK, monocyte, DC, basophil, and ILC branches downstream) — upper-left island at low CD66b and high CD45. Granulocyte: granulocytes (further split into neutrophils and eosinophils downstream) — large diagonal blob at mid-to-high CD66b and intermediate CD45. CD66bnegCD45lo: dying cells / debris — sparse cluster at the lower-left (both axes low). CD45hiCD66bpos: atypical population (activated granulocytes or contamination) — sparse cluster at the upper-right (both axes high).
+
+  10: |
+    CD14negCD56neg: mononuclear cells with monocytes and NK cells excluded (a cleanup step en route to B-cell gating downstream) — small dense cluster at the lower-left (both CD14 and CD56 low); excluded are the CD14+ monocytes on the right and the CD56+ NK cells at the upper-left.
+
+  11: |
+    CD123negCD3neg: residual non-T fraction with basophils and pDCs excluded (B-lineage cells and other residuals retained for B-cell gating downstream) — sparse cluster at the lower-left (CD123 and CD3 both low); the CD3+ T-cell band at the top and any CD123+ basophil/pDC events on the right are excluded.
+
+  12: |
+    CD20neg: non-mature-B residual within the B-lineage parent (contains plasmablast candidates and background; plasmablasts resolved downstream) — broad band at low CD20 spanning all CD19 levels, with a dense corner at the lower-left (CD19-CD20- background). TotalCD19B: main mature B cell pool (further resolved into naive / memory subsets downstream) — dense blob at the upper-right (high CD19 and high CD20).
+
+  13: |
+    NaiveB: naive B cells (un-activated, no class switch) — broad band at low CD27 with mid-to-high IgD, densest at the lower-right (IgD high, CD27 low). IgDnegMemB: class-switched memory B cells — blob at the upper-left (IgD low-to-mid, CD27 high). IgDposMemB: non-switched / IgM memory B cells — sparser blob at the upper-right (IgD high, CD27 high).
+
+  14: |
+    Plasmablast: antibody-secreting B-lineage cells — small sparse cluster at the upper-right (CD27 very high, CD38 very high), well separated from the broad background of the parent.
+
+  15: |
+    NonTNonB: mononuclear cells with B and T cells excluded (the parent for monocytes, DCs, NK cells, basophils, and ILCs) — dense cluster at the lower-left (both CD19 and CD3 low); excluded are the CD3+ T-cell blob at the upper-left and the CD19+ B-cell blob at the lower-right.
+
+  16: |
+    NonBNonNK: further-cleaned non-B, non-NK fraction (NK cells and any residual B cells excluded; the parent for monocyte and basophil/ILC branches) — dense cluster at the lower-left (CD56 low, CD20 low); the CD56+ NK-cell band at the lower-right is excluded.
+
+  17: |
+    TotalMonocyte: total monocytes (further resolved into classical / transitional / non-classical downstream) — captured on the right side (CD11c+); main dense blob at the upper-right (CD11c high, CD14 high) with a sparser CD14-dim tail extending downward along high CD11c. Excluded: the CD11c-low cluster at the lower-left.
+
+  18: |
+    ClassicalMono: classical monocytes (most abundant, inflammatory subset) — main dense blob at the upper-right (CD38 high, CD14 high). TransitionalMono: intermediate monocytes (mid-differentiation) — small cluster in the middle (CD38 mid, CD14 mid). NonclassicalMono: non-classical (patrolling) monocytes — cluster at the lower-left (CD38 low, CD14 low-to-dim). The three populations form a diagonal progression from lower-left to upper-right.
+
+  19: |
+    Basophil: basophils — distinct cluster at the upper-left (HLA-DR low, CD123 high). HLADRloCD123lo: residual non-DC, non-basophil population (may contain ILCs; further resolved downstream) — smaller cluster at the lower-left (both HLA-DR and CD123 low). The HLA-DR+ cloud on the right (DCs and other HLA-DR+ events) is excluded.
+
+  20: |
+    ILC: innate lymphoid cells — small sparse cluster at the upper-right (CD161 high, CD127 high), well separated from the broad CD127-low / CD161-low background.
+
+  21: |
+    NonTNonBCD14neg: further-cleaned non-T, non-B, non-monocyte fraction (enriches for NK cells and DCs downstream) — left band at low CD14 (parent already CD3-low); the CD14+ monocyte cloud on the right is excluded.
+
+  22: |
+    TotalDC: total dendritic cells (further split into pDC and cDC downstream) — cluster at the upper-left (CD56 low, HLA-DR high). TotalNK: total NK cells (further split into early / late maturation states downstream) — dense blob at the lower-right (CD56 mid-to-high, HLA-DR low). The lower-left double-negative background is excluded.
+
+  23: |
+    EarlyNK: immature cytokine-producing NK cells — left band at low CD57. LateNK: mature cytotoxic NK cells (terminally differentiated) — right band at mid-to-high CD57. The two are separated by a CD57 boundary.
+
+  24: |
+    pDC: plasmacytoid dendritic cells — small cluster at the upper-left (CD11c low, CD123 high). cDC: conventional / classical dendritic cells (further refined to mDC downstream) — main dense blob at the center-right (CD11c high, CD123 mid-to-low).
+
+  25: |
+    mDC: myeloid dendritic cells (within the conventional DC compartment) — cluster on the right (CD38 mid-to-high, CD123 low-to-mid); the CD38-low cluster on the left is excluded.
+
+  26: |
+    CD11cnegCD14neg: non-myeloid residual within the mononuclear fraction (lymphoid lineages; feeds the T-cell branch downstream) — large dense cluster at the lower-left (both CD14 and CD11c low); excluded are the CD14+ events on the right and the CD11c+ events at the top (myeloid).
+
+  27: |
+    CD3T: T cells (parent for the αβ vs γδ split downstream) — upper region (CD3+), with the main dense blob at the upper-left (CD3+ CD19-); the CD3-low band at the bottom is excluded.
+
+  28: |
+    abT: αβ T cells (the majority of T cells; parent for CD4/CD8 split downstream) — large dense band at low TCRgd (left). gdT: γδ T cells (minority) — sparser cluster at mid-to-high TCRgd (right). Split along TCRgd.
+
+  29: |
+    CD8: cytotoxic T cells (parent for memory subsetting downstream) — dense blob at the upper-left (CD4 low, CD8 high). CD4: helper T cells (parent for memory subsetting downstream and the Treg / Tfh / Th-polarization branches) — largest dense blob at the lower-right (CD4 high, CD8 low). DPT: double-positive T cells (rare; often thymic emigrants or activated transitional) — sparser cluster at the upper-right (CD4 high, CD8 high). DNT: double-negative T cells (includes MAIT and NKT precursors; resolved downstream) — sparse cluster at the lower-left (both low). Classical CD4 vs CD8 four-quadrant layout.
+
+  30: |
+    CD8Naive: naive cytotoxic T cells (antigen-inexperienced) — upper-right quadrant (CD45RA high, CD27 high). CD8TEMRA: terminally differentiated effector memory CD8 re-expressing CD45RA — lower-right quadrant (CD45RA high, CD27 low). CD8/CD45RAnegCD27pos: central memory / early effector memory CD8 (further split into TCM vs TEM1 downstream) — upper-left quadrant (CD45RA low, CD27 high). CD8/CD45RAnegCD27neg: late effector memory CD8 (further split into TEM2 vs TEM3 downstream) — lower-left quadrant (CD45RA low, CD27 low). Classical CD45RA vs CD27 four-quadrant layout.
+
+  31: |
+    CD8Naive/activated: activated naive CD8 T cells (not proliferating) — lower-right quadrant (HLA-DR+, CD38low). CD8Naive/CD38pos: proliferating naive CD8 T cells (e.g. recent thymic emigrants) — upper-left quadrant (HLA-DR-, CD38+). CD8Naive/activated+CD38pos: dually activated and proliferating naive CD8 T cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  32: |
+    CD8TCM: central memory cytotoxic T cells (lymph-node homing memory) — right band (CCR7 high). CD8TEM1: earliest-stage effector memory CD8 (CD27 retained) — left band (CCR7 low). Split along CCR7.
+
+  33: |
+    CD8TEM1/activated: activated CD8 TEM1 cells (not proliferating) — lower-right quadrant (HLA-DR+, CD38low). CD8TEM1/CD38pos: proliferating CD8 TEM1 cells — upper-left quadrant (HLA-DR-, CD38+). CD8TEM1/activated+CD38pos: dually activated and proliferating CD8 TEM1 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  34: |
+    CD8TCM/activated: activated CD8 central memory cells — lower-right quadrant (HLA-DR+, CD38low). CD8TCM/CD38pos: proliferating CD8 central memory cells — upper-left quadrant (HLA-DR-, CD38+). CD8TCM/activated+CD38pos: dually activated and proliferating CD8 central memory cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  35: |
+    CD8TEM2: intermediate-stage effector memory CD8 (CD27 lost, CCR7 retained) — right band (CCR7 high). CD8TEM3: terminally differentiated effector memory CD8 (CD27 and CCR7 both lost) — left band (CCR7 low). Split along CCR7.
+
+  36: |
+    CD8TEM3/activated: activated CD8 TEM3 cells — lower-right quadrant (HLA-DR+, CD38low). CD8TEM3/CD38pos: proliferating CD8 TEM3 cells — upper-left quadrant (HLA-DR-, CD38+). CD8TEM3/activated+CD38pos: dually activated and proliferating CD8 TEM3 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  37: |
+    CD8TEM2/activated: activated CD8 TEM2 cells — lower-right quadrant (HLA-DR+, CD38low). CD8TEM2/CD38pos: proliferating CD8 TEM2 cells — upper-left quadrant (HLA-DR-, CD38+). CD8TEM2/activated+CD38pos: dually activated and proliferating CD8 TEM2 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  38: |
+    CD8TEMRA/activated: activated CD8 TEMRA cells — lower-right quadrant (HLA-DR+, CD38low). CD8TEMRA/CD38pos: proliferating CD8 TEMRA cells — upper-left quadrant (HLA-DR-, CD38+). CD8TEMRA/activated+CD38pos: dually activated and proliferating CD8 TEMRA cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  39: |
+    Aggregated activation status across all non-naive CD8 T cells (TCM + all TEM stages + TEMRA). nnCD8/activated: activated non-naive CD8 — lower-right quadrant (HLA-DR+, CD38low). nnCD8/CD38pos: proliferating non-naive CD8 — upper-left quadrant (HLA-DR-, CD38+). nnCD8/activated+CD38pos: dually activated and proliferating non-naive CD8 — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  40: |
+    CD4Naive: naive helper T cells (antigen-inexperienced) — upper-right quadrant (CD45RA high, CD27 high). CD4TEMRA: terminally differentiated effector memory CD4 re-expressing CD45RA (rare in CD4) — lower-right quadrant (CD45RA high, CD27 low). CD4/CD45RAnegCD27pos: central memory / early effector memory CD4 (further split downstream) — upper-left quadrant (CD45RA low, CD27 high). CD4/CD45RAnegCD27neg: late effector memory CD4 (further split downstream) — lower-left quadrant (CD45RA low, CD27 low). Classical CD45RA vs CD27 four-quadrant layout.
+
+  41: |
+    CD4Naive/activated: activated naive CD4 T cells — lower-right quadrant (HLA-DR+, CD38low). CD4Naive/CD38pos: proliferating naive CD4 T cells — upper-left quadrant (HLA-DR-, CD38+). CD4Naive/activated+CD38pos: dually activated and proliferating naive CD4 T cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  42: |
+    CD4TCM: central memory helper T cells (lymph-node homing memory) — right band (CCR7 high). CD4TEM1: earliest-stage effector memory CD4 (CD27 retained) — left band (CCR7 low). Split along CCR7.
+
+  43: |
+    CD4TEM1/activated: activated CD4 TEM1 cells — lower-right quadrant (HLA-DR+, CD38low). CD4TEM1/CD38pos: proliferating CD4 TEM1 cells — upper-left quadrant (HLA-DR-, CD38+). CD4TEM1/activated+CD38pos: dually activated and proliferating CD4 TEM1 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  44: |
+    CD4TCM/activated: activated CD4 central memory cells — lower-right quadrant (HLA-DR+, CD38low). CD4TCM/CD38pos: proliferating CD4 central memory cells — upper-left quadrant (HLA-DR-, CD38+). CD4TCM/activated+CD38pos: dually activated and proliferating CD4 central memory cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  45: |
+    CD4TEM2: intermediate-stage effector memory CD4 (CD27 lost, CCR7 retained) — right band (CCR7 high). CD4TEM3: terminally differentiated effector memory CD4 (CD27 and CCR7 both lost) — left band (CCR7 low). Split along CCR7.
+
+  46: |
+    CD4TEM2/activated: activated CD4 TEM2 cells — lower-right quadrant (HLA-DR+, CD38low). CD4TEM2/CD38pos: proliferating CD4 TEM2 cells — upper-left quadrant (HLA-DR-, CD38+). CD4TEM2/activated+CD38pos: dually activated and proliferating CD4 TEM2 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  47: |
+    CD4TEM3/activated: activated CD4 TEM3 cells — lower-right quadrant (HLA-DR+, CD38low). CD4TEM3/CD38pos: proliferating CD4 TEM3 cells — upper-left quadrant (HLA-DR-, CD38+). CD4TEM3/activated+CD38pos: dually activated and proliferating CD4 TEM3 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  48: |
+    CD4TEMRA/activated: activated CD4 TEMRA cells — lower-right quadrant (HLA-DR+, CD38low). CD4TEMRA/CD38pos: proliferating CD4 TEMRA cells — upper-left quadrant (HLA-DR-, CD38+). CD4TEMRA/activated+CD38pos: dually activated and proliferating CD4 TEMRA cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  49: |
+    Aggregated activation status across all non-naive CD4 T cells (TCM + all TEM stages + TEMRA). nnCD4/activated: activated non-naive CD4 — lower-right quadrant (HLA-DR+, CD38low). nnCD4/CD38pos: proliferating non-naive CD4 — upper-left quadrant (HLA-DR-, CD38+). nnCD4/activated+CD38pos: dually activated and proliferating non-naive CD4 — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  50: |
+    nnCD4CXCR5pos: T follicular helper cells and Tfh-like cells (B-cell-follicle homing) — right band (CXCR5 high). nnCD4CXCR5neg: non-follicular non-naive helper T cells (parent for Th1/Th17/Th2 polarization downstream) — left band (CXCR5 low). Split along CXCR5.
+
+  51: |
+    nnCD4CXCR5pos/activated: activated Tfh / Tfh-like cells — lower-right quadrant (HLA-DR+, CD38low). nnCD4CXCR5pos/CD38pos: proliferating Tfh / Tfh-like cells — upper-left quadrant (HLA-DR-, CD38+). nnCD4CXCR5pos/activated+CD38pos: dually activated and proliferating Tfh / Tfh-like cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  52: |
+    Treg: regulatory T cells (memory/effector Treg only — corresponds to Miyara Fractions II/III; resting CD45RA+ Treg are in CD4Naive and not captured here) — cluster at the lower-right (CD25 high, CD127 low); the rest of the parent (CD25-low / CD127-high conventional T cells) is excluded.
+
+  53: |
+    Treg/activated: activated regulatory T cells — lower-right quadrant (HLA-DR+, CD38low). Treg/CD38pos: proliferating regulatory T cells — upper-left quadrant (HLA-DR-, CD38+). Treg/activated+CD38pos: dually activated and proliferating regulatory T cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  54: |
+    Th1: Type-1 helper T cells (IFNγ producers) — upper-left region (CCR6 low, CXCR3 high). Th17: Type-17 helper T cells (IL-17 producers; may include Th22-like cells) — lower-right region (CCR6 high, CXCR3 low). NonTh1NonTh17: non-Th1, non-Th17 effectors — Th2 candidates and uncommitted (Th2 resolved downstream) — lower-left region (both low). Three populations split by CCR6 × CXCR3 chemokine-receptor coordinates.
+
+  55: |
+    Th1/activated: activated Th1 cells — lower-right quadrant (HLA-DR+, CD38low). Th1/CD38pos: proliferating Th1 cells — upper-left quadrant (HLA-DR-, CD38+). Th1/activated+CD38pos: dually activated and proliferating Th1 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  56: |
+    Th17/activated: activated Th17 cells — lower-right quadrant (HLA-DR+, CD38low). Th17/CD38pos: proliferating Th17 cells — upper-left quadrant (HLA-DR-, CD38+). Th17/activated+CD38pos: dually activated and proliferating Th17 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  57: |
+    Th2: Type-2 helper T cells — right band (CCR4 high; CXCR3 stays low because the parent already excluded Th1). The CCR4-low cluster on the left is excluded.
+
+  58: |
+    Th2/activated: activated Th2 cells — lower-right quadrant (HLA-DR+, CD38low). Th2/CD38pos: proliferating Th2 cells — upper-left quadrant (HLA-DR-, CD38+). Th2/activated+CD38pos: dually activated and proliferating Th2 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  59: |
+    DNT/activated: activated double-negative T cells — lower-right quadrant (HLA-DR+, CD38low). DNT/CD38pos: proliferating double-negative T cells — upper-left quadrant (HLA-DR-, CD38+). DNT/activated+CD38pos: dually activated and proliferating double-negative T cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  60: |
+    DPT/activated: activated double-positive T cells — lower-right quadrant (HLA-DR+, CD38low). DPT/CD38pos: proliferating double-positive T cells — upper-left quadrant (HLA-DR-, CD38+). DPT/activated+CD38pos: dually activated and proliferating double-positive T cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  61: |
+    MAITNKT: mucosal-associated invariant T cells and invariant NKT cells (unconventional T-cell populations within αβT) — small cluster at the upper-left (CD4 low, CD161 high); the broad CD4+ region on the right and the CD161-low background at the bottom are excluded.
+
+  62: |
+    Neutrophil: mature neutrophils — large dense blob at the lower-right (CD16 high, CD294 low). Eosinophil: eosinophils — dense blob at the upper-left (CD16 mid-to-low, CD294 high). Two populations sit on opposite corners with a clear diagonal separation.
+
+Acute2021:
+  1: |
+    Cleanup1: real cells (calibration beads excluded) — broad lower band at low 140Ce_Bead, spanning the full time axis. Bead: calibration beads — tight upper band at high 140Ce_Bead, well separated from Cleanup1 by a clear gap.
+
+  2: |
+    Cleanup2: clean singlet events (doublets, partial events, and acquisition artifacts excluded) — broad mid-range band on Residual, spanning the full time axis; the thin bottom-edge band is excluded.
+
+  3: |
+    Cleanup3: properly-centered events with well-formed ion clouds — dense horizontal band at mid-to-high Center, spanning the full time axis; outliers far from this dense band are excluded.
+
+  4: |
+    Cleanup4: events with normal baseline (acquisition artifacts excluded) — dense horizontal band at mid-range Offset, spanning the full time axis; outliers above and below this dense band are excluded.
+
+  5: |
+    Cleanup5: singlet events (wide-pulse doublets and aggregates excluded) — dense horizontal band at mid-range Width, spanning the full time axis; outliers far from this dense band are excluded.
+
+  6: |
+    Cleanup6: live cells (dead cells excluded) — concentrated at low 103Rh_Live_Dead with density fading upward, spanning the full time axis; the high-Rh dead-cell tail at the top is excluded.
+
+  7: |
+    Ir: nucleated real cells — dense vertical blob at high 191Ir_DNA1 spanning a broad Event_length range; the low-DNA1, low-Event_length cluster at the lower-left is excluded.
+
+  8: |
+    193Ir_DNA2 × 89Y_CD45 — leukocyte gate that simultaneously trims doublets and debris.
+    Parent is already DNA1+ (intact-nucleus events from step 7); this step selects CD45+ leukocytes within that parent.
+    **Critical scale note**: the CD45 island sits at MID-to-HIGH DNA2 AND LOW-to-HIGH CD45 — NOT at either axis extreme on the DNA2 axis, and spanning nearly the full CD45 range above the bottom floor strip.
+    - CD45: leukocytes — dense oval island in the mid-to-high DNA2 / low-to-high CD45 region.
+    Unassigned wraps the CD45 island on three sides:
+      (a) extremely high-DNA2 right tail (doublets / damaged or hyperploid nuclei),
+      (b) low-DNA2 left tail (debris / non-live),
+      (c) low-CD45 bottom floor strip at CD45 ≈ 0 (non-immune events) — a distinct thin horizontal band beneath the island.
+
+  9: |
+    Mononuclear: lymphocytes, monocytes, and dendritic cells (the parent for B-cell, T-cell, NK, monocyte, DC, basophil, and ILC branches downstream) — upper-left island at low CD66b and high CD45. Granulocyte: granulocytes (further split into neutrophils and eosinophils downstream) — large diagonal blob at mid-to-high CD66b and intermediate CD45. CD66bnegCD45lo: dying cells / debris — sparse cluster at the lower-left (both axes low). CD45hiCD66bpos: atypical population (activated granulocytes or contamination) — sparse cluster at the upper-right (both axes high).
+
+  10: |
+    CD14negCD56neg: mononuclear cells with monocytes and NK cells excluded (a cleanup step en route to B-cell gating downstream) — small dense cluster at the lower-left (both CD14 and CD56 low); excluded are the CD14+ monocytes on the right and the CD56+ NK cells at the upper-left.
+
+  11: |
+    CD123negCD3neg: residual non-T fraction with basophils and pDCs excluded (B-lineage cells and other residuals retained for B-cell gating downstream) — sparse cluster at the lower-left (CD123 and CD3 both low); the CD3+ T-cell band at the top and any CD123+ basophil/pDC events on the right are excluded.
+
+  12: |
+    CD20neg: non-mature-B residual within the B-lineage parent (contains plasmablast candidates and background; plasmablasts resolved downstream) — broad band at low CD20 spanning all CD19 levels, with a dense corner at the lower-left (CD19-CD20- background). TotalCD19B: main mature B cell pool (further resolved into naive / memory subsets downstream) — dense blob at the upper-right (high CD19 and high CD20).
+
+  13: |
+    NaiveB: naive B cells (un-activated, no class switch) — broad band at low CD27 with mid-to-high IgD, densest at the lower-right (IgD high, CD27 low). IgDnegMemB: class-switched memory B cells — blob at the upper-left (IgD low-to-mid, CD27 high). IgDposMemB: non-switched / IgM memory B cells — sparser blob at the upper-right (IgD high, CD27 high).
+
+  14: |
+    Plasmablast: antibody-secreting B-lineage cells — small sparse cluster at the upper-right (CD27 very high, CD38 very high), well separated from the broad background of the parent.
+
+  15: |
+    NonTNonB: mononuclear cells with B and T cells excluded (the parent for monocytes, DCs, NK cells, basophils, and ILCs) — dense cluster at the lower-left (both CD19 and CD3 low); excluded are the CD3+ T-cell blob at the upper-left and the CD19+ B-cell blob at the lower-right.
+
+  16: |
+    NonBNonNK: further-cleaned non-B, non-NK fraction (NK cells and any residual B cells excluded; the parent for monocyte and basophil/ILC branches) — dense cluster at the lower-left (CD56 low, CD20 low); the CD56+ NK-cell band at the lower-right is excluded.
+
+  17: |
+    TotalMonocyte: total monocytes (further resolved into classical / transitional / non-classical downstream) — captured on the right side (CD11c+); main dense blob at the upper-right (CD11c high, CD14 high) with a sparser CD14-dim tail extending downward along high CD11c. Excluded: the CD11c-low cluster at the lower-left.
+
+  18: |
+    ClassicalMono: classical monocytes (most abundant, inflammatory subset) — main dense blob at the upper-right (CD38 high, CD14 high). TransitionalMono: intermediate monocytes (mid-differentiation) — small cluster in the middle (CD38 mid, CD14 mid). NonclassicalMono: non-classical (patrolling) monocytes — cluster at the lower-left (CD38 low, CD14 low-to-dim). The three populations form a diagonal progression from lower-left to upper-right.
+
+  19: |
+    Basophil: basophils — distinct cluster at the upper-left (HLA-DR low, CD123 high). HLADRloCD123lo: residual non-DC, non-basophil population (may contain ILCs; further resolved downstream) — smaller cluster at the lower-left (both HLA-DR and CD123 low). The HLA-DR+ cloud on the right (DCs and other HLA-DR+ events) is excluded.
+
+  20: |
+    ILC: innate lymphoid cells — small sparse cluster at the upper-right (CD161 high, CD127 high), well separated from the broad CD127-low / CD161-low background.
+
+  21: |
+    NonTNonBCD14neg: further-cleaned non-T, non-B, non-monocyte fraction (enriches for NK cells and DCs downstream) — left band at low CD14 (parent already CD3-low); the CD14+ monocyte cloud on the right is excluded.
+
+  22: |
+    TotalDC: total dendritic cells (further split into pDC and cDC downstream) — cluster at the upper-left (CD56 low, HLA-DR high). TotalNK: total NK cells (further split into early / late maturation states downstream) — dense blob at the lower-right (CD56 mid-to-high, HLA-DR low). The lower-left double-negative background is excluded.
+
+  23: |
+    EarlyNK: immature cytokine-producing NK cells — left band at low CD57. LateNK: mature cytotoxic NK cells (terminally differentiated) — right band at mid-to-high CD57. The two are separated by a CD57 boundary.
+
+  24: |
+    pDC: plasmacytoid dendritic cells — small cluster at the upper-left (CD11c low, CD123 high). cDC: conventional / classical dendritic cells (further refined to mDC downstream) — main dense blob at the center-right (CD11c high, CD123 mid-to-low).
+
+  25: |
+    mDC: myeloid dendritic cells (within the conventional DC compartment) — cluster on the right (CD38 mid-to-high, CD123 low-to-mid); the CD38-low cluster on the left is excluded.
+
+  26: |
+    CD11cnegCD14neg: non-myeloid residual within the mononuclear fraction (lymphoid lineages; feeds the T-cell branch downstream) — large dense cluster at the lower-left (both CD14 and CD11c low); excluded are the CD14+ events on the right and the CD11c+ events at the top (myeloid).
+
+  27: |
+    CD3T: T cells (parent for the αβ vs γδ split downstream) — upper region (CD3+), with the main dense blob at the upper-left (CD3+ CD19-); the CD3-low band at the bottom is excluded.
+
+  28: |
+    abT: αβ T cells (the majority of T cells; parent for CD4/CD8 split downstream) — large dense band at low TCRgd (left). gdT: γδ T cells (minority) — sparser cluster at mid-to-high TCRgd (right). Split along TCRgd.
+
+  29: |
+    CD8: cytotoxic T cells (parent for memory subsetting downstream) — dense blob at the upper-left (CD4 low, CD8 high). CD4: helper T cells (parent for memory subsetting downstream and the Treg / Tfh / Th-polarization branches) — largest dense blob at the lower-right (CD4 high, CD8 low). DPT: double-positive T cells (rare; often thymic emigrants or activated transitional) — sparser cluster at the upper-right (CD4 high, CD8 high). DNT: double-negative T cells (includes MAIT and NKT precursors; resolved downstream) — sparse cluster at the lower-left (both low). Classical CD4 vs CD8 four-quadrant layout.
+
+  30: |
+    CD8Naive: naive cytotoxic T cells (antigen-inexperienced) — upper-right quadrant (CD45RA high, CD27 high). CD8TEMRA: terminally differentiated effector memory CD8 re-expressing CD45RA — lower-right quadrant (CD45RA high, CD27 low). CD8/CD45RAnegCD27pos: central memory / early effector memory CD8 (further split into TCM vs TEM1 downstream) — upper-left quadrant (CD45RA low, CD27 high). CD8/CD45RAnegCD27neg: late effector memory CD8 (further split into TEM2 vs TEM3 downstream) — lower-left quadrant (CD45RA low, CD27 low). Classical CD45RA vs CD27 four-quadrant layout.
+
+  31: |
+    CD8Naive/activated: activated naive CD8 T cells (not proliferating) — lower-right quadrant (HLA-DR+, CD38low). CD8Naive/CD38pos: proliferating naive CD8 T cells (e.g. recent thymic emigrants) — upper-left quadrant (HLA-DR-, CD38+). CD8Naive/activated+CD38pos: dually activated and proliferating naive CD8 T cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  32: |
+    CD8TCM: central memory cytotoxic T cells (lymph-node homing memory) — right band (CCR7 high). CD8TEM1: earliest-stage effector memory CD8 (CD27 retained) — left band (CCR7 low). Split along CCR7.
+
+  33: |
+    CD8TEM1/activated: activated CD8 TEM1 cells (not proliferating) — lower-right quadrant (HLA-DR+, CD38low). CD8TEM1/CD38pos: proliferating CD8 TEM1 cells — upper-left quadrant (HLA-DR-, CD38+). CD8TEM1/activated+CD38pos: dually activated and proliferating CD8 TEM1 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  34: |
+    CD8TCM/activated: activated CD8 central memory cells — lower-right quadrant (HLA-DR+, CD38low). CD8TCM/CD38pos: proliferating CD8 central memory cells — upper-left quadrant (HLA-DR-, CD38+). CD8TCM/activated+CD38pos: dually activated and proliferating CD8 central memory cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  35: |
+    CD8TEM2: intermediate-stage effector memory CD8 (CD27 lost, CCR7 retained) — right band (CCR7 high). CD8TEM3: terminally differentiated effector memory CD8 (CD27 and CCR7 both lost) — left band (CCR7 low). Split along CCR7.
+
+  36: |
+    CD8TEM3/activated: activated CD8 TEM3 cells — lower-right quadrant (HLA-DR+, CD38low). CD8TEM3/CD38pos: proliferating CD8 TEM3 cells — upper-left quadrant (HLA-DR-, CD38+). CD8TEM3/activated+CD38pos: dually activated and proliferating CD8 TEM3 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  37: |
+    CD8TEM2/activated: activated CD8 TEM2 cells — lower-right quadrant (HLA-DR+, CD38low). CD8TEM2/CD38pos: proliferating CD8 TEM2 cells — upper-left quadrant (HLA-DR-, CD38+). CD8TEM2/activated+CD38pos: dually activated and proliferating CD8 TEM2 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  38: |
+    CD8TEMRA/activated: activated CD8 TEMRA cells — lower-right quadrant (HLA-DR+, CD38low). CD8TEMRA/CD38pos: proliferating CD8 TEMRA cells — upper-left quadrant (HLA-DR-, CD38+). CD8TEMRA/activated+CD38pos: dually activated and proliferating CD8 TEMRA cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  39: |
+    Aggregated activation status across all non-naive CD8 T cells (TCM + all TEM stages + TEMRA). nnCD8/activated: activated non-naive CD8 — lower-right quadrant (HLA-DR+, CD38low). nnCD8/CD38pos: proliferating non-naive CD8 — upper-left quadrant (HLA-DR-, CD38+). nnCD8/activated+CD38pos: dually activated and proliferating non-naive CD8 — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  40: |
+    CD4Naive: naive helper T cells (antigen-inexperienced) — upper-right quadrant (CD45RA high, CD27 high). CD4TEMRA: terminally differentiated effector memory CD4 re-expressing CD45RA (rare in CD4) — lower-right quadrant (CD45RA high, CD27 low). CD4/CD45RAnegCD27pos: central memory / early effector memory CD4 (further split downstream) — upper-left quadrant (CD45RA low, CD27 high). CD4/CD45RAnegCD27neg: late effector memory CD4 (further split downstream) — lower-left quadrant (CD45RA low, CD27 low). Classical CD45RA vs CD27 four-quadrant layout.
+
+  41: |
+    CD4Naive/activated: activated naive CD4 T cells — lower-right quadrant (HLA-DR+, CD38low). CD4Naive/CD38pos: proliferating naive CD4 T cells — upper-left quadrant (HLA-DR-, CD38+). CD4Naive/activated+CD38pos: dually activated and proliferating naive CD4 T cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  42: |
+    CD4TCM: central memory helper T cells (lymph-node homing memory) — right band (CCR7 high). CD4TEM1: earliest-stage effector memory CD4 (CD27 retained) — left band (CCR7 low). Split along CCR7.
+
+  43: |
+    CD4TEM1/activated: activated CD4 TEM1 cells — lower-right quadrant (HLA-DR+, CD38low). CD4TEM1/CD38pos: proliferating CD4 TEM1 cells — upper-left quadrant (HLA-DR-, CD38+). CD4TEM1/activated+CD38pos: dually activated and proliferating CD4 TEM1 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  44: |
+    CD4TCM/activated: activated CD4 central memory cells — lower-right quadrant (HLA-DR+, CD38low). CD4TCM/CD38pos: proliferating CD4 central memory cells — upper-left quadrant (HLA-DR-, CD38+). CD4TCM/activated+CD38pos: dually activated and proliferating CD4 central memory cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  45: |
+    CD4TEM2: intermediate-stage effector memory CD4 (CD27 lost, CCR7 retained) — right band (CCR7 high). CD4TEM3: terminally differentiated effector memory CD4 (CD27 and CCR7 both lost) — left band (CCR7 low). Split along CCR7.
+
+  46: |
+    CD4TEM2/activated: activated CD4 TEM2 cells — lower-right quadrant (HLA-DR+, CD38low). CD4TEM2/CD38pos: proliferating CD4 TEM2 cells — upper-left quadrant (HLA-DR-, CD38+). CD4TEM2/activated+CD38pos: dually activated and proliferating CD4 TEM2 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  47: |
+    CD4TEM3/activated: activated CD4 TEM3 cells — lower-right quadrant (HLA-DR+, CD38low). CD4TEM3/CD38pos: proliferating CD4 TEM3 cells — upper-left quadrant (HLA-DR-, CD38+). CD4TEM3/activated+CD38pos: dually activated and proliferating CD4 TEM3 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  48: |
+    CD4TEMRA/activated: activated CD4 TEMRA cells — lower-right quadrant (HLA-DR+, CD38low). CD4TEMRA/CD38pos: proliferating CD4 TEMRA cells — upper-left quadrant (HLA-DR-, CD38+). CD4TEMRA/activated+CD38pos: dually activated and proliferating CD4 TEMRA cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  49: |
+    Aggregated activation status across all non-naive CD4 T cells (TCM + all TEM stages + TEMRA). nnCD4/activated: activated non-naive CD4 — lower-right quadrant (HLA-DR+, CD38low). nnCD4/CD38pos: proliferating non-naive CD4 — upper-left quadrant (HLA-DR-, CD38+). nnCD4/activated+CD38pos: dually activated and proliferating non-naive CD4 — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  50: |
+    nnCD4CXCR5pos: T follicular helper cells and Tfh-like cells (B-cell-follicle homing) — right band (CXCR5 high). nnCD4CXCR5neg: non-follicular non-naive helper T cells (parent for Th1/Th17/Th2 polarization downstream) — left band (CXCR5 low). Split along CXCR5.
+
+  51: |
+    nnCD4CXCR5pos/activated: activated Tfh / Tfh-like cells — lower-right quadrant (HLA-DR+, CD38low). nnCD4CXCR5pos/CD38pos: proliferating Tfh / Tfh-like cells — upper-left quadrant (HLA-DR-, CD38+). nnCD4CXCR5pos/activated+CD38pos: dually activated and proliferating Tfh / Tfh-like cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  52: |
+    Treg: regulatory T cells (memory/effector Treg only — corresponds to Miyara Fractions II/III; resting CD45RA+ Treg are in CD4Naive and not captured here) — cluster at the lower-right (CD25 high, CD127 low); the rest of the parent (CD25-low / CD127-high conventional T cells) is excluded.
+
+  53: |
+    Treg/activated: activated regulatory T cells — lower-right quadrant (HLA-DR+, CD38low). Treg/CD38pos: proliferating regulatory T cells — upper-left quadrant (HLA-DR-, CD38+). Treg/activated+CD38pos: dually activated and proliferating regulatory T cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  54: |
+    Th1: Type-1 helper T cells (IFNγ producers) — upper-left region (CCR6 low, CXCR3 high). Th17: Type-17 helper T cells (IL-17 producers; may include Th22-like cells) — lower-right region (CCR6 high, CXCR3 low). NonTh1NonTh17: non-Th1, non-Th17 effectors — Th2 candidates and uncommitted (Th2 resolved downstream) — lower-left region (both low). Three populations split by CCR6 × CXCR3 chemokine-receptor coordinates.
+
+  55: |
+    Th1/activated: activated Th1 cells — lower-right quadrant (HLA-DR+, CD38low). Th1/CD38pos: proliferating Th1 cells — upper-left quadrant (HLA-DR-, CD38+). Th1/activated+CD38pos: dually activated and proliferating Th1 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  56: |
+    Th17/activated: activated Th17 cells — lower-right quadrant (HLA-DR+, CD38low). Th17/CD38pos: proliferating Th17 cells — upper-left quadrant (HLA-DR-, CD38+). Th17/activated+CD38pos: dually activated and proliferating Th17 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  57: |
+    Th2: Type-2 helper T cells — right band (CCR4 high; CXCR3 stays low because the parent already excluded Th1). The CCR4-low cluster on the left is excluded.
+
+  58: |
+    Th2/activated: activated Th2 cells — lower-right quadrant (HLA-DR+, CD38low). Th2/CD38pos: proliferating Th2 cells — upper-left quadrant (HLA-DR-, CD38+). Th2/activated+CD38pos: dually activated and proliferating Th2 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  59: |
+    DNT/activated: activated double-negative T cells — lower-right quadrant (HLA-DR+, CD38low). DNT/CD38pos: proliferating double-negative T cells — upper-left quadrant (HLA-DR-, CD38+). DNT/activated+CD38pos: dually activated and proliferating double-negative T cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  60: |
+    DPT/activated: activated double-positive T cells — lower-right quadrant (HLA-DR+, CD38low). DPT/CD38pos: proliferating double-positive T cells — upper-left quadrant (HLA-DR-, CD38+). DPT/activated+CD38pos: dually activated and proliferating double-positive T cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  61: |
+    MAITNKT: mucosal-associated invariant T cells and invariant NKT cells (unconventional T-cell populations within αβT) — small cluster at the upper-left (CD4 low, CD161 high); the broad CD4+ region on the right and the CD161-low background at the bottom are excluded.
+
+  62: |
+    Neutrophil: mature neutrophils — large dense blob at the lower-right (CD16 high, CD294 low). Eosinophil: eosinophils — dense blob at the upper-left (CD16 mid-to-low, CD294 high). Two populations sit on opposite corners with a clear diagonal separation.
+
+Vaccine:
+  1: |
+    Cleanup1: real cells (calibration beads excluded) — broad lower band at low 140Ce_Bead, spanning the full time axis. Bead: calibration beads — tight upper band at high 140Ce_Bead, well separated from Cleanup1 by a clear gap.
+
+  2: |
+    Cleanup2: clean singlet events (doublets, partial events, and acquisition artifacts excluded) — broad mid-range band on Residual, spanning the full time axis; the thin bottom-edge band is excluded.
+
+  3: |
+    Cleanup3: properly-centered events with well-formed ion clouds — dense horizontal band at mid-to-high Center, spanning the full time axis; outliers far from this dense band are excluded.
+
+  4: |
+    Cleanup4: events with normal baseline (acquisition artifacts excluded) — dense horizontal band at mid-range Offset, spanning the full time axis; outliers above and below this dense band are excluded.
+
+  5: |
+    Cleanup5: singlet events (wide-pulse doublets and aggregates excluded) — dense horizontal band at mid-range Width, spanning the full time axis; outliers far from this dense band are excluded.
+
+  6: |
+    Cleanup6: live cells (dead cells excluded) — concentrated at low 103Rh_Live_Dead with density fading upward, spanning the full time axis; the high-Rh dead-cell tail at the top is excluded.
+
+  7: |
+    Ir: nucleated real cells — dense vertical blob at high 191Ir_DNA1 spanning a broad Event_length range; the low-DNA1, low-Event_length cluster at the lower-left is excluded.
+
+  8: |
+    193Ir_DNA2 × 89Y_CD45 — leukocyte gate that simultaneously trims doublets and debris.
+    Parent is already DNA1+ (intact-nucleus events from step 7); this step selects CD45+ leukocytes within that parent.
+    **Critical scale note**: the CD45 island sits at MID-to-HIGH DNA2 AND LOW-to-HIGH CD45 — NOT at either axis extreme on the DNA2 axis, and spanning nearly the full CD45 range above the bottom floor strip.
+    - CD45: leukocytes — dense oval island in the mid-to-high DNA2 / low-to-high CD45 region.
+    Unassigned wraps the CD45 island on three sides:
+      (a) extremely high-DNA2 right tail (doublets / damaged or hyperploid nuclei),
+      (b) low-DNA2 left tail (debris / non-live),
+      (c) low-CD45 bottom floor strip at CD45 ≈ 0 (non-immune events) — a distinct thin horizontal band beneath the island.
+
+  9: |
+    Mononuclear: lymphocytes, monocytes, and dendritic cells (the parent for B-cell, T-cell, NK, monocyte, DC, basophil, and ILC branches downstream) — upper-left island at low CD66b and high CD45. Granulocyte: granulocytes (further split into neutrophils and eosinophils downstream) — large diagonal blob at mid-to-high CD66b and intermediate CD45. CD66bnegCD45lo: dying cells / debris — sparse cluster at the lower-left (both axes low). CD45hiCD66bpos: atypical population (activated granulocytes or contamination) — sparse cluster at the upper-right (both axes high).
+
+  10: |
+    CD14negCD56neg: mononuclear cells with monocytes and NK cells excluded (a cleanup step en route to B-cell gating downstream) — small dense cluster at the lower-left (both CD14 and CD56 low); excluded are the CD14+ monocytes on the right and the CD56+ NK cells at the upper-left.
+
+  11: |
+    CD123negCD3neg: residual non-T fraction with basophils and pDCs excluded (B-lineage cells and other residuals retained for B-cell gating downstream) — sparse cluster at the lower-left (CD123 and CD3 both low); the CD3+ T-cell band at the top and any CD123+ basophil/pDC events on the right are excluded.
+
+  12: |
+    CD20neg: non-mature-B residual within the B-lineage parent (contains plasmablast candidates and background; plasmablasts resolved downstream) — broad band at low CD20 spanning all CD19 levels, with a dense corner at the lower-left (CD19-CD20- background). TotalCD19B: main mature B cell pool (further resolved into naive / memory subsets downstream) — dense blob at the upper-right (high CD19 and high CD20).
+
+  13: |
+    NaiveB: naive B cells (un-activated, no class switch) — broad band at low CD27 with mid-to-high IgD, densest at the lower-right (IgD high, CD27 low). IgDnegMemB: class-switched memory B cells — blob at the upper-left (IgD low-to-mid, CD27 high). IgDposMemB: non-switched / IgM memory B cells — sparser blob at the upper-right (IgD high, CD27 high).
+
+  14: |
+    Plasmablast: antibody-secreting B-lineage cells — small sparse cluster at the upper-right (CD27 very high, CD38 very high), well separated from the broad background of the parent.
+
+  15: |
+    NonTNonB: mononuclear cells with B and T cells excluded (the parent for monocytes, DCs, NK cells, basophils, and ILCs) — dense cluster at the lower-left (both CD19 and CD3 low); excluded are the CD3+ T-cell blob at the upper-left and the CD19+ B-cell blob at the lower-right.
+
+  16: |
+    NonBNonNK: further-cleaned non-B, non-NK fraction (NK cells and any residual B cells excluded; the parent for monocyte and basophil/ILC branches) — dense cluster at the lower-left (CD56 low, CD20 low); the CD56+ NK-cell band at the lower-right is excluded.
+
+  17: |
+    TotalMonocyte: total monocytes (further resolved into classical / transitional / non-classical downstream) — captured on the right side (CD11c+); main dense blob at the upper-right (CD11c high, CD14 high) with a sparser CD14-dim tail extending downward along high CD11c. Excluded: the CD11c-low cluster at the lower-left.
+
+  18: |
+    ClassicalMono: classical monocytes (most abundant, inflammatory subset) — main dense blob at the upper-right (CD38 high, CD14 high). TransitionalMono: intermediate monocytes (mid-differentiation) — small cluster in the middle (CD38 mid, CD14 mid). NonclassicalMono: non-classical (patrolling) monocytes — cluster at the lower-left (CD38 low, CD14 low-to-dim). The three populations form a diagonal progression from lower-left to upper-right.
+
+  19: |
+    Basophil: basophils — distinct cluster at the upper-left (HLA-DR low, CD123 high). HLADRloCD123lo: residual non-DC, non-basophil population (may contain ILCs; further resolved downstream) — smaller cluster at the lower-left (both HLA-DR and CD123 low). The HLA-DR+ cloud on the right (DCs and other HLA-DR+ events) is excluded.
+
+  20: |
+    ILC: innate lymphoid cells — small sparse cluster at the upper-right (CD161 high, CD127 high), well separated from the broad CD127-low / CD161-low background.
+
+  21: |
+    NonTNonBCD14neg: further-cleaned non-T, non-B, non-monocyte fraction (enriches for NK cells and DCs downstream) — left band at low CD14 (parent already CD3-low); the CD14+ monocyte cloud on the right is excluded.
+
+  22: |
+    TotalDC: total dendritic cells (further split into pDC and cDC downstream) — cluster at the upper-left (CD56 low, HLA-DR high). TotalNK: total NK cells (further split into early / late maturation states downstream) — dense blob at the lower-right (CD56 mid-to-high, HLA-DR low). The lower-left double-negative background is excluded.
+
+  23: |
+    EarlyNK: immature cytokine-producing NK cells — left band at low CD57. LateNK: mature cytotoxic NK cells (terminally differentiated) — right band at mid-to-high CD57. The two are separated by a CD57 boundary.
+
+  24: |
+    pDC: plasmacytoid dendritic cells — small cluster at the upper-left (CD11c low, CD123 high). cDC: conventional / classical dendritic cells (further refined to mDC downstream) — main dense blob at the center-right (CD11c high, CD123 mid-to-low).
+
+  25: |
+    mDC: myeloid dendritic cells (within the conventional DC compartment) — cluster on the right (CD38 mid-to-high, CD123 low-to-mid); the CD38-low cluster on the left is excluded.
+
+  26: |
+    CD11cnegCD14neg: non-myeloid residual within the mononuclear fraction (lymphoid lineages; feeds the T-cell branch downstream) — large dense cluster at the lower-left (both CD14 and CD11c low); excluded are the CD14+ events on the right and the CD11c+ events at the top (myeloid).
+
+  27: |
+    CD3T: T cells (parent for the αβ vs γδ split downstream) — upper region (CD3+), with the main dense blob at the upper-left (CD3+ CD19-); the CD3-low band at the bottom is excluded.
+
+  28: |
+    abT: αβ T cells (the majority of T cells; parent for CD4/CD8 split downstream) — large dense band at low TCRgd (left). gdT: γδ T cells (minority) — sparser cluster at mid-to-high TCRgd (right). Split along TCRgd.
+
+  29: |
+    CD8: cytotoxic T cells (parent for memory subsetting downstream) — dense blob at the upper-left (CD4 low, CD8 high). CD4: helper T cells (parent for memory subsetting downstream and the Treg / Tfh / Th-polarization branches) — largest dense blob at the lower-right (CD4 high, CD8 low). DPT: double-positive T cells (rare; often thymic emigrants or activated transitional) — sparser cluster at the upper-right (CD4 high, CD8 high). DNT: double-negative T cells (includes MAIT and NKT precursors; resolved downstream) — sparse cluster at the lower-left (both low). Classical CD4 vs CD8 four-quadrant layout.
+
+  30: |
+    CD8Naive: naive cytotoxic T cells (antigen-inexperienced) — upper-right quadrant (CD45RA high, CD27 high). CD8TEMRA: terminally differentiated effector memory CD8 re-expressing CD45RA — lower-right quadrant (CD45RA high, CD27 low). CD8/CD45RAnegCD27pos: central memory / early effector memory CD8 (further split into TCM vs TEM1 downstream) — upper-left quadrant (CD45RA low, CD27 high). CD8/CD45RAnegCD27neg: late effector memory CD8 (further split into TEM2 vs TEM3 downstream) — lower-left quadrant (CD45RA low, CD27 low). Classical CD45RA vs CD27 four-quadrant layout.
+
+  31: |
+    CD8Naive/activated: activated naive CD8 T cells (not proliferating) — lower-right quadrant (HLA-DR+, CD38low). CD8Naive/CD38pos: proliferating naive CD8 T cells (e.g. recent thymic emigrants) — upper-left quadrant (HLA-DR-, CD38+). CD8Naive/activated+CD38pos: dually activated and proliferating naive CD8 T cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  32: |
+    CD8TCM: central memory cytotoxic T cells (lymph-node homing memory) — right band (CCR7 high). CD8TEM1: earliest-stage effector memory CD8 (CD27 retained) — left band (CCR7 low). Split along CCR7.
+
+  33: |
+    CD8TEM1/activated: activated CD8 TEM1 cells (not proliferating) — lower-right quadrant (HLA-DR+, CD38low). CD8TEM1/CD38pos: proliferating CD8 TEM1 cells — upper-left quadrant (HLA-DR-, CD38+). CD8TEM1/activated+CD38pos: dually activated and proliferating CD8 TEM1 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  34: |
+    CD8TCM/activated: activated CD8 central memory cells — lower-right quadrant (HLA-DR+, CD38low). CD8TCM/CD38pos: proliferating CD8 central memory cells — upper-left quadrant (HLA-DR-, CD38+). CD8TCM/activated+CD38pos: dually activated and proliferating CD8 central memory cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  35: |
+    CD8TEM2: intermediate-stage effector memory CD8 (CD27 lost, CCR7 retained) — right band (CCR7 high). CD8TEM3: terminally differentiated effector memory CD8 (CD27 and CCR7 both lost) — left band (CCR7 low). Split along CCR7.
+
+  36: |
+    CD8TEM3/activated: activated CD8 TEM3 cells — lower-right quadrant (HLA-DR+, CD38low). CD8TEM3/CD38pos: proliferating CD8 TEM3 cells — upper-left quadrant (HLA-DR-, CD38+). CD8TEM3/activated+CD38pos: dually activated and proliferating CD8 TEM3 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  37: |
+    CD8TEM2/activated: activated CD8 TEM2 cells — lower-right quadrant (HLA-DR+, CD38low). CD8TEM2/CD38pos: proliferating CD8 TEM2 cells — upper-left quadrant (HLA-DR-, CD38+). CD8TEM2/activated+CD38pos: dually activated and proliferating CD8 TEM2 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  38: |
+    CD8TEMRA/activated: activated CD8 TEMRA cells — lower-right quadrant (HLA-DR+, CD38low). CD8TEMRA/CD38pos: proliferating CD8 TEMRA cells — upper-left quadrant (HLA-DR-, CD38+). CD8TEMRA/activated+CD38pos: dually activated and proliferating CD8 TEMRA cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  39: |
+    Aggregated activation status across all non-naive CD8 T cells (TCM + all TEM stages + TEMRA). nnCD8/activated: activated non-naive CD8 — lower-right quadrant (HLA-DR+, CD38low). nnCD8/CD38pos: proliferating non-naive CD8 — upper-left quadrant (HLA-DR-, CD38+). nnCD8/activated+CD38pos: dually activated and proliferating non-naive CD8 — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  40: |
+    CD4Naive: naive helper T cells (antigen-inexperienced) — upper-right quadrant (CD45RA high, CD27 high). CD4TEMRA: terminally differentiated effector memory CD4 re-expressing CD45RA (rare in CD4) — lower-right quadrant (CD45RA high, CD27 low). CD4/CD45RAnegCD27pos: central memory / early effector memory CD4 (further split downstream) — upper-left quadrant (CD45RA low, CD27 high). CD4/CD45RAnegCD27neg: late effector memory CD4 (further split downstream) — lower-left quadrant (CD45RA low, CD27 low). Classical CD45RA vs CD27 four-quadrant layout.
+
+  41: |
+    CD4Naive/activated: activated naive CD4 T cells — lower-right quadrant (HLA-DR+, CD38low). CD4Naive/CD38pos: proliferating naive CD4 T cells — upper-left quadrant (HLA-DR-, CD38+). CD4Naive/activated+CD38pos: dually activated and proliferating naive CD4 T cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  42: |
+    CD4TCM: central memory helper T cells (lymph-node homing memory) — right band (CCR7 high). CD4TEM1: earliest-stage effector memory CD4 (CD27 retained) — left band (CCR7 low). Split along CCR7.
+
+  43: |
+    CD4TEM1/activated: activated CD4 TEM1 cells — lower-right quadrant (HLA-DR+, CD38low). CD4TEM1/CD38pos: proliferating CD4 TEM1 cells — upper-left quadrant (HLA-DR-, CD38+). CD4TEM1/activated+CD38pos: dually activated and proliferating CD4 TEM1 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  44: |
+    CD4TCM/activated: activated CD4 central memory cells — lower-right quadrant (HLA-DR+, CD38low). CD4TCM/CD38pos: proliferating CD4 central memory cells — upper-left quadrant (HLA-DR-, CD38+). CD4TCM/activated+CD38pos: dually activated and proliferating CD4 central memory cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  45: |
+    CD4TEM2: intermediate-stage effector memory CD4 (CD27 lost, CCR7 retained) — right band (CCR7 high). CD4TEM3: terminally differentiated effector memory CD4 (CD27 and CCR7 both lost) — left band (CCR7 low). Split along CCR7.
+
+  46: |
+    CD4TEM2/activated: activated CD4 TEM2 cells — lower-right quadrant (HLA-DR+, CD38low). CD4TEM2/CD38pos: proliferating CD4 TEM2 cells — upper-left quadrant (HLA-DR-, CD38+). CD4TEM2/activated+CD38pos: dually activated and proliferating CD4 TEM2 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  47: |
+    CD4TEM3/activated: activated CD4 TEM3 cells — lower-right quadrant (HLA-DR+, CD38low). CD4TEM3/CD38pos: proliferating CD4 TEM3 cells — upper-left quadrant (HLA-DR-, CD38+). CD4TEM3/activated+CD38pos: dually activated and proliferating CD4 TEM3 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  48: |
+    CD4TEMRA/activated: activated CD4 TEMRA cells — lower-right quadrant (HLA-DR+, CD38low). CD4TEMRA/CD38pos: proliferating CD4 TEMRA cells — upper-left quadrant (HLA-DR-, CD38+). CD4TEMRA/activated+CD38pos: dually activated and proliferating CD4 TEMRA cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  49: |
+    Aggregated activation status across all non-naive CD4 T cells (TCM + all TEM stages + TEMRA). nnCD4/activated: activated non-naive CD4 — lower-right quadrant (HLA-DR+, CD38low). nnCD4/CD38pos: proliferating non-naive CD4 — upper-left quadrant (HLA-DR-, CD38+). nnCD4/activated+CD38pos: dually activated and proliferating non-naive CD4 — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  50: |
+    nnCD4CXCR5pos: T follicular helper cells and Tfh-like cells (B-cell-follicle homing) — right band (CXCR5 high). nnCD4CXCR5neg: non-follicular non-naive helper T cells (parent for Th1/Th17/Th2 polarization downstream) — left band (CXCR5 low). Split along CXCR5.
+
+  51: |
+    nnCD4CXCR5pos/activated: activated Tfh / Tfh-like cells — lower-right quadrant (HLA-DR+, CD38low). nnCD4CXCR5pos/CD38pos: proliferating Tfh / Tfh-like cells — upper-left quadrant (HLA-DR-, CD38+). nnCD4CXCR5pos/activated+CD38pos: dually activated and proliferating Tfh / Tfh-like cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  52: |
+    Treg: regulatory T cells (memory/effector Treg only — corresponds to Miyara Fractions II/III; resting CD45RA+ Treg are in CD4Naive and not captured here) — cluster at the lower-right (CD25 high, CD127 low); the rest of the parent (CD25-low / CD127-high conventional T cells) is excluded.
+
+  53: |
+    Treg/activated: activated regulatory T cells — lower-right quadrant (HLA-DR+, CD38low). Treg/CD38pos: proliferating regulatory T cells — upper-left quadrant (HLA-DR-, CD38+). Treg/activated+CD38pos: dually activated and proliferating regulatory T cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  54: |
+    Th1: Type-1 helper T cells (IFNγ producers) — upper-left region (CCR6 low, CXCR3 high). Th17: Type-17 helper T cells (IL-17 producers; may include Th22-like cells) — lower-right region (CCR6 high, CXCR3 low). NonTh1NonTh17: non-Th1, non-Th17 effectors — Th2 candidates and uncommitted (Th2 resolved downstream) — lower-left region (both low). Three populations split by CCR6 × CXCR3 chemokine-receptor coordinates.
+
+  55: |
+    Th1/activated: activated Th1 cells — lower-right quadrant (HLA-DR+, CD38low). Th1/CD38pos: proliferating Th1 cells — upper-left quadrant (HLA-DR-, CD38+). Th1/activated+CD38pos: dually activated and proliferating Th1 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  56: |
+    Th17/activated: activated Th17 cells — lower-right quadrant (HLA-DR+, CD38low). Th17/CD38pos: proliferating Th17 cells — upper-left quadrant (HLA-DR-, CD38+). Th17/activated+CD38pos: dually activated and proliferating Th17 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  57: |
+    Th2: Type-2 helper T cells — right band (CCR4 high; CXCR3 stays low because the parent already excluded Th1). The CCR4-low cluster on the left is excluded.
+
+  58: |
+    Th2/activated: activated Th2 cells — lower-right quadrant (HLA-DR+, CD38low). Th2/CD38pos: proliferating Th2 cells — upper-left quadrant (HLA-DR-, CD38+). Th2/activated+CD38pos: dually activated and proliferating Th2 cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  59: |
+    DNT/activated: activated double-negative T cells — lower-right quadrant (HLA-DR+, CD38low). DNT/CD38pos: proliferating double-negative T cells — upper-left quadrant (HLA-DR-, CD38+). DNT/activated+CD38pos: dually activated and proliferating double-negative T cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  60: |
+    DPT/activated: activated double-positive T cells — lower-right quadrant (HLA-DR+, CD38low). DPT/CD38pos: proliferating double-positive T cells — upper-left quadrant (HLA-DR-, CD38+). DPT/activated+CD38pos: dually activated and proliferating double-positive T cells — upper-right quadrant (both +). Three-quadrant HLA-DR × CD38 layout; the resting (HLA-DR-, CD38-) lower-left quadrant is excluded.
+
+  61: |
+    MAITNKT: mucosal-associated invariant T cells and invariant NKT cells (unconventional T-cell populations within αβT) — small cluster at the upper-left (CD4 low, CD161 high); the broad CD4+ region on the right and the CD161-low background at the bottom are excluded.
+
+  62: |
+    Neutrophil: mature neutrophils — large dense blob at the lower-right (CD16 high, CD294 low). Eosinophil: eosinophils — dense blob at the upper-left (CD16 mid-to-low, CD294 high). Two populations sit on opposite corners with a clear diagonal separation.
+
+FR-FCM-Z74D_hc:
+  1: |
+    CD4: helper T cells — lower-right quadrant (CD4+, CD8-). CD8: cytotoxic T cells — upper-left quadrant (CD4-, CD8+). CD4p_CD8p: double-positive T cells (rare; often thymic emigrants or activated transitional) — upper-right quadrant. CD4n_CD8n: double-negative T cells (includes γδT, MAIT, iNKT) — lower-left quadrant. Both CD4 and CD8 are bimodal — quadrant boundaries set at the valley between the positive and negative peaks of each axis.
+
+  2: |
+    Classical Sallusto/Lanzavecchia CD8 memory layout on CCR7 × CD45RA. Strategy: (1) Naive_CD8 anchors on the dense blob at the upper-right corner (CCR7 very high, CD45RA high) — antigen-inexperienced naive cytotoxic T cells. (2) EMRA_CD8 sits immediately to the left of Naive_CD8 in the upper CD45RA band — terminally differentiated cytotoxic T cells. (3) In the lower CD45RA band (memory cells), CCR7 is bimodal — locate the CCR7+ peak; CM_CD8 (central memory; lymph-node homing) sits at/right of this peak, EM_CD8 (effector memory) sits to its left. CCR7 (and sometimes CD45RA) can be trimodal in this panel, so density peaks — not fixed thresholds — anchor the gate.
+
+  3: |
+    Treg vs conventional CD4 split on Foxp3 × CD127. tot_Treg: total regulatory T cells (CD4 lineage) — distinct cluster at the right (Foxp3+) and toward the lower edge (CD127-low). non_Treg: conventional helper T cells (Treg-excluded CD4 pool; parent for downstream memory and Th-polarization steps) — broad cluster at the left (Foxp3 low/negative).
+
+  4: |
+    Classical Sallusto/Lanzavecchia CD4 non-Treg memory layout on CCR7 × CD45RA. Strategy: (1) Naive_CD4 anchors on the dense blob at the upper-right corner (CCR7 very high, CD45RA high) — antigen-inexperienced naive helper T cells. (2) EMRA_CD4 sits immediately to the left of Naive_CD4 in the upper CD45RA band (rare in CD4) — terminally differentiated helper T cells. (3) In the lower CD45RA band (memory cells), CCR7 is bimodal — locate the left edge / shoulder of the CCR7+ peak (where density rises from background); CM_CD4 (central memory; lymph-node homing) sits at/right of this edge (includes the dense CCR7+ peak), EM_CD4 (effector memory) sits to its left. CCR7 (and sometimes CD45RA) can be trimodal in this panel, so density peaks — not fixed thresholds — anchor the gate. Memory subsets (CM, EM, EMRA) feed downstream Tfh annotation.
+
+  5: |
+    Strategy on CXCR5 × PD-1 — three populations stacked vertically within the CXCR5+ right cluster, plus the entire CXCR5- bulk: (1) CXCR5 is bimodal — locate the dense CXCR5+ cluster on the right. (2) Within the CXCR5+ cluster, find the PD-1 density peak. Tfh (resting / circulating Tfh) occupies the band from the PD-1 peak upward; Tfh_hi_PD1 (activated germinal-center-like Tfh) is the top sliver above this band (PD-1 very high). (3) non_Tfh (non-follicular memory helper T cells) = the entire CXCR5- left cluster PLUS the events in the CXCR5+ right cluster that sit BELOW the PD-1 peak.
+
+  6: |
+    Chemokine-receptor-based Th polarization on non-Tfh memory CD4 (CXCR3 × CCR6). Th1: Type-1 helper T cells (IFNγ producers; this gate also absorbs the plastic Th1/17 'Th1*' subset) — right region (CXCR3+, any CCR6). Th17_22: IL-17 / IL-22 producing Th cells — upper-left quadrant (CXCR3-, CCR6+). non_17_22_1: Th2 candidates and uncommitted effectors — lower-left quadrant (both CXCR3- and CCR6-).
+
+  7: |
+    Splitting the CCR6+ compartment on CCR10 × CCR4. Th17: classical IL-17-producing Th17 cells — upper-left cluster (CCR10-, CCR4+). Th22: IL-22-producing Th22 cells (skin-homing) — right cluster (CCR10+, CCR4+). The lower-left double-negative (CCR4-, CCR10-) corner is unassigned.
+
+  8: |
+    Th2 identification within the CXCR3- CCR6- compartment. Th2: Type-2 helper T cells — right cluster (CCR4+); the CCR4-low cluster on the left is unassigned. CCR4 is bimodal — boundary set at the valley between the CCR4- and CCR4+ peaks. CD8 (y) is a purity sanity-check axis (parent is CD4+ CD8-, so events stay at CD8-low); the call is driven by CCR4.
+
+  9: |
+    Strategy on CD127 × PD-1: (1) Find the dense CD127+ cluster on the right; events at CD127 below the left edge of this cluster (a sparse, scattered CD127- region) form the CD127- side. (2) Within the CD127+ cluster, locate the PD-1 density peak — use it as the horizontal threshold. Above the PD-1 peak = Th1_CD127p_PD1p (recently activated, still memory-competent Th1; upper-right). Below the PD-1 peak = Th1_CD127p_PD1n (resting homeostatic memory Th1; lower-right, the dominant population). (3) Apply the same PD-1 threshold to the sparse CD127- region: above the threshold = Th1_CD127n_PD1p (chronically-activated effector Th1; upper-left); below the threshold = Th1_CD127n_PD1n (terminally differentiated / post-effector Th1; lower-left). Parent caveat: this Th1 compartment includes the plastic CXCR3+CCR6+ Th1/17 subset.
+
+  10: |
+    Treg lineage stratification by Helios on Helios × Foxp3. Treg_Heliosp: stable-lineage Treg (enriched for thymus-derived Treg) — right cluster (Helios+). Treg_Heliosn: peripherally-induced or less-stable Treg — left cluster (Helios-). Helios is bimodal — boundary set at the valley between the two peaks. Foxp3 (y) is a parent-gate visual QC only (parent already Foxp3+, events stay at Foxp3-high).
+
+  11: |
+    Treg memory / activation status on CCR7 × CD45RA, binary split (CM/EM/EMRA collapsed into a single 'Memory_Treg' bucket). Naive_Treg: resting naive Treg (Miyara Fraction I) — upper-right quadrant (CCR7+, CD45RA+). Memory_Treg: effector / activated Treg (Miyara Fractions II + III aggregated) — broad cluster across the other three quadrants.
+
+  12: |
+    Strategy on CCR4 × CD69 — anchor on the two dense CD69- clusters: (1) In the lower (CD69-) band, two dense clusters separate along CCR4 — the left dense cluster (CCR4-) is Treg_CCR4n_CD69n (resting non-skin-homing Treg); the right dense cluster (CCR4+) is Treg_CCR4p_CD69n (skin-homing Treg, not activated). (2) Above these dense clusters the CD69+ region is sparse and scattered; apply the same CCR4 boundary: left of the boundary = Treg_CCR4n_CD69p (activated Treg without skin-homing bias); right of the boundary = Treg_CCR4p_CD69p (activated skin-homing Treg).
+
+FR-FCM-Z74D_tissue:
+  1: |
+    CD4: helper T cells — lower-right quadrant (CD4+, CD8-). CD8: cytotoxic T cells — upper-left quadrant (CD4-, CD8+). CD4p_CD8p: double-positive T cells (rare; often thymic emigrants or activated transitional) — upper-right quadrant. CD4n_CD8n: double-negative T cells (includes γδT, MAIT, iNKT) — lower-left quadrant. Both CD4 and CD8 are bimodal — quadrant boundaries set at the valley between the positive and negative peaks of each axis.
+
+  2: |
+    Classical Sallusto/Lanzavecchia CD8 memory layout on CCR7 × CD45RA. Strategy: (1) Naive_CD8 anchors on the dense blob at the upper-right corner (CCR7 very high, CD45RA high) — antigen-inexperienced naive cytotoxic T cells. (2) EMRA_CD8 sits immediately to the left of Naive_CD8 in the upper CD45RA band — terminally differentiated cytotoxic T cells. (3) In the lower CD45RA band (memory cells), CCR7 is bimodal — locate the CCR7+ peak; CM_CD8 (central memory; lymph-node homing) sits at/right of this peak, EM_CD8 (effector memory) sits to its left. CCR7 (and sometimes CD45RA) can be trimodal in this panel, so density peaks — not fixed thresholds — anchor the gate.
+
+  3: |
+    Treg vs conventional CD4 split on Foxp3 × CD127. tot_Treg: total regulatory T cells (CD4 lineage) — distinct cluster at the right (Foxp3+) and toward the lower edge (CD127-low). non_Treg: conventional helper T cells (Treg-excluded CD4 pool; parent for downstream memory and Th-polarization steps) — broad cluster at the left (Foxp3 low/negative).
+
+  4: |
+    Classical Sallusto/Lanzavecchia CD4 non-Treg memory layout on CCR7 × CD45RA. Strategy: (1) Naive_CD4 anchors on the dense blob at the upper-right corner (CCR7 very high, CD45RA high) — antigen-inexperienced naive helper T cells. (2) EMRA_CD4 sits immediately to the left of Naive_CD4 in the upper CD45RA band (rare in CD4) — terminally differentiated helper T cells. (3) In the lower CD45RA band (memory cells), CCR7 is bimodal — locate the left edge / shoulder of the CCR7+ peak (where density rises from background); CM_CD4 (central memory; lymph-node homing) sits at/right of this edge (includes the dense CCR7+ peak), EM_CD4 (effector memory) sits to its left. CCR7 (and sometimes CD45RA) can be trimodal in this panel, so density peaks — not fixed thresholds — anchor the gate. Memory subsets (CM, EM, EMRA) feed downstream Tfh annotation.
+
+  5: |
+    Strategy on CXCR5 × PD-1 — three populations stacked vertically within the CXCR5+ right cluster, plus the entire CXCR5- bulk: (1) CXCR5 is bimodal — locate the dense CXCR5+ cluster on the right. (2) Within the CXCR5+ cluster, find the PD-1 density peak. Tfh (resting / circulating Tfh) occupies the band from the PD-1 peak upward; Tfh_hi_PD1 (activated germinal-center-like Tfh) is the top sliver above this band (PD-1 very high). (3) non_Tfh (non-follicular memory helper T cells) = the entire CXCR5- left cluster PLUS the events in the CXCR5+ right cluster that sit BELOW the PD-1 peak.
+
+  6: |
+    Chemokine-receptor-based Th polarization on non-Tfh memory CD4 (CXCR3 × CCR6). Th1: Type-1 helper T cells (IFNγ producers; this gate also absorbs the plastic Th1/17 'Th1*' subset) — right region (CXCR3+, any CCR6). Th17_22: IL-17 / IL-22 producing Th cells — upper-left quadrant (CXCR3-, CCR6+). non_17_22_1: Th2 candidates and uncommitted effectors — lower-left quadrant (both CXCR3- and CCR6-).
+
+  7: |
+    Splitting the CCR6+ compartment on CCR10 × CCR4. Th17: classical IL-17-producing Th17 cells — upper-left cluster (CCR10-, CCR4+). Th22: IL-22-producing Th22 cells (skin-homing) — right cluster (CCR10+, CCR4+). The lower-left double-negative (CCR4-, CCR10-) corner is unassigned.
+
+  8: |
+    Th2 identification within the CXCR3- CCR6- compartment. Th2: Type-2 helper T cells — right cluster (CCR4+); the CCR4-low cluster on the left is unassigned. CCR4 is bimodal — boundary set at the valley between the CCR4- and CCR4+ peaks. CD8 (y) is a purity sanity-check axis (parent is CD4+ CD8-, so events stay at CD8-low); the call is driven by CCR4.
+
+  9: |
+    Strategy on CD127 × CD69 — the tissue-specific sub-gate of this cohort. Two clusters along CD127 plus a CD69+/- split: (1) CD127 is bimodal — dense CD127+ cluster on the right, sparser CD127- cluster on the left. (2) CD69 splits each side into an upper (CD69+) band and a lower (CD69-) band. Th1_CD127p_CD69p: tissue-resident Th1 with homeostatic signaling retained (Trm-like Th1) — upper-right quadrant (CD127+, CD69+). Th1_CD127p_CD69n: non-resident / circulating memory Th1 — lower-right quadrant (CD127+, CD69-). Th1_CD127n_CD69p: tissue-resident Th1 with homeostatic receptor down-regulated — upper-left quadrant (CD127-, CD69+). Th1_CD127n_CD69n: non-resident, non-memory-maintenance Th1 — lower-left quadrant (both -). Tissue caveat: in non-lymphoid tissues CD69+ marks residency and the upper band is well populated; in blood samples (412C_Blood, 423_Pre-blood) CD69+ is sparse and reflects early activation rather than residency. Parent caveat: this Th1 compartment includes the plastic CXCR3+CCR6+ Th1/17 subset.
+
+  10: |
+    Treg lineage stratification by Helios on Helios × Foxp3. Treg_Heliosp: stable-lineage Treg (enriched for thymus-derived Treg) — right cluster (Helios+). Treg_Heliosn: peripherally-induced or less-stable Treg — left cluster (Helios-). Helios is bimodal — boundary set at the valley between the two peaks. Foxp3 (y) is a parent-gate visual QC only (parent already Foxp3+, events stay at Foxp3-high).
+
+  11: |
+    Treg memory / activation status on CCR7 × CD45RA, binary split (CM/EM/EMRA collapsed into a single 'Memory_Treg' bucket). Naive_Treg: resting naive Treg (Miyara Fraction I) — upper-right quadrant (CCR7+, CD45RA+). Memory_Treg: effector / activated Treg (Miyara Fractions II + III aggregated) — broad cluster across the other three quadrants.
+
+  12: |
+    Strategy on CCR4 × CD69 — anchor on the two dense CD69- clusters: (1) In the lower (CD69-) band, two dense clusters separate along CCR4 — the left dense cluster (CCR4-) is Treg_CCR4n_CD69n (resting non-skin-homing Treg); the right dense cluster (CCR4+) is Treg_CCR4p_CD69n (skin-homing Treg, not activated). (2) Above these dense clusters the CD69+ region is sparse and scattered; apply the same CCR4 boundary: left of the boundary = Treg_CCR4n_CD69p (activated Treg without skin-homing bias); right of the boundary = Treg_CCR4p_CD69p (activated skin-homing Treg).
+

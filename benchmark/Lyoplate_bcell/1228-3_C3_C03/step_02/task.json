@@ -1,0 +1,31 @@
+{
+  "task_id": "Lyoplate_bcell__1228-3_C3_C03__step_02",
+  "dataset": "Lyoplate_bcell",
+  "sample": "1228-3_C3_C03",
+  "step": 2,
+  "parent": "Step01_CD3|CD19 == CD19pos",
+  "x_marker": "CD3",
+  "y_marker": "CD20",
+  "annotation_column": "Step02_CD3|CD20",
+  "categories": [
+    "CD19_CD20pos",
+    "CD19_CD20neg",
+    "Unassigned"
+  ],
+  "note": "Within CD19+ B cells, refine into CD20-positive vs CD20-negative subsets. CD19_CD20pos: mature/conventional B cells — main dense cluster at the upper region (CD20+). CD19_CD20neg: CD20-negative B-lineage residual (plasmablast candidates and others) — sparse cluster along the lower edge (CD20-low). CD3 (x) is a parent-purity sanity-check axis (parent already CD3-).",
+  "tips": "Split mature B-cell pool from CD20-negative B-lineage (pre-plasmablast) within CD19+ cells. CD19_CD20pos: CD20+. CD19_CD20neg: CD20-. Axis design caveat: x_marker is CD3, but parent is CD19+ CD3- — CD3 on x is a purity sanity-check axis (events should cluster at CD3-low); the actual split is driven by CD20 on y.",
+  "gating_context": "Root -> Step01_CD3|CD19(CD19pos)",
+  "gt_summary": {
+    "n_parent_cells": 6105,
+    "n_cells_per_category": {
+      "CD19_CD20pos": 6055,
+      "CD19_CD20neg": 50,
+      "Unassigned": 0
+    },
+    "population_proportions": {
+      "CD19_CD20pos": 0.9918,
+      "CD19_CD20neg": 0.0082,
+      "Unassigned": 0.0
+    }
+  }
+}

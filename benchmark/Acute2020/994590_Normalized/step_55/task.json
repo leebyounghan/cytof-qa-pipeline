@@ -1,0 +1,32 @@
+{
+  "task_id": "Acute2020__994590_Normalized__step_55",
+  "dataset": "Acute2020",
+  "sample": "994590_Normalized",
+  "step": 55,
+  "parent": "Step54_141Pr_CD196_CCR6|156Gd_CD183_CXCR3 == Th1",
+  "x_marker": "173Yb_HLA-DR",
+  "y_marker": "161Dy_CD38",
+  "annotation_column": "Step55_173Yb_HLA-DR|161Dy_CD38",
+  "categories": [
+    "Th1/activated",
+    "Th1/CD38pos",
+    "Th1/activated+CD38pos",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step54_141Pr_CD196_CCR6|156Gd_CD183_CXCR3(Th1)",
+  "gt_summary": {
+    "n_parent_cells": 1487,
+    "n_cells_per_category": {
+      "Th1/activated": 27,
+      "Th1/CD38pos": 183,
+      "Th1/activated+CD38pos": 342,
+      "Unassigned": 935
+    },
+    "population_proportions": {
+      "Th1/activated": 0.0182,
+      "Th1/CD38pos": 0.1231,
+      "Th1/activated+CD38pos": 0.23,
+      "Unassigned": 0.6288
+    }
+  }
+}

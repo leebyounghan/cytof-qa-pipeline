@@ -1,0 +1,29 @@
+{
+  "task_id": "Acute2021__42_Normalized__step_01",
+  "dataset": "Acute2021",
+  "sample": "42_Normalized",
+  "step": 1,
+  "parent": "ALL",
+  "x_marker": "Time",
+  "y_marker": "140Ce_Bead",
+  "annotation_column": "Step01_Time|140Ce_Bead",
+  "categories": [
+    "Cleanup1",
+    "Bead",
+    "Unassigned"
+  ],
+  "gating_context": "Root",
+  "gt_summary": {
+    "n_parent_cells": 224320,
+    "n_cells_per_category": {
+      "Cleanup1": 212280,
+      "Bead": 6950,
+      "Unassigned": 5090
+    },
+    "population_proportions": {
+      "Cleanup1": 0.9463,
+      "Bead": 0.031,
+      "Unassigned": 0.0227
+    }
+  }
+}

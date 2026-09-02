@@ -1,0 +1,436 @@
+# Hard tasks for In-Panel Hard (Setting 2) benchmark.
+#
+# Each entry defines a single (dataset, step, depletion) triple — one independent
+# benchmark task. Step-to-step connectivity is intentionally ignored: the depletion
+# is applied ONLY within the target step's parent population. Other steps of the
+# same sample are untouched.
+#
+# Runtime semantics
+#   1. Load the sample's parquet normally (no sample-wide perturbation).
+#   2. Compute the target step's parent population via the standard parent filter.
+#   3. Remove cells whose GT at `step_column` matches any value in `deplete`.
+#   4. Run the standard c2s pipeline on the depleted parent.
+#   5. Keep the step's category list INTACT — the LLM still sees the depleted
+#      category as an available option. This tests whether the model hallucinates
+#      the absent population or correctly labels only the populations that remain.
+#
+# Sample scope: each hard_id applies to all samples in the dataset's `test` split
+# (as defined in benchmark/splits.json).
+#
+# ─────────────────────────────────────────────────────────────────────────────
+# Design principle: clinical accuracy vs. synthetic stress test
+# ─────────────────────────────────────────────────────────────────────────────
+# Where a clinical/pharmacological scenario faithfully maps to single-population
+# depletion, we use the disease/drug name (e.g. `hiv`, `rituximab`,
+# `treg_depletion_daclizumab`).
+#
+# Where a real drug's mechanism is NOT pure cell depletion (e.g. anti-IL-17
+# neutralizes cytokine, not Th17 cells; anti-CTLA4 does not deplete peripheral
+# Tregs; IPEX yields functional but not numerical Treg loss), we instead use
+# a generic name (`th17_axis_collapse`) and frame it as a synthetic robustness
+# test — not a literal pharmacological model.
+#
+# Each scenario `description` documents both the matching clinical context AND
+# the limitations of treating it as pure depletion (e.g. naive-only depletion is
+# a partial model of immunosenescence; real aging also expands TEMRA).
+
+scenarios:
+  hiv:
+    description: >-
+      HIV late-stage / anti-CD4 therapy — massive CD4 T cell depletion. Targets
+      CD4 single-positive cells only. CD4+CD8+ double-positive (DP) cells are
+      intentionally NOT depleted: peripheral DP T cells in chronic HIV are more
+      often reported to EXPAND as a chronic-immune-activation phenotype rather
+      than to deplete cleanly, so adding them would model the wrong direction.
+      Caveat: real HIV preferentially depletes CCR5+ memory CD4 (mucosal effector
+      memory); this benchmark depletes all CD4 SP lineages uniformly. 100% depletion
+      is more extreme than late-stage AIDS — partial fractions (~0.7) better
+      approximate clinical reality.
+
+  rituximab:
+    description: >-
+      Anti-CD20 monoclonal therapy (rituximab, ocrelizumab) — selective depletion
+      of CD20+ mature B cells. Plasma cells (CD19+ CD20-) are spared, which is
+      clinically important for residual antibody production. Restricted to panels
+      that explicitly sub-gate CD20 within the CD19+ compartment.
+
+  b_cell_aplasia:
+    description: >-
+      Severe pan-B cell loss — clinical contexts include X-linked agammaglobulinemia
+      (XLA, BTK mutation), common variable immunodeficiency (CVID), and post-HSCT
+      B cell aplasia. Distinguished from `rituximab` because the depletion targets
+      ALL CD19+ cells (including plasmablasts/plasma cells) rather than CD20+ only.
+      Used for panels whose B-cell gate does not sub-discriminate CD20.
+
+  immunosenescence:
+    description: >-
+      Aging-related thymic involution — naive T cell pool collapse in elderly.
+      Caveat: real immunosenescence is `naive ↓ + TEMRA ↑` (CMV-driven terminal
+      differentiation); this benchmark only models the naive depletion arm.
+      CD8 naive collapses faster than CD4 naive in vivo — the two scenarios are
+      kept separate so the asymmetry can be inspected per dataset.
+      100% depletion is more extreme than centenarian phenotype (typically retains
+      10–30% naive); partial fractions are more clinically faithful.
+
+  neutropenia:
+    description: >-
+      Post-chemotherapy or idiopathic severe neutropenia — granulocyte / PMN
+      depletion. Note: CyTOF "PBMC" samples typically retain abundant granulocytes
+      because (1) Smart Tube / whole-blood stabilizer prep is standard in clinical
+      CyTOF, (2) low-density granulocytes (LDGs) co-isolate at the Ficoll
+      interface in inflammatory disease, and (3) the panels themselves include
+      a CD66b|CD45 granulocyte gate, which presupposes their presence. The
+      scenario therefore applies cleanly across all listed cohorts.
+
+  pdc_depletion:
+    description: >-
+      Plasmacytoid DC collapse in chronic viral infection (HIV, severe COVID-19,
+      measles). pDCs are a small population (~0.2-0.5% PBMC) that drop to near
+      zero in severe disease — 100% depletion is clinically realistic here.
+
+  nonclassical_mono_loss:
+    description: >-
+      Severe COVID-19 / sepsis signature — patrolling (CD14dim CD16+, nonclassical)
+      monocyte collapse. Well-documented (Schulte-Schrepping et al., Cell 2020).
+      Caveat: only one cohort (FRDR_covid19) supports this gate, limiting
+      cross-dataset generalization analysis.
+
+  th17_axis_collapse:
+    description: >-
+      Synthetic robustness test for Th17 disappearance. NOT a literal model of
+      anti-IL-17 (secukinumab) or anti-IL-12/23 (ustekinumab) therapy: those drugs
+      neutralize cytokines or block differentiation, but do not measurably deplete
+      peripheral CCR6+CXCR3- Th17 frequency in blood. Real clinical settings with
+      genuine Th17 numerical loss are uncommon — this scenario is best read as
+      a stress test of whether the model hallucinates a population whose
+      density signature has been removed, rather than as drug pharmacology.
+
+  treg_depletion_daclizumab:
+    description: >-
+      Anti-CD25 therapy (daclizumab) — one of the few clinical settings that
+      genuinely depletes peripheral Tregs (CD25 is constitutively high on Tregs).
+      Replaces the prior `anti_ctla4` framing because (1) ipilimumab depletes
+      intratumoral but NOT peripheral Tregs, and (2) IPEX syndrome causes
+      FOXP3 functional loss without numerical depletion — neither matches a
+      blood-based depletion scenario. Note: daclizumab also affects
+      activated CD25+ effector cells, but the depleted GT label here is the
+      Treg compartment (Foxp3+CD127lo or CD25+CD127lo).
+
+tasks:
+
+  # ----- S1. HIV — CD4 (and DP) T cell depletion -----
+  # DP cells (CD4+CD8+) are HIV-permissive and are added to the depletion list
+  # for panels whose Step* exposes `CD4p_CD8p` as a 4-quadrant category.
+  - hard_id: hiv_acute2020_step29
+    scenario: hiv
+    dataset: Acute2020
+    step: 29
+    step_column: "Step29_145Nd_CD4|146Nd_CD8a"
+    deplete: ["CD4"]
+
+  - hard_id: hiv_acute2021_step29
+    scenario: hiv
+    dataset: Acute2021
+    step: 29
+    step_column: "Step29_145Nd_CD4|146Nd_CD8a"
+    deplete: ["CD4"]
+
+  - hard_id: hiv_vaccine_step29
+    scenario: hiv
+    dataset: Vaccine
+    step: 29
+    step_column: "Step29_145Nd_CD4|146Nd_CD8a"
+    deplete: ["CD4"]
+
+  - hard_id: hiv_lyoplate_tcell_step02
+    scenario: hiv
+    dataset: Lyoplate_tcell
+    step: 2
+    step_column: "Step02_CD4|CD8"
+    deplete: ["CD4"]
+
+  - hard_id: hiv_bjornson_step05
+    scenario: hiv
+    dataset: Bjornson
+    step: 5
+    step_column: "Step05_CD4_Gd156Di|CD8_Gd155Di"
+    deplete: ["CD4Tcells"]
+
+  - hard_id: hiv_fr_fcm_z74d_tissue_step01
+    scenario: hiv
+    dataset: FR-FCM-Z74D_tissue
+    step: 1
+    step_column: "Step01_CD4|CD8"
+    deplete: ["CD4"]
+
+  # ----- S2. Rituximab — CD20+ B cell depletion (CD20-specific gating only) -----
+  - hard_id: rituximab_lyoplate_bcell_step02
+    scenario: rituximab
+    dataset: Lyoplate_bcell
+    step: 2
+    step_column: "Step02_CD3|CD20"
+    deplete: ["CD19_CD20pos"]
+
+  # ----- S2b. B cell aplasia — pan-CD19 loss (XLA / CVID / post-HSCT) -----
+  # Used where the B-cell gate does not sub-discriminate CD20+ vs CD20-, so
+  # depletion at this step necessarily removes plasmablasts/plasma cells too.
+  # This is biologically faithful to XLA / severe CVID, NOT to rituximab.
+  - hard_id: b_cell_aplasia_acute2020_step12
+    scenario: b_cell_aplasia
+    dataset: Acute2020
+    step: 12
+    step_column: "Step12_144Nd_CD19|171Yb_CD20"
+    deplete: ["TotalCD19B"]
+
+  - hard_id: b_cell_aplasia_acute2021_step12
+    scenario: b_cell_aplasia
+    dataset: Acute2021
+    step: 12
+    step_column: "Step12_144Nd_CD19|171Yb_CD20"
+    deplete: ["TotalCD19B"]
+
+  - hard_id: b_cell_aplasia_vaccine_step12
+    scenario: b_cell_aplasia
+    dataset: Vaccine
+    step: 12
+    step_column: "Step12_144Nd_CD19|171Yb_CD20"
+    deplete: ["TotalCD19B"]
+
+  - hard_id: b_cell_aplasia_frdr_covid19_step08
+    scenario: b_cell_aplasia
+    dataset: FRDR_covid19
+    step: 8
+    step_column: "Step08_CD19|CD3"
+    deplete: ["B_Cells"]
+
+  - hard_id: b_cell_aplasia_bjornson_step04
+    scenario: b_cell_aplasia
+    dataset: Bjornson
+    step: 4
+    step_column: "Step04_CD3_Gd157Di|CD19_Yb173Di"
+    deplete: ["Bcells"]
+
+  # ----- S3. Immunosenescence — Naive T cell collapse -----
+  - hard_id: immunosenescence_acute2020_step30
+    scenario: immunosenescence
+    dataset: Acute2020
+    step: 30
+    step_column: "Step30_150Nd_CD45RA|154Sm_CD27"
+    deplete: ["CD8Naive"]
+
+  - hard_id: immunosenescence_acute2021_step30
+    scenario: immunosenescence
+    dataset: Acute2021
+    step: 30
+    step_column: "Step30_150Nd_CD45RA|154Sm_CD27"
+    deplete: ["CD8Naive"]
+
+  - hard_id: immunosenescence_vaccine_step30
+    scenario: immunosenescence
+    dataset: Vaccine
+    step: 30
+    step_column: "Step30_150Nd_CD45RA|154Sm_CD27"
+    deplete: ["CD8Naive"]
+
+  - hard_id: immunosenescence_acute2020_step40
+    scenario: immunosenescence
+    dataset: Acute2020
+    step: 40
+    step_column: "Step40_150Nd_CD45RA|154Sm_CD27"
+    deplete: ["CD4Naive"]
+
+  - hard_id: immunosenescence_acute2021_step40
+    scenario: immunosenescence
+    dataset: Acute2021
+    step: 40
+    step_column: "Step40_150Nd_CD45RA|154Sm_CD27"
+    deplete: ["CD4Naive"]
+
+  - hard_id: immunosenescence_vaccine_step40
+    scenario: immunosenescence
+    dataset: Vaccine
+    step: 40
+    step_column: "Step40_150Nd_CD45RA|154Sm_CD27"
+    deplete: ["CD4Naive"]
+
+  - hard_id: immunosenescence_fr_fcm_z74d_hc_step02
+    scenario: immunosenescence
+    dataset: FR-FCM-Z74D_hc
+    step: 2
+    step_column: "Step02_CCR7|CD45RA"
+    deplete: ["Naive_CD8"]
+
+  - hard_id: immunosenescence_fr_fcm_z74d_hc_step04
+    scenario: immunosenescence
+    dataset: FR-FCM-Z74D_hc
+    step: 4
+    step_column: "Step04_CCR7|CD45RA"
+    deplete: ["Naive_CD4"]
+
+  - hard_id: immunosenescence_lyoplate_tcell_step03
+    scenario: immunosenescence
+    dataset: Lyoplate_tcell
+    step: 3
+    step_column: "Step03_CCR7|CD45RA"
+    deplete: ["CD4_Naive"]
+
+  - hard_id: immunosenescence_lyoplate_tcell_step05
+    scenario: immunosenescence
+    dataset: Lyoplate_tcell
+    step: 5
+    step_column: "Step05_CCR7|CD45RA"
+    deplete: ["CD8_Naive"]
+
+  - hard_id: immunosenescence_fr_fcm_z74d_tissue_step02
+    scenario: immunosenescence
+    dataset: FR-FCM-Z74D_tissue
+    step: 2
+    step_column: "Step02_CCR7|CD45RA"
+    deplete: ["Naive_CD8"]
+
+  - hard_id: immunosenescence_fr_fcm_z74d_tissue_step04
+    scenario: immunosenescence
+    dataset: FR-FCM-Z74D_tissue
+    step: 4
+    step_column: "Step04_CCR7|CD45RA"
+    deplete: ["Naive_CD4"]
+
+  # ----- S4. Neutropenia — Granulocyte / PMN depletion -----
+  - hard_id: neutropenia_acute2020_step09
+    scenario: neutropenia
+    dataset: Acute2020
+    step: 9
+    step_column: "Step09_172Yb_CD66b|89Y_CD45"
+    deplete: ["Granulocyte"]
+
+  - hard_id: neutropenia_acute2021_step09
+    scenario: neutropenia
+    dataset: Acute2021
+    step: 9
+    step_column: "Step09_172Yb_CD66b|89Y_CD45"
+    deplete: ["Granulocyte"]
+
+  - hard_id: neutropenia_vaccine_step09
+    scenario: neutropenia
+    dataset: Vaccine
+    step: 9
+    step_column: "Step09_172Yb_CD66b|89Y_CD45"
+    deplete: ["Granulocyte"]
+
+  - hard_id: neutropenia_frdr_covid19_step06
+    scenario: neutropenia
+    dataset: FRDR_covid19
+    step: 6
+    step_column: "Step06_CD14|SSC-A"
+    deplete: ["PMN"]
+
+  - hard_id: neutropenia_bjornson_step03
+    scenario: neutropenia
+    dataset: Bjornson
+    step: 3
+    step_column: "Step03_CD66_Gd158Di|CD45_In115Di"
+    deplete: ["Granulocyte"]
+
+  # ----- S5. pDC depletion — Chronic viral infection -----
+  - hard_id: pdc_depletion_acute2020_step24
+    scenario: pdc_depletion
+    dataset: Acute2020
+    step: 24
+    step_column: "Step24_147Sm_CD11c|143Nd_CD123_IL-3R"
+    deplete: ["pDC"]
+
+  - hard_id: pdc_depletion_acute2021_step24
+    scenario: pdc_depletion
+    dataset: Acute2021
+    step: 24
+    step_column: "Step24_147Sm_CD11c|143Nd_CD123_IL-3R"
+    deplete: ["pDC"]
+
+  - hard_id: pdc_depletion_vaccine_step24
+    scenario: pdc_depletion
+    dataset: Vaccine
+    step: 24
+    step_column: "Step24_147Sm_CD11c|143Nd_CD123_IL-3R"
+    deplete: ["pDC"]
+
+  - hard_id: pdc_depletion_frdr_covid19_step16
+    scenario: pdc_depletion
+    dataset: FRDR_covid19
+    step: 16
+    step_column: "Step16_CD303|CD123"
+    deplete: ["pDC"]
+
+  - hard_id: pdc_depletion_lyoplate_dc_step05
+    scenario: pdc_depletion
+    dataset: Lyoplate_DC
+    step: 5
+    step_column: "Step05_CD11c|CD123"
+    deplete: ["pDC"]
+
+  # ----- S6. Severe COVID-19 — Nonclassical monocyte collapse -----
+  - hard_id: nonclassical_mono_loss_frdr_covid19_step10
+    scenario: nonclassical_mono_loss
+    dataset: FRDR_covid19
+    step: 10
+    step_column: "Step10_CD16|CD14"
+    deplete: ["Patrolling_monocytes"]
+
+  # ----- S7. Th17 axis collapse — synthetic robustness test -----
+  # NOT a literal anti-IL-17 / anti-IL-12/23 drug model. Tests whether the model
+  # hallucinates a Th17 cluster whose density signature has been removed.
+  - hard_id: th17_axis_collapse_acute2020_step54
+    scenario: th17_axis_collapse
+    dataset: Acute2020
+    step: 54
+    step_column: "Step54_141Pr_CD196_CCR6|156Gd_CD183_CXCR3"
+    deplete: ["Th17"]
+
+  - hard_id: th17_axis_collapse_acute2021_step54
+    scenario: th17_axis_collapse
+    dataset: Acute2021
+    step: 54
+    step_column: "Step54_141Pr_CD196_CCR6|156Gd_CD183_CXCR3"
+    deplete: ["Th17"]
+
+  - hard_id: th17_axis_collapse_vaccine_step54
+    scenario: th17_axis_collapse
+    dataset: Vaccine
+    step: 54
+    step_column: "Step54_141Pr_CD196_CCR6|156Gd_CD183_CXCR3"
+    deplete: ["Th17"]
+
+  - hard_id: th17_axis_collapse_fr_fcm_z74d_hc_step06
+    scenario: th17_axis_collapse
+    dataset: FR-FCM-Z74D_hc
+    step: 6
+    step_column: "Step06_CXCR3|CCR6"
+    deplete: ["Th17_22"]
+
+  - hard_id: th17_axis_collapse_fr_fcm_z74d_tissue_step06
+    scenario: th17_axis_collapse
+    dataset: FR-FCM-Z74D_tissue
+    step: 6
+    step_column: "Step06_CXCR3|CCR6"
+    deplete: ["Th17_22"]
+
+  # ----- S8. Daclizumab (anti-CD25) — peripheral Treg depletion -----
+  - hard_id: treg_depletion_daclizumab_fr_fcm_z74d_hc_step03
+    scenario: treg_depletion_daclizumab
+    dataset: FR-FCM-Z74D_hc
+    step: 3
+    step_column: "Step03_Foxp3|CD127"
+    deplete: ["tot_Treg"]
+
+  - hard_id: treg_depletion_daclizumab_fr_fcm_z74d_tissue_step03
+    scenario: treg_depletion_daclizumab
+    dataset: FR-FCM-Z74D_tissue
+    step: 3
+    step_column: "Step03_Foxp3|CD127"
+    deplete: ["tot_Treg"]
+
+  - hard_id: treg_depletion_daclizumab_lyoplate_treg_step03
+    scenario: treg_depletion_daclizumab
+    dataset: Lyoplate_treg
+    step: 3
+    step_column: "Step03_CD25|CD127"
+    deplete: ["Treg"]

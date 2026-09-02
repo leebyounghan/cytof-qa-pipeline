@@ -1,0 +1,37 @@
+{
+  "task_id": "FRDR_covid19__20200604p8_p181n01_C05_003__step_10",
+  "dataset": "FRDR_covid19",
+  "sample": "20200604p8_p181n01_C05_003",
+  "step": 10,
+  "parent": "Step08_CD19|CD3 == Non_BT",
+  "x_marker": "Comp-PE-Cy7-A",
+  "y_marker": "Comp-BV421-A",
+  "annotation_column": "Step10_CD16|CD14",
+  "categories": [
+    "Classical_monocytes",
+    "Intermediate_monocytes",
+    "Patrolling_monocytes",
+    "Non_monocytes",
+    "Unassigned"
+  ],
+  "note": "Canonical three-way monocyte subsetting on CD14 × CD16, with four populations forming distinct clusters. Classical_monocytes: horizontal blob along the upper band (CD14 high, CD16 low-to-mid; CD14++ CD16-/lo). Intermediate_monocytes: small cluster at the upper-right (CD14 high, CD16 high). Patrolling_monocytes: cluster at the mid-right (CD14 mid/dim, CD16 high) — sits below the Intermediate cluster along the right edge. Non_monocytes: broad lower band at CD14 low, often with two density centers — a left center at CD16 low and a right center at CD16 high (CD14-low residual including some CD16+ non-monocyte events). Feeds the DC branch downstream.",
+  "tips": "Canonical three-way monocyte subsetting on CD14 × CD16. Classical_monocytes: CD14++ CD16-. Intermediate_monocytes: CD14++ CD16+. Patrolling_monocytes: CD14+ CD16++. Non_monocytes: CD14-low. Useful co-markers: HLA-DR confirms monocyte identity (all subsets are HLA-DR+) and is used at Step 14 to enrich the DC branch within Non_monocytes.",
+  "gating_context": "Root -> Step08_CD19|CD3(Non_BT)",
+  "gt_summary": {
+    "n_parent_cells": 11733,
+    "n_cells_per_category": {
+      "Classical_monocytes": 5150,
+      "Intermediate_monocytes": 1243,
+      "Patrolling_monocytes": 277,
+      "Non_monocytes": 4770,
+      "Unassigned": 293
+    },
+    "population_proportions": {
+      "Classical_monocytes": 0.4389,
+      "Intermediate_monocytes": 0.1059,
+      "Patrolling_monocytes": 0.0236,
+      "Non_monocytes": 0.4065,
+      "Unassigned": 0.025
+    }
+  }
+}

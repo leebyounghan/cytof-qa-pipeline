@@ -1,0 +1,29 @@
+{
+  "task_id": "Acute2021__47_Normalized__step_12",
+  "dataset": "Acute2021",
+  "sample": "47_Normalized",
+  "step": 12,
+  "parent": "Step11_143Nd_CD123_IL-3R|170Er_CD3 == CD123negCD3neg",
+  "x_marker": "144Nd_CD19",
+  "y_marker": "171Yb_CD20",
+  "annotation_column": "Step12_144Nd_CD19|171Yb_CD20",
+  "categories": [
+    "CD20neg",
+    "TotalCD19B",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step11_143Nd_CD123_IL-3R|170Er_CD3(CD123negCD3neg)",
+  "gt_summary": {
+    "n_parent_cells": 11507,
+    "n_cells_per_category": {
+      "CD20neg": 3125,
+      "TotalCD19B": 8372,
+      "Unassigned": 10
+    },
+    "population_proportions": {
+      "CD20neg": 0.2716,
+      "TotalCD19B": 0.7276,
+      "Unassigned": 0.0009
+    }
+  }
+}

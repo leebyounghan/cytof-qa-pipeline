@@ -1,0 +1,28 @@
+{
+  "task_id": "Lyoplate_treg__1369_1_Treg_B07__step_03",
+  "dataset": "Lyoplate_treg",
+  "sample": "1369_1_Treg_B07",
+  "step": 3,
+  "parent": "Step02_CD3|CD4 == CD4pos",
+  "x_marker": "CD25",
+  "y_marker": "CD127",
+  "annotation_column": "Step03_CD25|CD127",
+  "categories": [
+    "Treg",
+    "Unassigned"
+  ],
+  "note": "Treg: regulatory T cells — distinct cluster at the lower-right (CD25+, CD127 low/negative), well separated from the broader CD25-mid CD127-high conventional CD4 cloud. The classical Treg signature.",
+  "tips": "Canonical Treg identification within CD4+ helper T cells. Treg: CD25hi CD127lo (CD25/IL-2Rα is highly expressed on Treg, and CD127/IL-7Rα is down-regulated, together distinguishing Treg from activated conventional CD4 cells which can transiently up-regulate CD25 but retain CD127). Useful co-markers: Foxp3 is the canonical intracellular Treg transcription factor and gold-standard marker but requires fixation/permeabilization — not included in this surface-only panel. The CD25hiCD127lo surface signature is well-validated as a Foxp3+ Treg proxy.",
+  "gating_context": "Root -> Step02_CD3|CD4(CD4pos)",
+  "gt_summary": {
+    "n_parent_cells": 34336,
+    "n_cells_per_category": {
+      "Treg": 2466,
+      "Unassigned": 31870
+    },
+    "population_proportions": {
+      "Treg": 0.0718,
+      "Unassigned": 0.9282
+    }
+  }
+}

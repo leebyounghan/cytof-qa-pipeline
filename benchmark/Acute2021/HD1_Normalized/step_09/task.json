@@ -1,0 +1,35 @@
+{
+  "task_id": "Acute2021__HD1_Normalized__step_09",
+  "dataset": "Acute2021",
+  "sample": "HD1_Normalized",
+  "step": 9,
+  "parent": "Step08_193Ir_DNA2|89Y_CD45 == CD45",
+  "x_marker": "172Yb_CD66b",
+  "y_marker": "89Y_CD45",
+  "annotation_column": "Step09_172Yb_CD66b|89Y_CD45",
+  "categories": [
+    "Mononuclear",
+    "Granulocyte",
+    "CD66bnegCD45lo",
+    "CD45hiCD66bpos",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step08_193Ir_DNA2|89Y_CD45(CD45)",
+  "gt_summary": {
+    "n_parent_cells": 149714,
+    "n_cells_per_category": {
+      "Mononuclear": 40994,
+      "Granulocyte": 99404,
+      "CD66bnegCD45lo": 196,
+      "CD45hiCD66bpos": 8299,
+      "Unassigned": 821
+    },
+    "population_proportions": {
+      "Mononuclear": 0.2738,
+      "Granulocyte": 0.664,
+      "CD66bnegCD45lo": 0.0013,
+      "CD45hiCD66bpos": 0.0554,
+      "Unassigned": 0.0055
+    }
+  }
+}

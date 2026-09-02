@@ -1,0 +1,29 @@
+{
+  "task_id": "Vaccine__HD15_Normalized__step_01",
+  "dataset": "Vaccine",
+  "sample": "HD15_Normalized",
+  "step": 1,
+  "parent": "ALL",
+  "x_marker": "Time",
+  "y_marker": "140Ce_Bead",
+  "annotation_column": "Step01_Time|140Ce_Bead",
+  "categories": [
+    "Cleanup1",
+    "Bead",
+    "Unassigned"
+  ],
+  "gating_context": "Root",
+  "gt_summary": {
+    "n_parent_cells": 129555,
+    "n_cells_per_category": {
+      "Cleanup1": 123958,
+      "Bead": 5508,
+      "Unassigned": 89
+    },
+    "population_proportions": {
+      "Cleanup1": 0.9568,
+      "Bead": 0.0425,
+      "Unassigned": 0.0007
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "task_id": "Vaccine__47.T4_Normalized__step_54",
+  "dataset": "Vaccine",
+  "sample": "47.T4_Normalized",
+  "step": 54,
+  "parent": "Step50_158Gd_CD185_CXCR5|145Nd_CD4 == nnCD4CXCR5neg",
+  "x_marker": "141Pr_CD196_CCR6",
+  "y_marker": "156Gd_CD183_CXCR3",
+  "annotation_column": "Step54_141Pr_CD196_CCR6|156Gd_CD183_CXCR3",
+  "categories": [
+    "Th1",
+    "Th17",
+    "NonTh1NonTh17",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step50_158Gd_CD185_CXCR5|145Nd_CD4(nnCD4CXCR5neg)",
+  "gt_summary": {
+    "n_parent_cells": 12381,
+    "n_cells_per_category": {
+      "Th1": 3490,
+      "Th17": 2872,
+      "NonTh1NonTh17": 1415,
+      "Unassigned": 4604
+    },
+    "population_proportions": {
+      "Th1": 0.2819,
+      "Th17": 0.232,
+      "NonTh1NonTh17": 0.1143,
+      "Unassigned": 0.3719
+    }
+  }
+}

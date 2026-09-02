@@ -1,0 +1,26 @@
+{
+  "task_id": "Vaccine__18.T3_Normalized__step_04",
+  "dataset": "Vaccine",
+  "sample": "18.T3_Normalized",
+  "step": 4,
+  "parent": "Step03_Time|Center == Cleanup3",
+  "x_marker": "Time",
+  "y_marker": "Offset",
+  "annotation_column": "Step04_Time|Offset",
+  "categories": [
+    "Cleanup4",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step03_Time|Center(Cleanup3)",
+  "gt_summary": {
+    "n_parent_cells": 378053,
+    "n_cells_per_category": {
+      "Cleanup4": 375636,
+      "Unassigned": 2417
+    },
+    "population_proportions": {
+      "Cleanup4": 0.9936,
+      "Unassigned": 0.0064
+    }
+  }
+}

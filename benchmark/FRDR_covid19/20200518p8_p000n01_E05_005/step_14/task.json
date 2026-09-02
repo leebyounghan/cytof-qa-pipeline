@@ -1,0 +1,28 @@
+{
+  "task_id": "FRDR_covid19__20200518p8_p000n01_E05_005__step_14",
+  "dataset": "FRDR_covid19",
+  "sample": "20200518p8_p000n01_E05_005",
+  "step": 14,
+  "parent": "Step10_CD16|CD14 == Non_monocytes",
+  "x_marker": "Comp-BV510-A",
+  "y_marker": "SSC-A",
+  "annotation_column": "Step14_HLADR|SSC",
+  "categories": [
+    "HLADRp",
+    "Unassigned"
+  ],
+  "note": "Enrich HLA-DR+ APCs (DC candidates) within the Non_monocytes fraction. HLADRp: dense right cluster (HLA-DR+); the HLA-DR-low cluster on the left is excluded. HLA-DR is bimodal — boundary at the valley between the HLA-DR- and HLA-DR+ peaks. SSC (y) is a display axis (no SSC-based call).",
+  "tips": "Enrich HLA-DR+ APCs within the Non_monocytes fraction — entry to the DC branch. HLADRp: HLA-DR+ (DCs are uniformly HLA-DR-high; remaining HLA-DR- events in this parent include residual NK cells, basophils with low HLA-DR, or other lineages routed out here). DC identity is confirmed downstream — CD11c+ at Step 18 for mDCs and CD303+/CD123+ at Step 16 for pDCs. The HLA-DR- events dropped here are correctly captured by the Step 23 basophil-candidate branch off the same Non_BT parent.",
+  "gating_context": "Root -> Step10_CD16|CD14(Non_monocytes)",
+  "gt_summary": {
+    "n_parent_cells": 9870,
+    "n_cells_per_category": {
+      "HLADRp": 1527,
+      "Unassigned": 8343
+    },
+    "population_proportions": {
+      "HLADRp": 0.1547,
+      "Unassigned": 0.8453
+    }
+  }
+}

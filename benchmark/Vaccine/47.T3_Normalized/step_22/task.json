@@ -1,0 +1,29 @@
+{
+  "task_id": "Vaccine__47.T3_Normalized__step_22",
+  "dataset": "Vaccine",
+  "sample": "47.T3_Normalized",
+  "step": 22,
+  "parent": "Step21_168Er_CD14|170Er_CD3 == NonTNonBCD14neg",
+  "x_marker": "163Dy_CD56_NCAM",
+  "y_marker": "173Yb_HLA-DR",
+  "annotation_column": "Step22_163Dy_CD56_NCAM|173Yb_HLA-DR",
+  "categories": [
+    "TotalDC",
+    "TotalNK",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step21_168Er_CD14|170Er_CD3(NonTNonBCD14neg)",
+  "gt_summary": {
+    "n_parent_cells": 26506,
+    "n_cells_per_category": {
+      "TotalDC": 3136,
+      "TotalNK": 19073,
+      "Unassigned": 4297
+    },
+    "population_proportions": {
+      "TotalDC": 0.1183,
+      "TotalNK": 0.7196,
+      "Unassigned": 0.1621
+    }
+  }
+}

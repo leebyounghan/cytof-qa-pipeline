@@ -1,0 +1,31 @@
+{
+  "task_id": "FR-FCM-Z74D_tissue__exp_423_Donor_Pre-blood_023_T cells__step_07",
+  "dataset": "FR-FCM-Z74D_tissue",
+  "sample": "exp_423_Donor_Pre-blood_023_T cells",
+  "step": 7,
+  "parent": "Step06_CXCR3|CCR6 == Th17_22",
+  "x_marker": "CCR10",
+  "y_marker": "CCR4",
+  "annotation_column": "Step07_CCR10|CCR4",
+  "categories": [
+    "Th17",
+    "Th22",
+    "Unassigned"
+  ],
+  "note": "Splitting the CCR6+ compartment on CCR10 × CCR4. Th17: classical IL-17-producing Th17 cells — upper-left cluster (CCR10-, CCR4+). Th22: IL-22-producing Th22 cells (skin-homing) — right cluster (CCR10+, CCR4+). The lower-left double-negative (CCR4-, CCR10-) corner is unassigned.",
+  "tips": "Splitting the CCR6+ compartment (CXCR3- CCR6+ from Step 6, so Th1/17 plasticity events do not reach this step). Th17: CCR4+ CCR10-. Th22: CCR10+ (any CCR4) — typically CCR4+ as well. Tissue context: Th17 enriched in barrier tissues (Ileum, Lung); Th22 most classically described in skin but also reported in gut. Functional IL-17 / IL-22 intracellular cytokine staining not in panel.",
+  "gating_context": "Root -> Step06_CXCR3|CCR6(Th17_22)",
+  "gt_summary": {
+    "n_parent_cells": 4502,
+    "n_cells_per_category": {
+      "Th17": 2856,
+      "Th22": 517,
+      "Unassigned": 1129
+    },
+    "population_proportions": {
+      "Th17": 0.6344,
+      "Th22": 0.1148,
+      "Unassigned": 0.2508
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "task_id": "FRDR_covid19__20200527p8_p000n01_E05_005__step_19",
+  "dataset": "FRDR_covid19",
+  "sample": "20200527p8_p000n01_E05_005",
+  "step": 19,
+  "parent": "Step18_CD11c|FSC == mDC",
+  "x_marker": "Comp-APC-A",
+  "y_marker": "FSC-A",
+  "annotation_column": "Step19_CD1c|FSC",
+  "categories": [
+    "mDC1",
+    "mDC2",
+    "Unassigned"
+  ],
+  "note": "Myeloid DC subsetting by CD1c (BDCA-1). mDC1 (as labeled in this panel): right cluster (CD1c+). mDC2 (as labeled in this panel): left cluster (CD1c-). Two well-separated clusters along the CD1c axis. Nomenclature caveat: in canonical convention CD1c+ is cDC2, not cDC1 — the label mapping in this panel may be inverted relative to convention.",
+  "tips": "Myeloid DC subsetting by CD1c (BDCA-1). As labeled in this file: mDC1 = CD1c+, mDC2 = CD1c-. Nomenclature caveat: in the canonical cDC1 / cDC2 convention, cDC1 = CD141+ (BDCA-3+) cross-presenting DCs and cDC2 = CD1c+ (BDCA-1+) inflammatory DCs — so the CD1c+ subset is conventionally cDC2, not cDC1. The label mapping in this panel (CD1c+ → mDC1) appears inverted relative to the canonical convention; whether this is intentional (lab-specific naming) or an error should be verified with the panel author. CD141 is not in this panel, so a true cDC1 gate cannot be established.",
+  "gating_context": "Root -> Step18_CD11c|FSC(mDC)",
+  "gt_summary": {
+    "n_parent_cells": 832,
+    "n_cells_per_category": {
+      "mDC1": 183,
+      "mDC2": 640,
+      "Unassigned": 9
+    },
+    "population_proportions": {
+      "mDC1": 0.22,
+      "mDC2": 0.7692,
+      "Unassigned": 0.0108
+    }
+  }
+}

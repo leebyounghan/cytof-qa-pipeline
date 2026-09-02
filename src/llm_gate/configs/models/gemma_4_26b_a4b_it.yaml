@@ -1,0 +1,24 @@
+# Gemma 4-26B-A4B-it (MoE: 4B active / 26B total) — LLM-Gate variant.
+# Aligned with Qwen 3.6-27B gate config for fair benchmarking.
+# Same DP/TP/max_model_len/temperature/top_p/penalties as Qwen 3.6-27B.
+# Differs only in model-intrinsic knobs (see src/llm/configs/models/
+# gemma_4_26b_a4b_it.yaml header for the full rationale).
+model:
+  hf_id: google/gemma-4-26B-A4B-it
+  served_name: Gemma4-26B-A4B-it
+server:
+  data_parallel_size: 2
+  tensor_parallel_size: 2
+  max_model_len: 65536
+  gpu_memory_utilization: 0.9
+  enable_prefix_caching: true
+  trust_remote_code: true
+  enable_expert_parallel: true
+generation:
+  max_tokens: 32768
+  strip_think: true
+  temperature: 1.0
+  top_p: 0.95
+  top_k: 64
+  presence_penalty: 0.0
+  thinking: "on"

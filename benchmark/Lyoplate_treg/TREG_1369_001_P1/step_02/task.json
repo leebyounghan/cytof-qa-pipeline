@@ -1,0 +1,28 @@
+{
+  "task_id": "Lyoplate_treg__TREG_1369_001_P1__step_02",
+  "dataset": "Lyoplate_treg",
+  "sample": "TREG_1369_001_P1",
+  "step": 2,
+  "parent": "Step01_CD3|SSC-A == CD3pos",
+  "x_marker": "CD3",
+  "y_marker": "CD4",
+  "annotation_column": "Step02_CD3|CD4",
+  "categories": [
+    "CD4pos",
+    "Unassigned"
+  ],
+  "note": "CD4pos: helper T cells — distinct horizontal band at high CD4 (CD4+); the CD4-low / CD4-mid cluster (CD8 T cells, DNT, etc.) below is excluded. CD3 (x) is a parent-purity sanity-check axis (parent already CD3+, all events at CD3-high).",
+  "tips": "Positive selection of helper T cells within CD3+ T cells. CD4pos: CD4+. Axis design caveat: x_marker is CD3, but parent is already CD3+ — CD3 on x is a purity sanity-check axis (events should cluster at CD3-high); the actual call is driven by CD4 on y. CD8+ and DNT/DPT cells are not annotated because this panel's downstream goal is Treg identification, which is CD4-restricted.",
+  "gating_context": "Root -> Step01_CD3|SSC-A(CD3pos)",
+  "gt_summary": {
+    "n_parent_cells": 61078,
+    "n_cells_per_category": {
+      "CD4pos": 34579,
+      "Unassigned": 26499
+    },
+    "population_proportions": {
+      "CD4pos": 0.5661,
+      "Unassigned": 0.4339
+    }
+  }
+}

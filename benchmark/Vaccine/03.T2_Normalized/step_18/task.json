@@ -1,0 +1,32 @@
+{
+  "task_id": "Vaccine__03.T2_Normalized__step_18",
+  "dataset": "Vaccine",
+  "sample": "03.T2_Normalized",
+  "step": 18,
+  "parent": "Step17_147Sm_CD11c|168Er_CD14 == TotalMonocyte",
+  "x_marker": "161Dy_CD38",
+  "y_marker": "168Er_CD14",
+  "annotation_column": "Step18_161Dy_CD38|168Er_CD14",
+  "categories": [
+    "ClassicalMono",
+    "TransitionalMono",
+    "NonclassicalMono",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step17_147Sm_CD11c|168Er_CD14(TotalMonocyte)",
+  "gt_summary": {
+    "n_parent_cells": 7398,
+    "n_cells_per_category": {
+      "ClassicalMono": 6646,
+      "TransitionalMono": 246,
+      "NonclassicalMono": 208,
+      "Unassigned": 298
+    },
+    "population_proportions": {
+      "ClassicalMono": 0.8984,
+      "TransitionalMono": 0.0333,
+      "NonclassicalMono": 0.0281,
+      "Unassigned": 0.0403
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "task_id": "Bjornson__R15W7_W070515100685_Hu_x_IL-4__step_01",
+  "dataset": "Bjornson",
+  "sample": "R15W7_W070515100685_Hu_x_IL-4",
+  "step": 1,
+  "parent": "ALL",
+  "x_marker": "DNA1",
+  "y_marker": "Event_length",
+  "annotation_column": "Step01_DNA1|Event_length",
+  "categories": [
+    "Ir",
+    "Unassigned"
+  ],
+  "note": "Ir: nucleated events (intact-nucleus events; viability is not assessed at this step) — right region (DNA1+), spanning a broad Event_length range. DNA1 is bimodal — the boundary is set at the valley between the DNA1- background peak and the DNA1+ nucleated peak; the low-DNA1 background on the left is excluded.",
+  "tips": "Ir: DNA1+ (Iridium-191 intercalator labels nucleated events; FCS channel PnN=Ir191Di, PnS=DNA1). This is the first cleanup gate — the Bjornson workflow skips the usual Helios Gaussian-discrimination cascade (Center/Offset/Residual/Width) and goes directly from raw FCS to DNA × Event_length. The gate selects nucleated events on DNA1+ without explicit Event_length filtering — Event_length is shown on the y-axis primarily as a visualization context, and doublet/debris exclusion is effectively handled by the DNA1+ polygon shape and downstream marker-based gates. Note: Ir-intercalator labels both live and dead nucleated cells (dead cells often bind more intercalator due to increased membrane permeability), so this gate selects nucleated events but is NOT a viability gate.",
+  "gating_context": "Root",
+  "gt_summary": {
+    "n_parent_cells": 193869,
+    "n_cells_per_category": {
+      "Ir": 155421,
+      "Unassigned": 38448
+    },
+    "population_proportions": {
+      "Ir": 0.8017,
+      "Unassigned": 0.1983
+    }
+  }
+}

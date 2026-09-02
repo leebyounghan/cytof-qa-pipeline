@@ -1,0 +1,32 @@
+{
+  "task_id": "Acute2021__9_Normalized__step_59",
+  "dataset": "Acute2021",
+  "sample": "9_Normalized",
+  "step": 59,
+  "parent": "Step29_145Nd_CD4|146Nd_CD8a == DNT",
+  "x_marker": "173Yb_HLA-DR",
+  "y_marker": "161Dy_CD38",
+  "annotation_column": "Step59_173Yb_HLA-DR|161Dy_CD38",
+  "categories": [
+    "DNT/activated",
+    "DNT/CD38pos",
+    "DNT/activated+CD38pos",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step29_145Nd_CD4|146Nd_CD8a(DNT)",
+  "gt_summary": {
+    "n_parent_cells": 44,
+    "n_cells_per_category": {
+      "DNT/activated": 0,
+      "DNT/CD38pos": 5,
+      "DNT/activated+CD38pos": 2,
+      "Unassigned": 37
+    },
+    "population_proportions": {
+      "DNT/activated": 0.0,
+      "DNT/CD38pos": 0.1136,
+      "DNT/activated+CD38pos": 0.0455,
+      "Unassigned": 0.8409
+    }
+  }
+}

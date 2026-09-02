@@ -1,0 +1,137 @@
+name: Bjornson
+panel: ''
+instrument: ''
+n_steps: 8
+n_samples: 64
+cofactor: 5.0
+channel_marker_map:
+  Time: Time
+  Event_length: Event_length
+  BC1: BC1
+  BC2: BC2
+  BC3: BC3
+  BC4: BC4
+  BC5: BC5
+  BC6: BC6
+  CD235a_In113Di: CD235a_In113Di
+  CD45_In115Di: CD45_In115Di
+  Ba138Di: Ba138Di
+  STAT3 pY705_La139Di: STAT3 pY705_La139Di
+  CD61_Ce140Di: CD61_Ce140Di
+  CD7_Pr141Di: CD7_Pr141Di
+  CD33_Nd142Di: CD33_Nd142Di
+  CD11c_Nd143Di: CD11c_Nd143Di
+  MAPKAPK2 pT334_Nd144Di: MAPKAPK2 pT334_Nd144Di
+  CREB pS133_Nd145Di: CREB pS133_Nd145Di
+  PLCγ2 pY759_Nd146Di: PLCγ2 pY759_Nd146Di
+  STAT1 pY701_Sm147Di: STAT1 pY701_Sm147Di
+  CD123_Nd148Di: CD123_Nd148Di
+  STAT5 pY694_Sm149Di: STAT5 pY694_Sm149Di
+  S6 pS235/236_Sm150Di: S6 pS235/236_Sm150Di
+  CD14_Eu151Di: CD14_Eu151Di
+  Erk1/2 pT202/Y204_Sm152Di: Erk1/2 pT202/Y204_Sm152Di
+  CD11b_Eu153Di: CD11b_Eu153Di
+  P38 pT180/Y182_Sm154Di: P38 pT180/Y182_Sm154Di
+  CD8_Gd155Di: CD8_Gd155Di
+  CD4_Gd156Di: CD4_Gd156Di
+  CD3_Gd157Di: CD3_Gd157Di
+  CD66_Gd158Di: CD66_Gd158Di
+  CD16_Tb159Di: CD16_Tb159Di
+  Zap70/Syk pY319/Y352_Gd160Di: Zap70/Syk pY319/Y352_Gd160Di
+  TBK1/NAK pS172_Dy161Di: TBK1/NAK pS172_Dy161Di
+  CD1c_Dy162Di: CD1c_Dy162Di
+  IkBa amino-terminal_Dy163Di: IkBa amino-terminal_Dy163Di
+  BDCA3_Dy164Di: BDCA3_Dy164Di
+  STAT6 pY691_Ho165Di: STAT6 pY691_Ho165Di
+  CD45RA_Er166Di: CD45RA_Er166Di
+  FoxP3_Er167Di: FoxP3_Er167Di
+  CD161_Er168Di: CD161_Er168Di
+  Ki67_Tm169Di: Ki67_Tm169Di
+  STAT4 pY693_Er170Di: STAT4 pY693_Er170Di
+  CCR7_Yb171Di: CCR7_Yb171Di
+  4E-BP1 pT37/46_Yb172Di: 4E-BP1 pT37/46_Yb172Di
+  CD19_Yb173Di: CD19_Yb173Di
+  IgM_Yb174Di: IgM_Yb174Di
+  CD56_Lu175Di: CD56_Lu175Di
+  HLA-DR_Yb176Di: HLA-DR_Yb176Di
+  DNA1: DNA1
+  DNA2: DNA2
+gating_plan:
+- step: 1
+  parent: ALL
+  x_marker: DNA1
+  y_marker: Event_length
+  annotation column name: Step01_DNA1|Event_length
+  annotation categories:
+  - Ir
+  note: 'Ir: nucleated events (intact-nucleus events; viability is not assessed at this step).'
+  tips: 'Ir: DNA1+ (Iridium-191 intercalator labels nucleated events; FCS channel PnN=Ir191Di, PnS=DNA1). This is the first cleanup gate — the Bjornson workflow skips the usual Helios Gaussian-discrimination cascade (Center/Offset/Residual/Width) and goes directly from raw FCS to DNA × Event_length. The gate selects nucleated events on DNA1+ without explicit Event_length filtering — Event_length is shown on the y-axis primarily as a visualization context, and doublet/debris exclusion is effectively handled by the DNA1+ polygon shape and downstream marker-based gates. Note: Ir-intercalator labels both live and dead nucleated cells (dead cells often bind more intercalator due to increased membrane permeability), so this gate selects nucleated events but is NOT a viability gate.'
+- step: 2
+  parent: Step01_DNA1|Event_length == Ir
+  x_marker: DNA2
+  y_marker: CD45_In115Di
+  annotation column name: Step02_DNA2|CD45_In115Di
+  annotation categories:
+  - CD45
+  note: 'CD45: leukocytes (white blood cells with intact nuclei; the DNA2-hyperbright tail of doublets / damaged or hyperploid nuclei is excluded).'
+  tips: 'CD45: CD45+ DNA2+ with DNA2++ excluded (FCS PnN=Ir193Di/In115Di, PnS=DNA2/CD45_In115Di). The polygon intentionally excludes the DNA2-hyperbright tail — events with aberrantly high DNA2 signal are most consistent with doublets/aggregates or damaged/hyperploid nuclei. This gate is per-file adjusted in OMIQ (perFileFilters on 58 of 512 samples) because CD45-In115 signal intensity varies by acquisition run — polygon is redrawn per sample for samples that drift from the template. Important caveat: this panel has no live/dead discriminator (no cisplatin/rhodium), and the DNA1 ∩ DNA2 gate selects nucleated intact events rather than specifically live cells. Downstream populations may therefore include a mixture of live and dead leukocytes. Useful co-markers for cleaner leukocyte gating: CD235a_In113Di (glycophorin A) flags erythrocyte-leukocyte aggregates — bona fide leukocytes should be CD235a-; CD61_Ce140Di (platelet GPIIIa) flags platelet-leukocyte aggregates — bona fide leukocytes should be CD61-. Both are in panel but not used in this workflow; they can serve as QC checks.'
+- step: 3
+  parent: Step02_DNA2|CD45_In115Di == CD45
+  x_marker: CD66_Gd158Di
+  y_marker: CD45_In115Di
+  annotation column name: Step03_CD66_Gd158Di|CD45_In115Di
+  annotation categories:
+  - Granulocyte
+  - CD45hiCD66lo
+  note: 'Granulocyte: granulocytes (predominantly neutrophils and eosinophils; basophils are not captured here and fall into the residual downstream). CD45hiCD66lo: mononuclear fraction (lymphocytes, monocytes, DCs, NK).'
+  tips: 'Granulocyte: CD45low/int CD66+ (neutrophils typically show CD45 low-to-intermediate and dominate this gate; basophils express CD66 at very low levels and are generally NOT captured in a CD66+ granulocyte gate). CD45hiCD66lo: CD45hi CD66-. Useful co-markers: CD16_Tb159Di further confirms neutrophils within Granulocyte (neutrophils CD16+, eosinophils CD16-); CD11b_Eu153Di is positive on both neutrophils and eosinophils and reinforces granulocyte identity; CD33_Nd142Di (pan-myeloid) is typically low-to-intermediate on granulocytes vs higher on monocytes and can help distinguish myeloid vs lymphoid within the CD45hiCD66lo fraction; HLA-DR_Yb176Di is negative on granulocytes; CD3_Gd157Di / CD19_Yb173Di low confirms non-lymphoid nature of CD45hiCD66lo minor populations.'
+- step: 4
+  parent: Step03_CD66_Gd158Di|CD45_In115Di == CD45hiCD66lo
+  x_marker: CD3_Gd157Di
+  y_marker: CD19_Yb173Di
+  annotation column name: Step04_CD3_Gd157Di|CD19_Yb173Di
+  annotation categories:
+  - Bcells
+  - Tcells
+  - CD3negCD19neg
+  note: 'Bcells: B lymphocytes. Tcells: T lymphocytes (both αβ and γδ; TCR subtypes not resolved in this panel). CD3negCD19neg: non-B non-T fraction (NK cells, ILCs, monocytes, DCs, basophils — parsed downstream).'
+  tips: 'Three-way lymphoid split on a single CD3 × CD19 plot. Bcells: CD3- CD19+. Tcells: CD3+ CD19-. CD3negCD19neg: CD3- CD19-. Useful co-markers: CD20 (not in panel) would refine mature B cells; CD56_Lu175Di resolves NK from other CD3-CD19- subsets downstream; IgM_Yb174Di (in panel) could further refine mature vs naive B cells; HLA-DR_Yb176Di is expressed on B cells (APCs) and typically negative on resting T cells — useful as a positive confirmation for Bcells and a negative check for Tcells; CD7_Pr141Di is expressed on essentially all T cells (and NK) but not on B cells, reinforcing Tcells assignment within the CD3+CD19- polygon.'
+- step: 5
+  parent: Step04_CD3_Gd157Di|CD19_Yb173Di == Tcells
+  x_marker: CD4_Gd156Di
+  y_marker: CD8_Gd155Di
+  annotation column name: Step05_CD4_Gd156Di|CD8_Gd155Di
+  annotation categories:
+  - CD4Tcells
+  - CD8Tcells
+  note: 'CD4Tcells: helper T cells. CD8Tcells: cytotoxic T cells. (Double-positive and double-negative T-cell subsets are not explicitly gated in this workflow.)'
+  tips: 'CD4Tcells: CD4+ CD8-. CD8Tcells: CD4- CD8+. DPT and DNT (includes MAIT/NKT) subsets fall outside both polygon regions and are not tracked. Useful co-markers: CD45RA_Er166Di / CCR7_Yb171Di enable memory subset analysis (Naive/TCM/TEM/TEMRA) — present in panel but not gated in this simplified workflow. FoxP3_Er167Di (in panel) would resolve Treg within CD4Tcells; CD161_Er168Di (in panel) would mark MAIT within the unassigned DNT residual; CD7_Pr141Di confirms T cell identity across both CD4 and CD8 subsets (expressed on >95% of mature T cells); CD56_Lu175Di (in panel) would identify NKT within DPT/DNT residuals.'
+- step: 6
+  parent: Step04_CD3_Gd157Di|CD19_Yb173Di == CD3negCD19neg
+  x_marker: CD7_Pr141Di
+  y_marker: HLA-DR_Yb176Di
+  annotation column name: Step06_CD7_Pr141Di|HLA-DR_Yb176Di
+  annotation categories:
+  - NKcells
+  - HLA-DRposCD7neg
+  note: 'NKcells: NK cells (lymphoid lineage within the non-B non-T residual). HLA-DRposCD7neg: antigen-presenting cells — monocytes and DCs (further parsed downstream).'
+  tips: 'Within the CD3-CD19- residual, CD7 × HLA-DR separates NK (CD7+, lymphoid) from myeloid APCs (HLA-DR+). NKcells: CD7+ HLA-DR- (CD7 is expressed on most NK cells — strongly on CD56bright NK, more variably on CD56dim NK subsets). HLA-DRposCD7neg: HLA-DR+ CD7-. The CD7- HLA-DR- quadrant (unlabeled) contains basophils and any remaining residual. Useful co-markers: CD56_Lu175Di is the classical NK marker and serves as a sanity check — most NK are CD56+; CD16_Tb159Di marks cytotoxic mature NK (CD56dim CD16+); CD161_Er168Di is expressed on NK cells (particularly CD56bright subset) and provides additional NK confirmation; CD123_Nd148Di is useful for identifying basophils in the unlabeled CD7-HLA-DR- residual (basophils are CD123+ HLA-DR- CD7-); CD33_Nd142Di is typically higher on the HLA-DR+CD7- myeloid fraction and low on NK.'
+- step: 7
+  parent: Step06_CD7_Pr141Di|HLA-DR_Yb176Di == HLA-DRposCD7neg
+  x_marker: CD16_Tb159Di
+  y_marker: CD11b_Eu153Di
+  annotation column name: Step07_CD16_Tb159Di|CD11b_Eu153Di
+  annotation categories:
+  - Monocytes
+  - CD11bnegCD16neg
+  note: 'Monocytes: total monocytes (classical, intermediate, and non-classical subsets are not split in this workflow). CD11bnegCD16neg: non-monocyte APC residual (enriches for DCs, resolved downstream).'
+  tips: 'Monocytes: CD11b+ (any CD16) OR CD11b- CD16+ — the polygon captures both the CD11b+ region (classical, intermediate, and most non-classical monocytes) AND the CD11b-low CD16+ region to include non-classical monocyte populations that have down-regulated CD11b. The standard Ziegler-Heitbrock nomenclature defines classical CD14++CD16-, intermediate CD14++CD16+, and non-classical CD14+CD16++ subsets on a CD14 × CD16 plot. CD11bnegCD16neg: CD11b- CD16-. Useful co-markers: CD14_Eu151Di confirms monocyte identity and would enable classical/intermediate/non-classical subset splitting on CD14 × CD16 if needed; CD33_Nd142Di is a pan-myeloid marker — monocytes are CD33++ (higher than DCs or granulocytes); HLA-DR_Yb176Di is positive on monocytes; CD11c_Nd143Di is also expressed on monocytes (in addition to cDCs).'
+- step: 8
+  parent: Step07_CD16_Tb159Di|CD11b_Eu153Di == CD11bnegCD16neg
+  x_marker: CD11c_Nd143Di
+  y_marker: CD123_Nd148Di
+  annotation column name: Step08_CD11c_Nd143Di|CD123_Nd148Di
+  annotation categories:
+  - DCs
+  note: 'DCs: total dendritic cells (conventional and plasmacytoid; cDC vs pDC subtypes are not split in this workflow).'
+  tips: 'DCs: CD11c+ AND/OR CD123+ (cDC are CD11c+ CD123-, pDC are CD11c- CD123+; this gate captures both with a single polygon). Useful co-markers: HLA-DR+ is a DC hallmark and already enforced by the upstream parent chain; CD1c_Dy162Di and BDCA3_Dy164Di (BDCA3/CD141) are available in panel and would resolve cDC1 (BDCA3+) vs cDC2 (CD1c+) if needed; CD33_Nd142Di confirms myeloid lineage (cDCs are CD33+, lower than monocytes); CD14_Eu151Di should be negative/low on DCs — useful as a negative check to exclude residual monocytes that leaked past Step 7; CD11b_Eu153Di is generally low/negative on DCs.'

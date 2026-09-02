@@ -1,0 +1,31 @@
+{
+  "task_id": "Bjornson__R15W9_W070515101352_Hu_M_IFNa2__step_03",
+  "dataset": "Bjornson",
+  "sample": "R15W9_W070515101352_Hu_M_IFNa2",
+  "step": 3,
+  "parent": "Step02_DNA2|CD45_In115Di == CD45",
+  "x_marker": "CD66_Gd158Di",
+  "y_marker": "CD45_In115Di",
+  "annotation_column": "Step03_CD66_Gd158Di|CD45_In115Di",
+  "categories": [
+    "Granulocyte",
+    "CD45hiCD66lo",
+    "Unassigned"
+  ],
+  "note": "Granulocyte: granulocytes (predominantly neutrophils and eosinophils; basophils fall into the residual downstream) — large blob on the right (CD66 high, CD45 low-to-high). CD45hiCD66lo: mononuclear fraction (lymphocytes, monocytes, DCs, NK) — blob at the upper-left (CD45 high, CD66 low). The two populations occupy opposite corners of the plot; sparse events at the lower-left and the upper-right are excluded.",
+  "tips": "Granulocyte: CD45low/int CD66+ (neutrophils typically show CD45 low-to-intermediate and dominate this gate; basophils express CD66 at very low levels and are generally NOT captured in a CD66+ granulocyte gate). CD45hiCD66lo: CD45hi CD66-. Useful co-markers: CD16_Tb159Di further confirms neutrophils within Granulocyte (neutrophils CD16+, eosinophils CD16-); CD11b_Eu153Di is positive on both neutrophils and eosinophils and reinforces granulocyte identity; CD33_Nd142Di (pan-myeloid) is typically low-to-intermediate on granulocytes vs higher on monocytes and can help distinguish myeloid vs lymphoid within the CD45hiCD66lo fraction; HLA-DR_Yb176Di is negative on granulocytes; CD3_Gd157Di / CD19_Yb173Di low confirms non-lymphoid nature of CD45hiCD66lo minor populations.",
+  "gating_context": "Root -> Step02_DNA2|CD45_In115Di(CD45)",
+  "gt_summary": {
+    "n_parent_cells": 54097,
+    "n_cells_per_category": {
+      "Granulocyte": 31945,
+      "CD45hiCD66lo": 17963,
+      "Unassigned": 4189
+    },
+    "population_proportions": {
+      "Granulocyte": 0.5905,
+      "CD45hiCD66lo": 0.3321,
+      "Unassigned": 0.0774
+    }
+  }
+}

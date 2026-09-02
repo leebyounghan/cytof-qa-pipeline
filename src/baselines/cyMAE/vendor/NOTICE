@@ -1,0 +1,41 @@
+cyMAE — Cytometry Masked Autoencoder
+====================================
+
+Source:   https://github.com/JaesikKim/cyMAE
+Commit:   7f28acea14934fb7202bc9440b25f7e8e5ef7b2e
+License:  Apache-2.0 (see LICENSE)
+Citation: Kim et al., bioRxiv 2024.02.13.580114v2
+
+Files vendored from upstream
+----------------------------
+- modeling_pretrain.py   (PretrainVisionTransformer encoder + decoder + factories)
+- modeling_finetune.py   (Block, Mlp, Attention, _cfg, get_sinusoid_encoding_table; finetune
+                          VisionTransformer also defined but not used by us)
+- masking_generator.py   (RandomMaskingGenerator)
+
+Modifications
+-------------
+- modeling_pretrain.py: import line changed from
+      `from modeling_finetune import Block, _cfg, get_sinusoid_encoding_table`
+  to
+      `from .modeling_finetune import Block, _cfg, get_sinusoid_encoding_table`
+  so the package can be loaded as a Python sub-package.
+
+- modeling_pretrain.py: non-learnable sinusoid `pos_embed` registered as a
+  non-persistent buffer in both `PretrainVisionTransformerEncoder` and the
+  `PretrainVisionTransformer` wrapper (was a plain tensor attribute upstream).
+  The corresponding `forward_features` / `forward` calls drop the per-step
+  `.type_as(x).to(x.device).clone().detach()` and now use a single
+  `.to(dtype=x.dtype)`. This removes a host↔device alloc per forward and is
+  checkpoint-compatible (`persistent=False` keeps it out of state_dict).
+
+Files NOT vendored
+------------------
+- engine_for_pretraining.py / engine_for_finetuning.py / optim_factory.py / utils.py
+  We write our own training loops in src/baselines/cyMAE/{pretrain,train_heads}.py
+  using plain AdamW; we do not use the upstream engines / distributed utilities /
+  tensorboard logging.
+- run_mae_pretraining.py / run_class_finetuning.py
+  CLI replaced by our own scripts that integrate with BenchmarkLoader.
+- dataset_folder.py / datasets.py
+  Replaced by data.py (parquet adapter).

@@ -1,0 +1,87 @@
+name: Lyoplate_tcell
+panel: ''
+instrument: BD LSR II
+n_steps: 6
+n_samples: 63
+cofactor: 150.0
+channel_marker_map:
+  FSC-A: FSC-A
+  SSC-A: SSC-A
+  Live: Viability
+  CCR7: CCR7
+  CD4: CD4
+  CD45RA: CD45RA
+  CD3: CD3
+  HLADR: HLA-DR
+  CD38: CD38
+  CD8: CD8
+gating_plan:
+- step: 1
+  parent: ALL
+  x_marker: CD3
+  y_marker: SSC-A
+  annotation column name: Step01_CD3|SSC-A
+  annotation categories:
+  - CD3pos
+  note: 'CD3pos: T cells.'
+  tips: 'Positive selection of T cells on pre-gated Live singlet lymphocytes. CD3pos: CD3+ (pan-T marker). The y-axis SSC-A serves as a secondary sanity check — T cells sit in the canonical lymphocyte scatter range; CD3+ events with aberrantly high SSC would indicate granulocyte contamination or doublets that slipped through the upstream cleanup. CD3- events (B cells, NK cells, myeloid) are not annotated here because they are not the target of this panel (separate B-cell / Treg / DC panels cover those).'
+- step: 2
+  parent: Step01_CD3|SSC-A == CD3pos
+  x_marker: CD4
+  y_marker: CD8
+  annotation column name: Step02_CD4|CD8
+  annotation categories:
+  - CD4
+  - CD8
+  - DNT
+  - DPT
+  note: 'CD4: helper T cells (the majority population). CD8: cytotoxic T cells. DNT: double-negative T cells (includes γδT, MAIT, iNKT precursors). DPT: double-positive T cells (rare; often thymic emigrants or activated transitional).'
+  tips: 'CD4/CD8 quadrant split on CD3+ T cells. CD4: CD4+ CD8-. CD8: CD4- CD8+. DNT: CD4- CD8-. DPT: CD4+ CD8+. Useful co-markers: αβ/γδ TCR markers and CD161 (for MAIT/iNKT enrichment within DNT) are not in this panel, so DNT cannot be further resolved here.'
+- step: 3
+  parent: Step02_CD4|CD8 == CD4
+  x_marker: CCR7
+  y_marker: CD45RA
+  annotation column name: Step03_CCR7|CD45RA
+  annotation categories:
+  - CD4_Naive
+  - CD4_Central_Memory
+  - CD4_Effector_Memory
+  - CD4_Effector
+  note: 'CD4_Naive: naive helper T cells (antigen-inexperienced). CD4_Central_Memory: lymph-node-homing memory helper T cells. CD4_Effector_Memory: peripheral-tissue effector-memory helper T cells. CD4_Effector: terminally differentiated helper T cells (TEMRA; relatively uncommon in CD4 compared to CD8).'
+  tips: 'CD4 differentiation subsets (canonical Sallusto/Lanzavecchia scheme on CCR7 × CD45RA). CD4_Naive: CCR7+ CD45RA+. CD4_Central_Memory: CCR7+ CD45RA-. CD4_Effector_Memory: CCR7- CD45RA-. CD4_Effector: CCR7- CD45RA+ (the file label `CD4_Effector` is a shorthand for TEMRA). Useful co-markers: CD27 / CD28 would refine the EM differentiation axis but are not in this panel.'
+- step: 4
+  parent: Step02_CD4|CD8 == CD4
+  x_marker: CD38
+  y_marker: HLADR
+  annotation column name: Step04_CD38|HLADR
+  annotation categories:
+  - CD4_Activated
+  - CD4_38negDRpos
+  - CD4_38posDRneg
+  - CD4_38negDRneg
+  note: 'CD4_Activated: dually activated and proliferating helper T cells. CD4_38negDRpos: activated helper T cells (not proliferating). CD4_38posDRneg: proliferating helper T cells (without classical activation; can be enriched for younger/recently-differentiated cells). CD4_38negDRneg: resting helper T cells.'
+  tips: 'CD4 activation / proliferation state (parallel annotation to Step 3 on the same CD4 parent; activation axes are orthogonal to differentiation). HLA-DR is an activation marker (MHC-II induced on recently-activated T cells); CD38 marks proliferation / metabolic activity. CD4_Activated: CD38+ HLA-DR+ (the CD38+HLA-DR+ signature is more extensively validated in CD8 than in CD4, where markers such as Ki-67, CD25, or ICOS are often used alongside). CD4_38negDRpos: CD38- HLA-DR+. CD4_38posDRneg: CD38+ HLA-DR- (CD38 alone is not an RTE-specific marker — CD31+CD45RA+ is the canonical RTE signature). CD4_38negDRneg: CD38- HLA-DR-.'
+- step: 5
+  parent: Step02_CD4|CD8 == CD8
+  x_marker: CCR7
+  y_marker: CD45RA
+  annotation column name: Step05_CCR7|CD45RA
+  annotation categories:
+  - CD8_Naive
+  - CD8_Central_Memory
+  - CD8_Effector_Memory
+  - CD8_Effector
+  note: 'CD8_Naive: naive cytotoxic T cells. CD8_Central_Memory: lymph-node-homing memory cytotoxic T cells. CD8_Effector_Memory: peripheral-tissue effector-memory cytotoxic T cells. CD8_Effector: terminally differentiated cytotoxic T cells (TEMRA; more prominent than in CD4, expanded with age and CMV+ status).'
+  tips: 'CD8 differentiation subsets (mirror of Step 3 on the CD8 parent). CD8_Naive: CCR7+ CD45RA+. CD8_Central_Memory: CCR7+ CD45RA-. CD8_Effector_Memory: CCR7- CD45RA-. CD8_Effector: CCR7- CD45RA+ (the file label is shorthand for TEMRA). Useful co-markers: CD27/CD28 would refine the differentiation axis but are not in panel; CD57 would identify senescent / terminally differentiated CD8 but is also missing.'
+- step: 6
+  parent: Step02_CD4|CD8 == CD8
+  x_marker: CD38
+  y_marker: HLADR
+  annotation column name: Step06_CD38|HLADR
+  annotation categories:
+  - CD8_Activated
+  - CD8_38negDRpos
+  - CD8_38posDRneg
+  - CD8_38negDRneg
+  note: 'CD8_Activated: dually activated and proliferating cytotoxic T cells (a well-established readout for CD8 activation; expanded in acute viral infection and following vaccination). CD8_38negDRpos: activated cytotoxic T cells (not proliferating). CD8_38posDRneg: proliferating cytotoxic T cells (without classical activation). CD8_38negDRneg: resting cytotoxic T cells.'
+  tips: 'CD8 activation / proliferation state (parallel annotation to Step 5 on the CD8 parent; mirror of Step 4 for CD8). HLA-DR = activation; CD38 = proliferation. CD8_Activated: CD38+ HLA-DR+. CD8_38negDRpos: CD38- HLA-DR+. CD8_38posDRneg: CD38+ HLA-DR-. CD8_38negDRneg: CD38- HLA-DR-.'

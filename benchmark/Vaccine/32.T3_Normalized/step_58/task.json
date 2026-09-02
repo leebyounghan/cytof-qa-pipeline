@@ -1,0 +1,32 @@
+{
+  "task_id": "Vaccine__32.T3_Normalized__step_58",
+  "dataset": "Vaccine",
+  "sample": "32.T3_Normalized",
+  "step": 58,
+  "parent": "Step57_152Sm_CD194_CCR4|156Gd_CD183_CXCR3 == Th2",
+  "x_marker": "173Yb_HLA-DR",
+  "y_marker": "161Dy_CD38",
+  "annotation_column": "Step58_173Yb_HLA-DR|161Dy_CD38",
+  "categories": [
+    "Th2/activated",
+    "Th2/CD38pos",
+    "Th2/activated+CD38pos",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step57_152Sm_CD194_CCR4|156Gd_CD183_CXCR3(Th2)",
+  "gt_summary": {
+    "n_parent_cells": 109,
+    "n_cells_per_category": {
+      "Th2/activated": 0,
+      "Th2/CD38pos": 24,
+      "Th2/activated+CD38pos": 0,
+      "Unassigned": 85
+    },
+    "population_proportions": {
+      "Th2/activated": 0.0,
+      "Th2/CD38pos": 0.2202,
+      "Th2/activated+CD38pos": 0.0,
+      "Unassigned": 0.7798
+    }
+  }
+}

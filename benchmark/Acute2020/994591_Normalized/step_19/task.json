@@ -1,0 +1,29 @@
+{
+  "task_id": "Acute2020__994591_Normalized__step_19",
+  "dataset": "Acute2020",
+  "sample": "994591_Normalized",
+  "step": 19,
+  "parent": "Step16_163Dy_CD56_NCAM|171Yb_CD20 == NonBNonNK",
+  "x_marker": "173Yb_HLA-DR",
+  "y_marker": "143Nd_CD123_IL-3R",
+  "annotation_column": "Step19_173Yb_HLA-DR|143Nd_CD123_IL-3R",
+  "categories": [
+    "Basophil",
+    "HLADRloCD123lo",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step16_163Dy_CD56_NCAM|171Yb_CD20(NonBNonNK)",
+  "gt_summary": {
+    "n_parent_cells": 4519,
+    "n_cells_per_category": {
+      "Basophil": 283,
+      "HLADRloCD123lo": 395,
+      "Unassigned": 3841
+    },
+    "population_proportions": {
+      "Basophil": 0.0626,
+      "HLADRloCD123lo": 0.0874,
+      "Unassigned": 0.85
+    }
+  }
+}

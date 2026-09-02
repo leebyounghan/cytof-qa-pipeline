@@ -1,0 +1,14 @@
+# GPT-5.4 (OpenAI API) — LLM-Gate config.
+# Use with run_openai_gate.sh (NOT run_vllm_gate.sh).
+# Requires OPENAI_API_KEY in the environment.
+model:
+  openai_id: gpt-5.4                 # → run_openai --model gpt-5.4
+  # served_name: defaults to "gpt-5.4"
+
+# No `server:` / `server_env:` sections — OpenAI API mode skips vllm serve.
+
+generation:
+  max_tokens: 32768                  # bumped to match open-source thinking budget
+  # temperature/top_p/etc left null → run_openai uses its own defaults
+  # (temperature 0.0 = greedy).
+  # strip_think: false — GPT-5.4 single-shot, no </think> bleeding.

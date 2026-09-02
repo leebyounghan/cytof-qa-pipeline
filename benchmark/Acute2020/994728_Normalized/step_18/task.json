@@ -1,0 +1,32 @@
+{
+  "task_id": "Acute2020__994728_Normalized__step_18",
+  "dataset": "Acute2020",
+  "sample": "994728_Normalized",
+  "step": 18,
+  "parent": "Step17_147Sm_CD11c|168Er_CD14 == TotalMonocyte",
+  "x_marker": "161Dy_CD38",
+  "y_marker": "168Er_CD14",
+  "annotation_column": "Step18_161Dy_CD38|168Er_CD14",
+  "categories": [
+    "ClassicalMono",
+    "TransitionalMono",
+    "NonclassicalMono",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step17_147Sm_CD11c|168Er_CD14(TotalMonocyte)",
+  "gt_summary": {
+    "n_parent_cells": 516,
+    "n_cells_per_category": {
+      "ClassicalMono": 510,
+      "TransitionalMono": 2,
+      "NonclassicalMono": 0,
+      "Unassigned": 4
+    },
+    "population_proportions": {
+      "ClassicalMono": 0.9884,
+      "TransitionalMono": 0.0039,
+      "NonclassicalMono": 0.0,
+      "Unassigned": 0.0078
+    }
+  }
+}

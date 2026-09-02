@@ -1,0 +1,31 @@
+{
+  "task_id": "Bjornson__R15W7_W070515100685_Hu_x_Ebola VLPs__step_07",
+  "dataset": "Bjornson",
+  "sample": "R15W7_W070515100685_Hu_x_Ebola VLPs",
+  "step": 7,
+  "parent": "Step06_CD7_Pr141Di|HLA-DR_Yb176Di == HLA-DRposCD7neg",
+  "x_marker": "CD16_Tb159Di",
+  "y_marker": "CD11b_Eu153Di",
+  "annotation_column": "Step07_CD16_Tb159Di|CD11b_Eu153Di",
+  "categories": [
+    "Monocytes",
+    "CD11bnegCD16neg",
+    "Unassigned"
+  ],
+  "note": "Monocytes: total monocytes (classical, intermediate, and non-classical subsets are not split in this workflow) — a polygon capturing the main CD11b+ dense blob at the upper region (high CD11b across CD16) plus the CD11b-low CD16+ tail extending to the right (which contains non-classical monocytes that have down-regulated CD11b). CD11bnegCD16neg: non-monocyte APC residual (enriches for DCs, resolved downstream) — small cluster at the lower-left (both CD11b and CD16 low).",
+  "tips": "Monocytes: CD11b+ (any CD16) OR CD11b- CD16+ — the polygon captures both the CD11b+ region (classical, intermediate, and most non-classical monocytes) AND the CD11b-low CD16+ region to include non-classical monocyte populations that have down-regulated CD11b. The standard Ziegler-Heitbrock nomenclature defines classical CD14++CD16-, intermediate CD14++CD16+, and non-classical CD14+CD16++ subsets on a CD14 × CD16 plot. CD11bnegCD16neg: CD11b- CD16-. Useful co-markers: CD14_Eu151Di confirms monocyte identity and would enable classical/intermediate/non-classical subset splitting on CD14 × CD16 if needed; CD33_Nd142Di is a pan-myeloid marker — monocytes are CD33++ (higher than DCs or granulocytes); HLA-DR_Yb176Di is positive on monocytes; CD11c_Nd143Di is also expressed on monocytes (in addition to cDCs).",
+  "gating_context": "Root -> Step06_CD7_Pr141Di|HLA-DR_Yb176Di(HLA-DRposCD7neg)",
+  "gt_summary": {
+    "n_parent_cells": 6887,
+    "n_cells_per_category": {
+      "Monocytes": 6244,
+      "CD11bnegCD16neg": 545,
+      "Unassigned": 98
+    },
+    "population_proportions": {
+      "Monocytes": 0.9066,
+      "CD11bnegCD16neg": 0.0791,
+      "Unassigned": 0.0142
+    }
+  }
+}

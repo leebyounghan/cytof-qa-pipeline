@@ -1,0 +1,37 @@
+{
+  "task_id": "FR-FCM-Z74D_tissue__exp_403C_donor_Spleen_022_T cells__step_04",
+  "dataset": "FR-FCM-Z74D_tissue",
+  "sample": "exp_403C_donor_Spleen_022_T cells",
+  "step": 4,
+  "parent": "Step03_Foxp3|CD127 == non_Treg",
+  "x_marker": "CCR7",
+  "y_marker": "CD45RA",
+  "annotation_column": "Step04_CCR7|CD45RA",
+  "categories": [
+    "Naive_CD4",
+    "CM_CD4",
+    "EM_CD4",
+    "EMRA_CD4",
+    "Unassigned"
+  ],
+  "note": "Classical Sallusto/Lanzavecchia CD4 non-Treg memory layout on CCR7 × CD45RA. Strategy: (1) Naive_CD4 anchors on the dense blob at the upper-right corner (CCR7 very high, CD45RA high) — antigen-inexperienced naive helper T cells. (2) EMRA_CD4 sits immediately to the left of Naive_CD4 in the upper CD45RA band (rare in CD4) — terminally differentiated helper T cells. (3) In the lower CD45RA band (memory cells), CCR7 is bimodal — locate the left edge / shoulder of the CCR7+ peak (where density rises from background); CM_CD4 (central memory; lymph-node homing) sits at/right of this edge (includes the dense CCR7+ peak), EM_CD4 (effector memory) sits to its left. CCR7 (and sometimes CD45RA) can be trimodal in this panel, so density peaks — not fixed thresholds — anchor the gate. Memory subsets (CM, EM, EMRA) feed downstream Tfh annotation.",
+  "tips": "CD4 non-Treg memory subsets (Sallusto/Lanzavecchia, CCR7 × CD45RA). Naive_CD4: CCR7+ CD45RA+. CM_CD4: CCR7+ CD45RA-. EM_CD4: CCR7- CD45RA-. EMRA_CD4: CCR7- CD45RA+. Tissue context: CM_CD4 is enriched in lymphoid tissues (Spleen, LN) due to CCR7-driven homing; non-lymphoid tissues are dominated by EM_CD4 and EMRA_CD4.",
+  "gating_context": "Root -> Step03_Foxp3|CD127(non_Treg)",
+  "gt_summary": {
+    "n_parent_cells": 37609,
+    "n_cells_per_category": {
+      "Naive_CD4": 9100,
+      "CM_CD4": 4271,
+      "EM_CD4": 18756,
+      "EMRA_CD4": 5215,
+      "Unassigned": 267
+    },
+    "population_proportions": {
+      "Naive_CD4": 0.242,
+      "CM_CD4": 0.1136,
+      "EM_CD4": 0.4987,
+      "EMRA_CD4": 0.1387,
+      "Unassigned": 0.0071
+    }
+  }
+}

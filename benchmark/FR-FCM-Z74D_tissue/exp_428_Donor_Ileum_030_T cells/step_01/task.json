@@ -1,0 +1,37 @@
+{
+  "task_id": "FR-FCM-Z74D_tissue__exp_428_Donor_Ileum_030_T cells__step_01",
+  "dataset": "FR-FCM-Z74D_tissue",
+  "sample": "exp_428_Donor_Ileum_030_T cells",
+  "step": 1,
+  "parent": "ALL",
+  "x_marker": "CD4",
+  "y_marker": "CD8",
+  "annotation_column": "Step01_CD4|CD8",
+  "categories": [
+    "CD4",
+    "CD8",
+    "CD4p_CD8p",
+    "CD4n_CD8n",
+    "Unassigned"
+  ],
+  "note": "CD4: helper T cells — lower-right quadrant (CD4+, CD8-). CD8: cytotoxic T cells — upper-left quadrant (CD4-, CD8+). CD4p_CD8p: double-positive T cells (rare; often thymic emigrants or activated transitional) — upper-right quadrant. CD4n_CD8n: double-negative T cells (includes γδT, MAIT, iNKT) — lower-left quadrant. Both CD4 and CD8 are bimodal — quadrant boundaries set at the valley between the positive and negative peaks of each axis.",
+  "tips": "CD4/CD8 quadrant split on pre-gated T cells (CD3+ enforced upstream by the 'T cells' FCS gate). CD4: CD4+ CD8-. CD8: CD4- CD8+. CD4p_CD8p: CD4+ CD8+. CD4n_CD8n: CD4- CD8-. Useful co-markers: αβ/γδ TCR markers are not in this panel, so DNT cannot be further resolved here.",
+  "gating_context": "Root",
+  "gt_summary": {
+    "n_parent_cells": 7263,
+    "n_cells_per_category": {
+      "CD4": 1184,
+      "CD8": 4418,
+      "CD4p_CD8p": 45,
+      "CD4n_CD8n": 1532,
+      "Unassigned": 84
+    },
+    "population_proportions": {
+      "CD4": 0.163,
+      "CD8": 0.6083,
+      "CD4p_CD8p": 0.0062,
+      "CD4n_CD8n": 0.2109,
+      "Unassigned": 0.0116
+    }
+  }
+}

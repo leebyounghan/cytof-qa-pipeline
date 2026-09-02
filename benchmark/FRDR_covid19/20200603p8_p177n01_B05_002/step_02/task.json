@@ -1,0 +1,28 @@
+{
+  "task_id": "FRDR_covid19__20200603p8_p177n01_B05_002__step_02",
+  "dataset": "FRDR_covid19",
+  "sample": "20200603p8_p177n01_B05_002",
+  "step": 2,
+  "parent": "Step01_Time|CD1c == Time_stable",
+  "x_marker": "FSC-A",
+  "y_marker": "SSC-A",
+  "annotation_column": "Step02_FSC-A|SSC-A",
+  "categories": [
+    "Cells",
+    "Unassigned"
+  ],
+  "note": "Cells: intact white blood cells (lymphocytes, monocytes, and granulocytes captured as one envelope) — broad WBC blob in the middle of the FSC × SSC plane spanning the lymphocyte (low FSC/SSC), monocyte (mid), and granulocyte (high SSC) clusters as a single inclusive envelope. The lower-left debris corner and a thin upper saturation band at the SSC-A axis max are excluded.",
+  "tips": "Forward/side scatter cleanup to isolate intact white blood cells. Cells: events within a broad WBC scatter envelope spanning the lymphocyte (FSC-low / SSC-low), monocyte (FSC-mid / SSC-mid), and granulocyte (FSC-mid-to-high / SSC-high) clusters as a single polygon. Excluded: lower-left debris (RBC fragments, platelets, dead-cell remnants, free fluorochrome / dye aggregates near the SSC baseline) and upper-right aggregates (cell clumps and large doublets that pre-empt the dedicated singlet gates at Steps 3–4). The three WBC clusters often touch on the FSC × SSC plane, so the gate is drawn as one inclusive envelope.",
+  "gating_context": "Root -> Step01_Time|CD1c(Time_stable)",
+  "gt_summary": {
+    "n_parent_cells": 199749,
+    "n_cells_per_category": {
+      "Cells": 64773,
+      "Unassigned": 134976
+    },
+    "population_proportions": {
+      "Cells": 0.3243,
+      "Unassigned": 0.6757
+    }
+  }
+}

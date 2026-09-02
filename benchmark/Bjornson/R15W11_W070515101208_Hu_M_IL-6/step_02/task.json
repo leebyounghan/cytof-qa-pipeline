@@ -1,0 +1,28 @@
+{
+  "task_id": "Bjornson__R15W11_W070515101208_Hu_M_IL-6__step_02",
+  "dataset": "Bjornson",
+  "sample": "R15W11_W070515101208_Hu_M_IL-6",
+  "step": 2,
+  "parent": "Step01_DNA1|Event_length == Ir",
+  "x_marker": "DNA2",
+  "y_marker": "CD45_In115Di",
+  "annotation_column": "Step02_DNA2|CD45_In115Di",
+  "categories": [
+    "CD45",
+    "Unassigned"
+  ],
+  "note": "CD45: leukocytes (white blood cells with intact nuclei; the DNA2-hyperbright tail of doublets / damaged or hyperploid nuclei is excluded) — main dense blob centered at mid DNA2 and mid-to-high CD45_In115Di; the right-side DNA2-hyperbright tail (high DNA2) and the very-low-CD45 background events are excluded.",
+  "tips": "CD45: CD45+ DNA2+ with DNA2++ excluded (FCS PnN=Ir193Di/In115Di, PnS=DNA2/CD45_In115Di). The polygon intentionally excludes the DNA2-hyperbright tail — events with aberrantly high DNA2 signal are most consistent with doublets/aggregates or damaged/hyperploid nuclei. This gate is per-file adjusted in OMIQ (perFileFilters on 58 of 512 samples) because CD45-In115 signal intensity varies by acquisition run — polygon is redrawn per sample for samples that drift from the template. Important caveat: this panel has no live/dead discriminator (no cisplatin/rhodium), and the DNA1 ∩ DNA2 gate selects nucleated intact events rather than specifically live cells. Downstream populations may therefore include a mixture of live and dead leukocytes. Useful co-markers for cleaner leukocyte gating: CD235a_In113Di (glycophorin A) flags erythrocyte-leukocyte aggregates — bona fide leukocytes should be CD235a-; CD61_Ce140Di (platelet GPIIIa) flags platelet-leukocyte aggregates — bona fide leukocytes should be CD61-. Both are in panel but not used in this workflow; they can serve as QC checks.",
+  "gating_context": "Root -> Step01_DNA1|Event_length(Ir)",
+  "gt_summary": {
+    "n_parent_cells": 72925,
+    "n_cells_per_category": {
+      "CD45": 70087,
+      "Unassigned": 2838
+    },
+    "population_proportions": {
+      "CD45": 0.9611,
+      "Unassigned": 0.0389
+    }
+  }
+}

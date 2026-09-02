@@ -1,0 +1,29 @@
+{
+  "task_id": "Vaccine__18.T3_Normalized__step_62",
+  "dataset": "Vaccine",
+  "sample": "18.T3_Normalized",
+  "step": 62,
+  "parent": "Step09_172Yb_CD66b|89Y_CD45 == Granulocyte",
+  "x_marker": "148Nd_CD16",
+  "y_marker": "166Er_CD294",
+  "annotation_column": "Step62_148Nd_CD16|166Er_CD294",
+  "categories": [
+    "Neutrophil",
+    "Eosinophil",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step09_172Yb_CD66b|89Y_CD45(Granulocyte)",
+  "gt_summary": {
+    "n_parent_cells": 185955,
+    "n_cells_per_category": {
+      "Neutrophil": 181866,
+      "Eosinophil": 1823,
+      "Unassigned": 2266
+    },
+    "population_proportions": {
+      "Neutrophil": 0.978,
+      "Eosinophil": 0.0098,
+      "Unassigned": 0.0122
+    }
+  }
+}

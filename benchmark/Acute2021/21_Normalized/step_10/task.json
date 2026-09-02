@@ -1,0 +1,26 @@
+{
+  "task_id": "Acute2021__21_Normalized__step_10",
+  "dataset": "Acute2021",
+  "sample": "21_Normalized",
+  "step": 10,
+  "parent": "Step09_172Yb_CD66b|89Y_CD45 == Mononuclear",
+  "x_marker": "168Er_CD14",
+  "y_marker": "163Dy_CD56_NCAM",
+  "annotation_column": "Step10_168Er_CD14|163Dy_CD56_NCAM",
+  "categories": [
+    "CD14negCD56neg",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step09_172Yb_CD66b|89Y_CD45(Mononuclear)",
+  "gt_summary": {
+    "n_parent_cells": 11793,
+    "n_cells_per_category": {
+      "CD14negCD56neg": 9642,
+      "Unassigned": 2151
+    },
+    "population_proportions": {
+      "CD14negCD56neg": 0.8176,
+      "Unassigned": 0.1824
+    }
+  }
+}

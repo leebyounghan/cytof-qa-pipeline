@@ -1,0 +1,26 @@
+{
+  "task_id": "Vaccine__37.T1_5_Normalized__step_07",
+  "dataset": "Vaccine",
+  "sample": "37.T1_5_Normalized",
+  "step": 7,
+  "parent": "Step06_Time|103Rh_Live_Dead == Cleanup6",
+  "x_marker": "191Ir_DNA1",
+  "y_marker": "Event_length",
+  "annotation_column": "Step07_191Ir_DNA1|Event_length",
+  "categories": [
+    "Ir",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step06_Time|103Rh_Live_Dead(Cleanup6)",
+  "gt_summary": {
+    "n_parent_cells": 413407,
+    "n_cells_per_category": {
+      "Ir": 398763,
+      "Unassigned": 14644
+    },
+    "population_proportions": {
+      "Ir": 0.9646,
+      "Unassigned": 0.0354
+    }
+  }
+}

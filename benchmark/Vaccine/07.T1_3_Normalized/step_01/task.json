@@ -1,0 +1,29 @@
+{
+  "task_id": "Vaccine__07.T1_3_Normalized__step_01",
+  "dataset": "Vaccine",
+  "sample": "07.T1_3_Normalized",
+  "step": 1,
+  "parent": "ALL",
+  "x_marker": "Time",
+  "y_marker": "140Ce_Bead",
+  "annotation_column": "Step01_Time|140Ce_Bead",
+  "categories": [
+    "Cleanup1",
+    "Bead",
+    "Unassigned"
+  ],
+  "gating_context": "Root",
+  "gt_summary": {
+    "n_parent_cells": 551668,
+    "n_cells_per_category": {
+      "Cleanup1": 541664,
+      "Bead": 6274,
+      "Unassigned": 3730
+    },
+    "population_proportions": {
+      "Cleanup1": 0.9819,
+      "Bead": 0.0114,
+      "Unassigned": 0.0068
+    }
+  }
+}

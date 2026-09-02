@@ -1,0 +1,28 @@
+{
+  "task_id": "FRDR_covid19__20200612p8_p221n01_C03_003__step_01",
+  "dataset": "FRDR_covid19",
+  "sample": "20200612p8_p221n01_C03_003",
+  "step": 1,
+  "parent": "ALL",
+  "x_marker": "Time",
+  "y_marker": "Comp-APC-A",
+  "annotation_column": "Step01_Time|CD1c",
+  "categories": [
+    "Time_stable",
+    "Unassigned"
+  ],
+  "note": "Time_stable: events acquired during a stable acquisition window (drift, fluid disturbances, channel-stability outliers excluded) — broad horizontal band on the CD1c (y) axis spanning the bulk of the time axis; the bright-CD1c upper band and start/end drift regions are excluded.",
+  "tips": "Time stability gate. The Time x-axis excludes drift / fluid-disturbance regions at the start or end of the run (clogs, air bubbles, sample-end artifacts). The y-axis (Comp-APC-A, CD1c) serves: (1) channel-stability QC — a fluorescence channel plotted vs. time reveals time-localized drift (laser warmup, cytometer instability, sample evaporation); (2) vertical outlier exclusion — events that spike abnormally high (electronic noise) within an otherwise stable time window are removed by polygon. Any bright/stable fluorescence channel could serve the y-axis role; CD1c is used here for convenience.",
+  "gating_context": "Root",
+  "gt_summary": {
+    "n_parent_cells": 244494,
+    "n_cells_per_category": {
+      "Time_stable": 244165,
+      "Unassigned": 329
+    },
+    "population_proportions": {
+      "Time_stable": 0.9987,
+      "Unassigned": 0.0013
+    }
+  }
+}

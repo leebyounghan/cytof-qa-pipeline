@@ -1,0 +1,37 @@
+{
+  "task_id": "Lyoplate_tcell__1349_1_T CELL__step_03",
+  "dataset": "Lyoplate_tcell",
+  "sample": "1349_1_T CELL",
+  "step": 3,
+  "parent": "Step02_CD4|CD8 == CD4",
+  "x_marker": "CCR7",
+  "y_marker": "CD45RA",
+  "annotation_column": "Step03_CCR7|CD45RA",
+  "categories": [
+    "CD4_Naive",
+    "CD4_Central_Memory",
+    "CD4_Effector_Memory",
+    "CD4_Effector",
+    "Unassigned"
+  ],
+  "note": "CD4 memory layout on CCR7 × CD45RA. Strategy: (1) CD4_Naive anchors on the dense blob at the upper-right corner (CCR7 very high, CD45RA high). (2) CD4_Effector (EMRA) sits to the left of CD4_Naive in the upper CD45RA band (rare in CD4). (3) In the lower CD45RA band, CCR7 is bimodal — locate the left edge / shoulder of the CCR7+ peak; CD4_Central_Memory (lymph-node homing) sits at/right of this edge (includes the dense CCR7+ peak), CD4_Effector_Memory sits to its left.",
+  "tips": "CD4 differentiation subsets (canonical Sallusto/Lanzavecchia scheme on CCR7 × CD45RA). CD4_Naive: CCR7+ CD45RA+. CD4_Central_Memory: CCR7+ CD45RA-. CD4_Effector_Memory: CCR7- CD45RA-. CD4_Effector: CCR7- CD45RA+ (the file label `CD4_Effector` is a shorthand for TEMRA). Useful co-markers: CD27 / CD28 would refine the EM differentiation axis but are not in this panel.",
+  "gating_context": "Root -> Step02_CD4|CD8(CD4)",
+  "gt_summary": {
+    "n_parent_cells": 56027,
+    "n_cells_per_category": {
+      "CD4_Naive": 15539,
+      "CD4_Central_Memory": 20599,
+      "CD4_Effector_Memory": 17322,
+      "CD4_Effector": 2567,
+      "Unassigned": 0
+    },
+    "population_proportions": {
+      "CD4_Naive": 0.2773,
+      "CD4_Central_Memory": 0.3677,
+      "CD4_Effector_Memory": 0.3092,
+      "CD4_Effector": 0.0458,
+      "Unassigned": 0.0
+    }
+  }
+}

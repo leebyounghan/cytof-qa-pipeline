@@ -1,0 +1,26 @@
+{
+  "task_id": "Acute2021__56_Normalized__step_21",
+  "dataset": "Acute2021",
+  "sample": "56_Normalized",
+  "step": 21,
+  "parent": "Step15_144Nd_CD19|170Er_CD3 == NonTNonB",
+  "x_marker": "168Er_CD14",
+  "y_marker": "170Er_CD3",
+  "annotation_column": "Step21_168Er_CD14|170Er_CD3",
+  "categories": [
+    "NonTNonBCD14neg",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step15_144Nd_CD19|170Er_CD3(NonTNonB)",
+  "gt_summary": {
+    "n_parent_cells": 21390,
+    "n_cells_per_category": {
+      "NonTNonBCD14neg": 8047,
+      "Unassigned": 13343
+    },
+    "population_proportions": {
+      "NonTNonBCD14neg": 0.3762,
+      "Unassigned": 0.6238
+    }
+  }
+}

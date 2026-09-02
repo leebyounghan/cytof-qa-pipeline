@@ -1,0 +1,37 @@
+{
+  "task_id": "FR-FCM-Z74D_tissue__exp_403C_donor_Lung_026_T cells__step_12",
+  "dataset": "FR-FCM-Z74D_tissue",
+  "sample": "exp_403C_donor_Lung_026_T cells",
+  "step": 12,
+  "parent": "Step03_Foxp3|CD127 == tot_Treg",
+  "x_marker": "CCR4",
+  "y_marker": "CD69",
+  "annotation_column": "Step12_CCR4|CD69",
+  "categories": [
+    "Treg_CCR4p_CD69p",
+    "Treg_CCR4p_CD69n",
+    "Treg_CCR4n_CD69p",
+    "Treg_CCR4n_CD69n",
+    "Unassigned"
+  ],
+  "note": "Strategy on CCR4 × CD69 — anchor on the two dense CD69- clusters: (1) In the lower (CD69-) band, two dense clusters separate along CCR4 — the left dense cluster (CCR4-) is Treg_CCR4n_CD69n (resting non-skin-homing Treg); the right dense cluster (CCR4+) is Treg_CCR4p_CD69n (skin-homing Treg, not activated). (2) Above these dense clusters the CD69+ region is sparse and scattered; apply the same CCR4 boundary: left of the boundary = Treg_CCR4n_CD69p (activated Treg without skin-homing bias); right of the boundary = Treg_CCR4p_CD69p (activated skin-homing Treg).",
+  "tips": "Treg tissue-residency / homing quadrants. CCR4 marks skin/mucosa-homing capacity; CD69 in non-lymphoid tissues is associated with Trm-like residency. Treg_CCR4p_CD69p: CCR4+ CD69+. Treg_CCR4p_CD69n: CCR4+ CD69-. Treg_CCR4n_CD69p: CCR4- CD69+. Treg_CCR4n_CD69n: CCR4- CD69-. CD103 IS in panel — CCR4+ CD69+ CD103+ closely matches the core skin/mucosa-homing Trm-Treg phenotype, though CD103-negative tissue-resident populations also exist. In blood samples CD69+ reads as early activation, not residency (mirrors Step 9).",
+  "gating_context": "Root -> Step03_Foxp3|CD127(tot_Treg)",
+  "gt_summary": {
+    "n_parent_cells": 897,
+    "n_cells_per_category": {
+      "Treg_CCR4p_CD69p": 455,
+      "Treg_CCR4p_CD69n": 369,
+      "Treg_CCR4n_CD69p": 36,
+      "Treg_CCR4n_CD69n": 34,
+      "Unassigned": 3
+    },
+    "population_proportions": {
+      "Treg_CCR4p_CD69p": 0.5072,
+      "Treg_CCR4p_CD69n": 0.4114,
+      "Treg_CCR4n_CD69p": 0.0401,
+      "Treg_CCR4n_CD69n": 0.0379,
+      "Unassigned": 0.0033
+    }
+  }
+}

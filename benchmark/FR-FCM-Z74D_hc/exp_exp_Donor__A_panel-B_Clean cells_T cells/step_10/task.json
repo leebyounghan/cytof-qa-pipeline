@@ -1,0 +1,31 @@
+{
+  "task_id": "FR-FCM-Z74D_hc__exp_exp_Donor__A_panel-B_Clean cells_T cells__step_10",
+  "dataset": "FR-FCM-Z74D_hc",
+  "sample": "exp_exp_Donor__A_panel-B_Clean cells_T cells",
+  "step": 10,
+  "parent": "Step03_Foxp3|CD127 == tot_Treg",
+  "x_marker": "Helios",
+  "y_marker": "Foxp3",
+  "annotation_column": "Step10_Helios|Foxp3",
+  "categories": [
+    "Treg_Heliosp",
+    "Treg_Heliosn",
+    "Unassigned"
+  ],
+  "note": "Treg lineage stratification by Helios on Helios × Foxp3. Treg_Heliosp: stable-lineage Treg (enriched for thymus-derived Treg) — right cluster (Helios+). Treg_Heliosn: peripherally-induced or less-stable Treg — left cluster (Helios-). Helios is bimodal — boundary set at the valley between the two peaks. Foxp3 (y) is a parent-gate visual QC only (parent already Foxp3+, events stay at Foxp3-high).",
+  "tips": "Treg lineage stratification by Helios (Ikaros family TF IKZF2). Treg_Heliosp: Helios+ — note that Helios as a strict thymic-origin marker is contested; Helios expression can also be induced in peripherally-generated Treg under certain activation conditions [Gottschalk et al. 2012, Akimova et al.], so 'Helios+' is best read as 'enriched for stable-lineage Treg' rather than a definitive tTreg marker. Treg_Heliosn: Helios-. The Foxp3 y-axis is a parent-gate visual QC only — parent is already Foxp3+, so all events should sit at Foxp3-high; the call is driven by Helios on x. In-panel co-marker priors: CD25 bright supports stable Treg; CD45RA+ CCR7+ (Step 11) corresponds to Miyara Fraction I-like, and Helios+ CD45RA+ corresponds to a stable Treg phenotype.",
+  "gating_context": "Root -> Step03_Foxp3|CD127(tot_Treg)",
+  "gt_summary": {
+    "n_parent_cells": 7012,
+    "n_cells_per_category": {
+      "Treg_Heliosp": 5965,
+      "Treg_Heliosn": 984,
+      "Unassigned": 63
+    },
+    "population_proportions": {
+      "Treg_Heliosp": 0.8507,
+      "Treg_Heliosn": 0.1403,
+      "Unassigned": 0.009
+    }
+  }
+}

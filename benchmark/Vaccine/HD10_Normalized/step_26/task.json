@@ -1,0 +1,26 @@
+{
+  "task_id": "Vaccine__HD10_Normalized__step_26",
+  "dataset": "Vaccine",
+  "sample": "HD10_Normalized",
+  "step": 26,
+  "parent": "Step09_172Yb_CD66b|89Y_CD45 == Mononuclear",
+  "x_marker": "168Er_CD14",
+  "y_marker": "147Sm_CD11c",
+  "annotation_column": "Step26_168Er_CD14|147Sm_CD11c",
+  "categories": [
+    "CD11cnegCD14neg",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step09_172Yb_CD66b|89Y_CD45(Mononuclear)",
+  "gt_summary": {
+    "n_parent_cells": 28616,
+    "n_cells_per_category": {
+      "CD11cnegCD14neg": 23737,
+      "Unassigned": 4879
+    },
+    "population_proportions": {
+      "CD11cnegCD14neg": 0.8295,
+      "Unassigned": 0.1705
+    }
+  }
+}

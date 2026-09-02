@@ -1,0 +1,31 @@
+{
+  "task_id": "FR-FCM-Z74D_hc__exp_exp_Donor__A_panel-C_Clean cells_T cells__step_11",
+  "dataset": "FR-FCM-Z74D_hc",
+  "sample": "exp_exp_Donor__A_panel-C_Clean cells_T cells",
+  "step": 11,
+  "parent": "Step03_Foxp3|CD127 == tot_Treg",
+  "x_marker": "CCR7",
+  "y_marker": "CD45RA",
+  "annotation_column": "Step11_CCR7|CD45RA",
+  "categories": [
+    "Memory_Treg",
+    "Naive_Treg",
+    "Unassigned"
+  ],
+  "note": "Treg memory / activation status on CCR7 × CD45RA, binary split (CM/EM/EMRA collapsed into a single 'Memory_Treg' bucket). Naive_Treg: resting naive Treg (Miyara Fraction I) — upper-right quadrant (CCR7+, CD45RA+). Memory_Treg: effector / activated Treg (Miyara Fractions II + III aggregated) — broad cluster across the other three quadrants.",
+  "tips": "Treg memory / activation status (binary split). Naive_Treg: CCR7+ CD45RA+. Memory_Treg: all other CCR7/CD45RA quadrants aggregated. This step collapses CM/EM/EMRA into a single 'memory' bucket, unlike the 4-way split used for conventional CD4/CD8 (Steps 2 & 4). In-panel co-marker priors to formalize Miyara fractions (all in panel, not currently gated): Foxp3 intensity (low vs high) splits CD45RA- Memory_Treg into Fr II (Foxp3-high effector Treg) and Fr III (Foxp3-low non-suppressive); CD25 brightness reinforces Fr II.",
+  "gating_context": "Root -> Step03_Foxp3|CD127(tot_Treg)",
+  "gt_summary": {
+    "n_parent_cells": 6570,
+    "n_cells_per_category": {
+      "Memory_Treg": 5350,
+      "Naive_Treg": 1206,
+      "Unassigned": 14
+    },
+    "population_proportions": {
+      "Memory_Treg": 0.8143,
+      "Naive_Treg": 0.1836,
+      "Unassigned": 0.0021
+    }
+  }
+}

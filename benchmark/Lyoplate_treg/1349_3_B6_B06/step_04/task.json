@@ -1,0 +1,37 @@
+{
+  "task_id": "Lyoplate_treg__1349_3_B6_B06__step_04",
+  "dataset": "Lyoplate_treg",
+  "sample": "1349_3_B6_B06",
+  "step": 4,
+  "parent": "Step03_CD25|CD127 == Treg",
+  "x_marker": "CCR4",
+  "y_marker": "HLADR",
+  "annotation_column": "Step04_CCR4|HLADR",
+  "categories": [
+    "CCR4neg_HLADRpos",
+    "CCR4pos_HLADRpos",
+    "CCR4pos_HLADRneg",
+    "CCR4neg_HLADRneg",
+    "Unassigned"
+  ],
+  "note": "Treg subsetting on CCR4 × HLA-DR, four-quadrant layout. CCR4pos_HLADRpos: activated skin-homing Treg — upper-right quadrant (CCR4+, HLA-DR+). CCR4pos_HLADRneg: skin-homing Treg, not activated — lower-right quadrant (CCR4+, HLA-DR-). CCR4neg_HLADRpos: activated Treg without skin-homing bias — upper-left quadrant (CCR4-, HLA-DR+). CCR4neg_HLADRneg: resting non-skin-homing Treg — lower-left quadrant (both -).",
+  "tips": "Treg functional / activation quadrants. CCR4 marks skin/mucosa-homing capacity and is associated with tissue-homing effector Treg. HLA-DR is an activation marker on Treg and is enriched on effector Treg with enhanced suppressive capacity (reported e.g. in Miyara et al. 2009 and follow-up work). CCR4pos_HLADRpos: CCR4+ HLA-DR+. CCR4pos_HLADRneg: CCR4+ HLA-DR-. CCR4neg_HLADRpos: CCR4- HLA-DR+. CCR4neg_HLADRneg: CCR4- HLA-DR-.",
+  "gating_context": "Root -> Step03_CD25|CD127(Treg)",
+  "gt_summary": {
+    "n_parent_cells": 605,
+    "n_cells_per_category": {
+      "CCR4neg_HLADRpos": 12,
+      "CCR4pos_HLADRpos": 143,
+      "CCR4pos_HLADRneg": 247,
+      "CCR4neg_HLADRneg": 203,
+      "Unassigned": 0
+    },
+    "population_proportions": {
+      "CCR4neg_HLADRpos": 0.0198,
+      "CCR4pos_HLADRpos": 0.2364,
+      "CCR4pos_HLADRneg": 0.4083,
+      "CCR4neg_HLADRneg": 0.3355,
+      "Unassigned": 0.0
+    }
+  }
+}

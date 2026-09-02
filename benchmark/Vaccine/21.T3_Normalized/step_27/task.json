@@ -1,0 +1,26 @@
+{
+  "task_id": "Vaccine__21.T3_Normalized__step_27",
+  "dataset": "Vaccine",
+  "sample": "21.T3_Normalized",
+  "step": 27,
+  "parent": "Step26_168Er_CD14|147Sm_CD11c == CD11cnegCD14neg",
+  "x_marker": "144Nd_CD19",
+  "y_marker": "170Er_CD3",
+  "annotation_column": "Step27_144Nd_CD19|170Er_CD3",
+  "categories": [
+    "CD3T",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step26_168Er_CD14|147Sm_CD11c(CD11cnegCD14neg)",
+  "gt_summary": {
+    "n_parent_cells": 128489,
+    "n_cells_per_category": {
+      "CD3T": 113210,
+      "Unassigned": 15279
+    },
+    "population_proportions": {
+      "CD3T": 0.8811,
+      "Unassigned": 0.1189
+    }
+  }
+}

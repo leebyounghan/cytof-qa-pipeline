@@ -1,0 +1,28 @@
+{
+  "task_id": "Bjornson__R15W9_W070515101352_Hu_M_IFNg__step_08",
+  "dataset": "Bjornson",
+  "sample": "R15W9_W070515101352_Hu_M_IFNg",
+  "step": 8,
+  "parent": "Step07_CD16_Tb159Di|CD11b_Eu153Di == CD11bnegCD16neg",
+  "x_marker": "CD11c_Nd143Di",
+  "y_marker": "CD123_Nd148Di",
+  "annotation_column": "Step08_CD11c_Nd143Di|CD123_Nd148Di",
+  "categories": [
+    "DCs",
+    "Unassigned"
+  ],
+  "note": "DCs: total dendritic cells (conventional and plasmacytoid; cDC vs pDC subtypes are not split in this workflow) — two distinct sub-clusters captured by a single polygon: a CD11c+ CD123- cluster at the lower-right (cDC) and a CD11c- CD123+ cluster at the upper-left (pDC). The lower-left double-negative corner is excluded.",
+  "tips": "DCs: CD11c+ AND/OR CD123+ (cDC are CD11c+ CD123-, pDC are CD11c- CD123+; this gate captures both with a single polygon). Useful co-markers: HLA-DR+ is a DC hallmark and already enforced by the upstream parent chain; CD1c_Dy162Di and BDCA3_Dy164Di (BDCA3/CD141) are available in panel and would resolve cDC1 (BDCA3+) vs cDC2 (CD1c+) if needed; CD33_Nd142Di confirms myeloid lineage (cDCs are CD33+, lower than monocytes); CD14_Eu151Di should be negative/low on DCs — useful as a negative check to exclude residual monocytes that leaked past Step 7; CD11b_Eu153Di is generally low/negative on DCs.",
+  "gating_context": "Root -> Step07_CD16_Tb159Di|CD11b_Eu153Di(CD11bnegCD16neg)",
+  "gt_summary": {
+    "n_parent_cells": 211,
+    "n_cells_per_category": {
+      "DCs": 179,
+      "Unassigned": 32
+    },
+    "population_proportions": {
+      "DCs": 0.8483,
+      "Unassigned": 0.1517
+    }
+  }
+}

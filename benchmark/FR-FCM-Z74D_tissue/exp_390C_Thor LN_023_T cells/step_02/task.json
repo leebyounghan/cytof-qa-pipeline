@@ -1,0 +1,37 @@
+{
+  "task_id": "FR-FCM-Z74D_tissue__exp_390C_Thor LN_023_T cells__step_02",
+  "dataset": "FR-FCM-Z74D_tissue",
+  "sample": "exp_390C_Thor LN_023_T cells",
+  "step": 2,
+  "parent": "Step01_CD4|CD8 == CD8",
+  "x_marker": "CCR7",
+  "y_marker": "CD45RA",
+  "annotation_column": "Step02_CCR7|CD45RA",
+  "categories": [
+    "Naive_CD8",
+    "CM_CD8",
+    "EM_CD8",
+    "EMRA_CD8",
+    "Unassigned"
+  ],
+  "note": "Classical Sallusto/Lanzavecchia CD8 memory layout on CCR7 × CD45RA. Strategy: (1) Naive_CD8 anchors on the dense blob at the upper-right corner (CCR7 very high, CD45RA high) — antigen-inexperienced naive cytotoxic T cells. (2) EMRA_CD8 sits immediately to the left of Naive_CD8 in the upper CD45RA band — terminally differentiated cytotoxic T cells. (3) In the lower CD45RA band (memory cells), CCR7 is bimodal — locate the CCR7+ peak; CM_CD8 (central memory; lymph-node homing) sits at/right of this peak, EM_CD8 (effector memory) sits to its left. CCR7 (and sometimes CD45RA) can be trimodal in this panel, so density peaks — not fixed thresholds — anchor the gate.",
+  "tips": "Classical Sallusto/Lanzavecchia CD8 memory scheme (CCR7 × CD45RA). Naive_CD8: CCR7+ CD45RA+. CM_CD8: CCR7+ CD45RA-. EM_CD8: CCR7- CD45RA-. EMRA_CD8: CCR7- CD45RA+. Tissue context: in non-lymphoid tissues (Liver, Lung, Ileum) the Naive_CD8 fraction is expected to be low — substantial Naive_CD8 in those tissues may indicate blood contamination; lymphoid tissues (Spleen, mLN, tLN, BM) retain more Naive_CD8. Useful co-markers: CD45RO / CD27 / CD28 would refine memory staging but are not in panel; CD69 + CD103 (both in panel) identify tissue-resident memory (Trm) and are resolved separately at Step 9 for Th1.",
+  "gating_context": "Root -> Step01_CD4|CD8(CD8)",
+  "gt_summary": {
+    "n_parent_cells": 16314,
+    "n_cells_per_category": {
+      "Naive_CD8": 9184,
+      "CM_CD8": 283,
+      "EM_CD8": 4324,
+      "EMRA_CD8": 2374,
+      "Unassigned": 149
+    },
+    "population_proportions": {
+      "Naive_CD8": 0.563,
+      "CM_CD8": 0.0173,
+      "EM_CD8": 0.265,
+      "EMRA_CD8": 0.1455,
+      "Unassigned": 0.0091
+    }
+  }
+}

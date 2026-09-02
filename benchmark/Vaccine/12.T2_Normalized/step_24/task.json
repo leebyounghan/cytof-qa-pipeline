@@ -1,0 +1,29 @@
+{
+  "task_id": "Vaccine__12.T2_Normalized__step_24",
+  "dataset": "Vaccine",
+  "sample": "12.T2_Normalized",
+  "step": 24,
+  "parent": "Step22_163Dy_CD56_NCAM|173Yb_HLA-DR == TotalDC",
+  "x_marker": "147Sm_CD11c",
+  "y_marker": "143Nd_CD123_IL-3R",
+  "annotation_column": "Step24_147Sm_CD11c|143Nd_CD123_IL-3R",
+  "categories": [
+    "pDC",
+    "cDC",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step22_163Dy_CD56_NCAM|173Yb_HLA-DR(TotalDC)",
+  "gt_summary": {
+    "n_parent_cells": 3417,
+    "n_cells_per_category": {
+      "pDC": 107,
+      "cDC": 3198,
+      "Unassigned": 112
+    },
+    "population_proportions": {
+      "pDC": 0.0313,
+      "cDC": 0.9359,
+      "Unassigned": 0.0328
+    }
+  }
+}

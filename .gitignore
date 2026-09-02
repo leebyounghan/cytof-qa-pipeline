@@ -1,0 +1,55 @@
+# Data directories (large files, not tracked in git)
+data
+data/
+output/
+outputs/
+logs/
+results/
+
+# Under case_study/: track source code only, skip plots/ and per-method predictions
+case_study/*
+!case_study/*.py
+
+# Flat-pipeline derived outputs (regenerated from src/llm_gate_flat/ and src/flowsom_c2s/)
+results_flat/
+benchmark_flat/
+
+# Under benchmark/: track metadata (notes.yaml, splits.json, panel_meta.yaml,
+# hard_*.yaml) and task.json; skip plots and derived per-step data
+benchmark/**/*
+!benchmark/**/
+!benchmark/notes.yaml
+!benchmark/splits.json
+!benchmark/hard_depletion.yaml
+!benchmark/hard_shift.yaml
+!benchmark/**/panel_meta.yaml
+!benchmark/**/task.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+*.egg-info/
+dist/
+build/
+
+# macOS
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Env
+.env
+venv/
+.venv/
+
+# Run logs
+*.log
+
+# flowDensity inference outputs (large, regenerated)
+src/llm/flowdensity_result/
+
+# Claude Code session-local state
+.claude/

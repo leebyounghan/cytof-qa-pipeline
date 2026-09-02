@@ -1,0 +1,26 @@
+{
+  "task_id": "Acute2021__57_Normalized__step_05",
+  "dataset": "Acute2021",
+  "sample": "57_Normalized",
+  "step": 5,
+  "parent": "Step04_Time|Offset == Cleanup4",
+  "x_marker": "Time",
+  "y_marker": "Width",
+  "annotation_column": "Step05_Time|Width",
+  "categories": [
+    "Cleanup5",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step04_Time|Offset(Cleanup4)",
+  "gt_summary": {
+    "n_parent_cells": 440184,
+    "n_cells_per_category": {
+      "Cleanup5": 426940,
+      "Unassigned": 13244
+    },
+    "population_proportions": {
+      "Cleanup5": 0.9699,
+      "Unassigned": 0.0301
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "task_id": "Acute2020__994586_Normalized__step_41",
+  "dataset": "Acute2020",
+  "sample": "994586_Normalized",
+  "step": 41,
+  "parent": "Step40_150Nd_CD45RA|154Sm_CD27 == CD4Naive",
+  "x_marker": "173Yb_HLA-DR",
+  "y_marker": "161Dy_CD38",
+  "annotation_column": "Step41_173Yb_HLA-DR|161Dy_CD38",
+  "categories": [
+    "CD4Naive/activated",
+    "CD4Naive/CD38pos",
+    "CD4Naive/activated+CD38pos",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step40_150Nd_CD45RA|154Sm_CD27(CD4Naive)",
+  "gt_summary": {
+    "n_parent_cells": 1190,
+    "n_cells_per_category": {
+      "CD4Naive/activated": 0,
+      "CD4Naive/CD38pos": 653,
+      "CD4Naive/activated+CD38pos": 2,
+      "Unassigned": 535
+    },
+    "population_proportions": {
+      "CD4Naive/activated": 0.0,
+      "CD4Naive/CD38pos": 0.5487,
+      "CD4Naive/activated+CD38pos": 0.0017,
+      "Unassigned": 0.4496
+    }
+  }
+}

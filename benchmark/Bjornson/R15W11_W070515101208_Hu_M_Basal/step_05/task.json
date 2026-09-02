@@ -1,0 +1,31 @@
+{
+  "task_id": "Bjornson__R15W11_W070515101208_Hu_M_Basal__step_05",
+  "dataset": "Bjornson",
+  "sample": "R15W11_W070515101208_Hu_M_Basal",
+  "step": 5,
+  "parent": "Step04_CD3_Gd157Di|CD19_Yb173Di == Tcells",
+  "x_marker": "CD4_Gd156Di",
+  "y_marker": "CD8_Gd155Di",
+  "annotation_column": "Step05_CD4_Gd156Di|CD8_Gd155Di",
+  "categories": [
+    "CD4Tcells",
+    "CD8Tcells",
+    "Unassigned"
+  ],
+  "note": "CD4Tcells: helper T cells — dense blob at the lower-right (CD4+, CD8-). CD8Tcells: cytotoxic T cells — dense blob at the upper-left (CD4-, CD8+). Both CD4 and CD8 are bimodal — quadrant boundaries set at the valley between the positive and negative peaks of each axis. DPT (upper-right) and DNT (lower-left) subsets are not categorized and fall into Unassigned.",
+  "tips": "CD4Tcells: CD4+ CD8-. CD8Tcells: CD4- CD8+. DPT and DNT (includes MAIT/NKT) subsets fall outside both polygon regions and are not tracked. Useful co-markers: CD45RA_Er166Di / CCR7_Yb171Di enable memory subset analysis (Naive/TCM/TEM/TEMRA) — present in panel but not gated in this simplified workflow. FoxP3_Er167Di (in panel) would resolve Treg within CD4Tcells; CD161_Er168Di (in panel) would mark MAIT within the unassigned DNT residual; CD7_Pr141Di confirms T cell identity across both CD4 and CD8 subsets (expressed on >95% of mature T cells); CD56_Lu175Di (in panel) would identify NKT within DPT/DNT residuals.",
+  "gating_context": "Root -> Step04_CD3_Gd157Di|CD19_Yb173Di(Tcells)",
+  "gt_summary": {
+    "n_parent_cells": 31102,
+    "n_cells_per_category": {
+      "CD4Tcells": 15191,
+      "CD8Tcells": 10029,
+      "Unassigned": 5882
+    },
+    "population_proportions": {
+      "CD4Tcells": 0.4884,
+      "CD8Tcells": 0.3225,
+      "Unassigned": 0.1891
+    }
+  }
+}

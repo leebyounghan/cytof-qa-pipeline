@@ -1,0 +1,28 @@
+{
+  "task_id": "Lyoplate_bcell__B_CELL_12828_002_P1__step_05",
+  "dataset": "Lyoplate_bcell",
+  "sample": "B_CELL_12828_002_P1",
+  "step": 5,
+  "parent": "Step02_CD3|CD20 == CD19_CD20neg",
+  "x_marker": "CD38",
+  "y_marker": "CD27",
+  "annotation_column": "Step05_CD38|CD27",
+  "categories": [
+    "Plasmablasts",
+    "Unassigned"
+  ],
+  "note": "Plasmablasts: antibody-secreting B-lineage cells — small cluster at the upper-right (CD38++, CD27++), separated from the sparse background at lower CD27 and CD38.",
+  "tips": "Plasmablast identification within the CD19+ CD20- pool. Plasmablasts: CD38++ CD27+. Parent design is important: plasmablasts are CD20-low/negative, so they would be missed if gated from the CD20+ (mature B) branch — hence the separate parent at Step 2. The CD19+ CD20- parent also contains CD19+CD20- non-plasmablast residuals, which are excluded by requiring CD27+ CD38++ here.",
+  "gating_context": "Root -> Step02_CD3|CD20(CD19_CD20neg)",
+  "gt_summary": {
+    "n_parent_cells": 206,
+    "n_cells_per_category": {
+      "Plasmablasts": 109,
+      "Unassigned": 97
+    },
+    "population_proportions": {
+      "Plasmablasts": 0.5291,
+      "Unassigned": 0.4709
+    }
+  }
+}

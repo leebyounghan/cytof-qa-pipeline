@@ -1,0 +1,37 @@
+{
+  "task_id": "Lyoplate_DC__lot 12828_D3_D03__step_05",
+  "dataset": "Lyoplate_DC",
+  "sample": "lot 12828_D3_D03",
+  "step": 5,
+  "parent": "Step04_SSC-A|HLADR == HLADRpos",
+  "x_marker": "CD11c",
+  "y_marker": "CD123",
+  "annotation_column": "Step05_CD11c|CD123",
+  "categories": [
+    "pDC",
+    "mDC",
+    "CD11cpos_CD123pos",
+    "CD11cneg_CD123neg",
+    "Unassigned"
+  ],
+  "note": "DC subset split on CD11c × CD123 within HLADR+ Lin- CD14- CD16- CD56- compartment. pDC: plasmacytoid dendritic cells — large cloud at CD123 high forming a horizontal band at the top of the plot (spans a broad CD11c range). mDC: myeloid dendritic cells — main cluster at the right (CD11c high, CD123 mid-to-high). CD11cpos_CD123pos: CD11c+ CD123+ residual (very small group). CD11cneg_CD123neg: CD11c- CD123- residual — sparse cluster at the left.",
+  "tips": "DC subsetting on CD11c × CD123 quadrants. pDC: CD11c- CD123+ (CD123 high). mDC: CD11c+ CD123 dim/low (CD123 lower than pDC; not necessarily absolutely negative — the cut is relative within HLA-DR+ DCs). CD11cpos_CD123pos: CD11c+ CD123+. CD11cneg_CD123neg: CD11c- CD123-. Naming caveat: the four categories mix biological names (`pDC`, `mDC`) with explicit marker-signature names (`CD11cpos_CD123pos`, `CD11cneg_CD123neg`) — this is intentional, reflecting that only the two canonical DC subsets have well-defined biological identities at this resolution.",
+  "gating_context": "Root -> Step04_SSC-A|HLADR(HLADRpos)",
+  "gt_summary": {
+    "n_parent_cells": 1594,
+    "n_cells_per_category": {
+      "pDC": 422,
+      "mDC": 922,
+      "CD11cpos_CD123pos": 5,
+      "CD11cneg_CD123neg": 245,
+      "Unassigned": 0
+    },
+    "population_proportions": {
+      "pDC": 0.2647,
+      "mDC": 0.5784,
+      "CD11cpos_CD123pos": 0.0031,
+      "CD11cneg_CD123neg": 0.1537,
+      "Unassigned": 0.0
+    }
+  }
+}

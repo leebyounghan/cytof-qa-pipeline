@@ -1,0 +1,26 @@
+{
+  "task_id": "Acute2020__994574_Normalized__step_07",
+  "dataset": "Acute2020",
+  "sample": "994574_Normalized",
+  "step": 7,
+  "parent": "Step06_Time|103Rh_Live_Dead == Cleanup6",
+  "x_marker": "191Ir_DNA1",
+  "y_marker": "Event_length",
+  "annotation_column": "Step07_191Ir_DNA1|Event_length",
+  "categories": [
+    "Ir",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step06_Time|103Rh_Live_Dead(Cleanup6)",
+  "gt_summary": {
+    "n_parent_cells": 412580,
+    "n_cells_per_category": {
+      "Ir": 401082,
+      "Unassigned": 11498
+    },
+    "population_proportions": {
+      "Ir": 0.9721,
+      "Unassigned": 0.0279
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "task_id": "Lyoplate_tcell__T_CELL_1369_002_P1__step_02",
+  "dataset": "Lyoplate_tcell",
+  "sample": "T_CELL_1369_002_P1",
+  "step": 2,
+  "parent": "Step01_CD3|SSC-A == CD3pos",
+  "x_marker": "CD4",
+  "y_marker": "CD8",
+  "annotation_column": "Step02_CD4|CD8",
+  "categories": [
+    "CD4",
+    "CD8",
+    "DNT",
+    "DPT",
+    "Unassigned"
+  ],
+  "note": "Four-population split on CD4 × CD8. CD4: helper T cells — dense vertical band at the right (CD4+, CD8-). CD8: cytotoxic T cells — dense horizontal band at the top (CD4-, CD8+). DPT: double-positive T cells — small cluster at the upper-right (CD4+, CD8+). DNT: double-negative T cells — cluster at the lower-left (both -). Both CD4 and CD8 are bimodal — quadrant boundaries set at the valley between the positive and negative peaks of each axis.",
+  "tips": "CD4/CD8 quadrant split on CD3+ T cells. CD4: CD4+ CD8-. CD8: CD4- CD8+. DNT: CD4- CD8-. DPT: CD4+ CD8+. Useful co-markers: αβ/γδ TCR markers and CD161 (for MAIT/iNKT enrichment within DNT) are not in this panel, so DNT cannot be further resolved here.",
+  "gating_context": "Root -> Step01_CD3|SSC-A(CD3pos)",
+  "gt_summary": {
+    "n_parent_cells": 50291,
+    "n_cells_per_category": {
+      "CD4": 31950,
+      "CD8": 11709,
+      "DNT": 6518,
+      "DPT": 114,
+      "Unassigned": 0
+    },
+    "population_proportions": {
+      "CD4": 0.6353,
+      "CD8": 0.2328,
+      "DNT": 0.1296,
+      "DPT": 0.0023,
+      "Unassigned": 0.0
+    }
+  }
+}

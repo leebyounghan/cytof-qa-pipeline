@@ -1,0 +1,448 @@
+# Hard shift tasks — channel_scale perturbations for In-Panel Hard (Setting 2).
+#
+# Each entry defines a single (dataset, step, channel_scale) triple.
+# Magnitudes are MULTIPLICATIVE FACTORS on raw (pre-arcsinh) signal:
+#   raw'      = raw * factor
+#   arcsinh'  = arcsinh(sinh(arcsinh) * factor)
+# factor=1.0 is no perturbation; <1 dims, >1 brightens.
+#
+# Why multiplicative? Additive shifts in arcsinh space drive dim cells (raw≈0)
+# into unphysical negative raw counts. Multiplicative on raw preserves dim
+# populations near zero and rescales bright populations proportionally — which
+# is how lot/antibody/instrument calibration drift actually behaves.
+#
+# Calibration: factor = exp(delta), where the underlying delta was empirically
+# calibrated per (dataset, step) as
+#   delta = clip(0.30 × |median(marker | high_classes) − median(marker | low_classes)|, ±1.0)
+#   panel_global: delta = clip(0.20 × median(protein-channel IQR), 1.0)
+# (target ~10-30% of cells crossing the gate boundary; cap keeps the
+#  perturbation in the 'lot variability' regime.) factor range thus spans
+#  exp(-1) ≈ 0.37 to exp(1) ≈ 2.72.
+#
+# Runtime semantics
+#   1. Load the sample's parquet normally.
+#   2. Apply the channel_scale (marker name → broadcast via meta.json[channels]).
+#   3. Compute the target step's parent population via the standard parent filter.
+#   4. Evaluate the step's classification on the rescaled expression columns.
+#   5. GT labels are unchanged — tests robustness to calibration drift.
+#
+# Sentinel: scales may include `__all_protein_markers__: <factor>` which the
+# loader (src/hard_shifts.py) expands to all channels with kind == "protein".
+#
+# Sample scope: each hard_id applies to all samples in the dataset's `test` split.
+
+scenarios:
+  lineage_dim:
+    description: Aged-antibody / partial conjugation failure on lineage markers — dim staining of CD3/CD4/CD8/CD19/CD20
+    rationale: Antibody lots degrade or partial conjugation reduces stain intensity. Per-task delta = clip(0.30 × |pos_med
+      - neg_med|, ±1.0).
+  ccr7_internalization:
+    description: Surface CCR7 loss from freeze-thaw or cell activation during prep — pushes Naive/CM cells toward EM/EMRA
+      gates
+    rationale: 'CCR7 is famously labile: freeze-thaw cycles and any in-tube activation cause receptor internalization.'
+  cd45ra_drift:
+    description: CD45RA antibody lot brightness increase — over-estimates Naive and TEMRA populations
+    rationale: CD45RA shows substantial lot-to-lot variability. Brighter staining inflates the CD45RA-positive gate.
+  treg_marker_collapse:
+    description: Intracellular Treg marker dim staining — Foxp3/CD25 down, CD127 up — collapses the Treg gate
+    rationale: Foxp3 is intracellular and requires fix/perm; technical failures dim Foxp3+CD25 simultaneously.
+  mono_subset_shift:
+    description: CD16 channel drift — confounds monocyte subset (Classical/Intermediate/Patrolling) and Neutrophil/Eosinophil
+      borders
+    rationale: CD16 spillover or compensation residuals shift the boundary between CD16-low and CD16-high populations.
+  dc_marker_drift:
+    description: Dendritic-cell discriminator marker drift — CD11c dim, CD123 dim — confuses pDC vs mDC discrimination
+    rationale: DC subset markers have narrower dynamic range than lineage markers; lot variability shifts the pDC/mDC border.
+  bead_residual:
+    description: Post-normalization bead intensity drift — bead population shifts down, polluting the real-cell gate at step
+      1
+    rationale: EQ4-bead normalization can leave residuals when beads aren't perfectly captured. Marker name 'Bead' broadcasts
+      to all 4 bead mass channels (140Ce, 142Ce, 165Ho, 175Lu). CyTOF only.
+  viability_drift:
+    description: Viability dye drift from sample storage / freeze-thaw — Rh staining intensifies, more cells incorrectly look
+      dead
+    rationale: 103Rh-IDU staining intensity grows with extended storage and freeze-thaw cycles, pushing real live cells past
+      the viability gate. Step 6 of CyTOF cohorts.
+  panel_global:
+    description: Whole-panel calibration drift — all protein channels +delta — simulates batch-level instrument calibration
+      error
+    rationale: CyTOF bead normalization residuals or flow cytometer compensation drift apply systematically. delta = clip(0.20
+      × median(protein-channel IQR), 1.0).
+tasks:
+- hard_id: lineage_dim_acute2020_step12
+  scenario: lineage_dim
+  dataset: Acute2020
+  step: 12
+  step_column: Step12_144Nd_CD19|171Yb_CD20
+  scales:
+    CD19: 0.3679
+    CD20: 0.3679
+- hard_id: lineage_dim_acute2020_step29
+  scenario: lineage_dim
+  dataset: Acute2020
+  step: 29
+  step_column: Step29_145Nd_CD4|146Nd_CD8a
+  scales:
+    CD4: 0.3679
+    CD8a: 0.3679
+- hard_id: lineage_dim_acute2021_step29
+  scenario: lineage_dim
+  dataset: Acute2021
+  step: 29
+  step_column: Step29_145Nd_CD4|146Nd_CD8a
+  scales:
+    CD4: 0.3679
+    CD8a: 0.3679
+- hard_id: lineage_dim_fr_fcm_z74d_hc_step01
+  scenario: lineage_dim
+  dataset: FR-FCM-Z74D_hc
+  step: 1
+  step_column: Step01_CD4|CD8
+  scales:
+    CD4: 0.3679
+    CD8: 0.3679
+- hard_id: lineage_dim_frdr_covid19_step08
+  scenario: lineage_dim
+  dataset: FRDR_covid19
+  step: 8
+  step_column: Step08_CD19|CD3
+  scales:
+    CD3: 0.3679
+    CD19: 0.3679
+- hard_id: lineage_dim_lyoplate_bcell_step01
+  scenario: lineage_dim
+  dataset: Lyoplate_bcell
+  step: 1
+  step_column: Step01_CD3|CD19
+  scales:
+    CD3: 0.6839
+    CD19: 0.7118
+- hard_id: lineage_dim_lyoplate_tcell_step02
+  scenario: lineage_dim
+  dataset: Lyoplate_tcell
+  step: 2
+  step_column: Step02_CD4|CD8
+  scales:
+    CD4: 0.7189
+    CD8: 0.6839
+- hard_id: lineage_dim_vaccine_step29
+  scenario: lineage_dim
+  dataset: Vaccine
+  step: 29
+  step_column: Step29_145Nd_CD4|146Nd_CD8a
+  scales:
+    CD4: 0.5066
+    CD8a: 0.3679
+- hard_id: ccr7_internalization_fr_fcm_z74d_hc_step02
+  scenario: ccr7_internalization
+  dataset: FR-FCM-Z74D_hc
+  step: 2
+  step_column: Step02_CCR7|CD45RA
+  scales:
+    CCR7: 0.4025
+- hard_id: ccr7_internalization_fr_fcm_z74d_hc_step04
+  scenario: ccr7_internalization
+  dataset: FR-FCM-Z74D_hc
+  step: 4
+  step_column: Step04_CCR7|CD45RA
+  scales:
+    CCR7: 0.3679
+- hard_id: ccr7_internalization_fr_fcm_z74d_tissue_step02
+  scenario: ccr7_internalization
+  dataset: FR-FCM-Z74D_tissue
+  step: 2
+  step_column: Step02_CCR7|CD45RA
+  scales:
+    CCR7: 0.3679
+- hard_id: ccr7_internalization_fr_fcm_z74d_tissue_step04
+  scenario: ccr7_internalization
+  dataset: FR-FCM-Z74D_tissue
+  step: 4
+  step_column: Step04_CCR7|CD45RA
+  scales:
+    CCR7: 0.436
+- hard_id: ccr7_internalization_lyoplate_tcell_step03
+  scenario: ccr7_internalization
+  dataset: Lyoplate_tcell
+  step: 3
+  step_column: Step03_CCR7|CD45RA
+  scales:
+    CCR7: 0.7866
+- hard_id: ccr7_internalization_lyoplate_tcell_step05
+  scenario: ccr7_internalization
+  dataset: Lyoplate_tcell
+  step: 5
+  step_column: Step05_CCR7|CD45RA
+  scales:
+    CCR7: 0.7634
+- hard_id: cd45ra_drift_acute2020_step30
+  scenario: cd45ra_drift
+  dataset: Acute2020
+  step: 30
+  step_column: Step30_150Nd_CD45RA|154Sm_CD27
+  scales:
+    CD45RA: 2.5345
+- hard_id: cd45ra_drift_acute2020_step40
+  scenario: cd45ra_drift
+  dataset: Acute2020
+  step: 40
+  step_column: Step40_150Nd_CD45RA|154Sm_CD27
+  scales:
+    CD45RA: 2.2479
+- hard_id: cd45ra_drift_acute2021_step30
+  scenario: cd45ra_drift
+  dataset: Acute2021
+  step: 30
+  step_column: Step30_150Nd_CD45RA|154Sm_CD27
+  scales:
+    CD45RA: 2.6379
+- hard_id: cd45ra_drift_acute2021_step40
+  scenario: cd45ra_drift
+  dataset: Acute2021
+  step: 40
+  step_column: Step40_150Nd_CD45RA|154Sm_CD27
+  scales:
+    CD45RA: 2.5857
+- hard_id: cd45ra_drift_fr_fcm_z74d_hc_step02
+  scenario: cd45ra_drift
+  dataset: FR-FCM-Z74D_hc
+  step: 2
+  step_column: Step02_CCR7|CD45RA
+  scales:
+    CD45RA: 2.4843
+- hard_id: cd45ra_drift_fr_fcm_z74d_hc_step04
+  scenario: cd45ra_drift
+  dataset: FR-FCM-Z74D_hc
+  step: 4
+  step_column: Step04_CCR7|CD45RA
+  scales:
+    CD45RA: 2.7183
+- hard_id: cd45ra_drift_lyoplate_tcell_step03
+  scenario: cd45ra_drift
+  dataset: Lyoplate_tcell
+  step: 3
+  step_column: Step03_CCR7|CD45RA
+  scales:
+    CD45RA: 1.2712
+- hard_id: cd45ra_drift_lyoplate_tcell_step05
+  scenario: cd45ra_drift
+  dataset: Lyoplate_tcell
+  step: 5
+  step_column: Step05_CCR7|CD45RA
+  scales:
+    CD45RA: 1.2461
+- hard_id: cd45ra_drift_vaccine_step30
+  scenario: cd45ra_drift
+  dataset: Vaccine
+  step: 30
+  step_column: Step30_150Nd_CD45RA|154Sm_CD27
+  scales:
+    CD45RA: 2.1383
+- hard_id: cd45ra_drift_vaccine_step40
+  scenario: cd45ra_drift
+  dataset: Vaccine
+  step: 40
+  step_column: Step40_150Nd_CD45RA|154Sm_CD27
+  scales:
+    CD45RA: 2.034
+- hard_id: treg_marker_collapse_fr_fcm_z74d_hc_step03
+  scenario: treg_marker_collapse
+  dataset: FR-FCM-Z74D_hc
+  step: 3
+  step_column: Step03_Foxp3|CD127
+  scales:
+    Foxp3: 0.625
+    CD127: 1.682
+- hard_id: treg_marker_collapse_fr_fcm_z74d_tissue_step03
+  scenario: treg_marker_collapse
+  dataset: FR-FCM-Z74D_tissue
+  step: 3
+  step_column: Step03_Foxp3|CD127
+  scales:
+    Foxp3: 0.522
+    CD127: 1.2969
+- hard_id: treg_marker_collapse_lyoplate_treg_step03
+  scenario: treg_marker_collapse
+  dataset: Lyoplate_treg
+  step: 3
+  step_column: Step03_CD25|CD127
+  scales:
+    CD25: 0.827
+    CD127: 1.1052
+- hard_id: mono_subset_shift_acute2020_step62
+  scenario: mono_subset_shift
+  dataset: Acute2020
+  step: 62
+  step_column: Step62_148Nd_CD16|166Er_CD294
+  scales:
+    CD16: 1.31
+- hard_id: mono_subset_shift_acute2021_step62
+  scenario: mono_subset_shift
+  dataset: Acute2021
+  step: 62
+  step_column: Step62_148Nd_CD16|166Er_CD294
+  scales:
+    CD16: 1.716
+- hard_id: mono_subset_shift_frdr_covid19_step07
+  scenario: mono_subset_shift
+  dataset: FRDR_covid19
+  step: 7
+  step_column: Step07_CD16|FSC-A
+  scales:
+    CD16: 2.7183
+- hard_id: mono_subset_shift_frdr_covid19_step10
+  scenario: mono_subset_shift
+  dataset: FRDR_covid19
+  step: 10
+  step_column: Step10_CD16|CD14
+  scales:
+    CD16: 1.804
+- hard_id: mono_subset_shift_vaccine_step62
+  scenario: mono_subset_shift
+  dataset: Vaccine
+  step: 62
+  step_column: Step62_148Nd_CD16|166Er_CD294
+  scales:
+    CD16: 2.1598
+- hard_id: dc_marker_drift_acute2020_step24
+  scenario: dc_marker_drift
+  dataset: Acute2020
+  step: 24
+  step_column: Step24_147Sm_CD11c|143Nd_CD123_IL-3R
+  scales:
+    CD11c: 0.522
+- hard_id: dc_marker_drift_frdr_covid19_step16
+  scenario: dc_marker_drift
+  dataset: FRDR_covid19
+  step: 16
+  step_column: Step16_CD303|CD123
+  scales:
+    CD303: 0.3679
+    CD123: 0.3679
+- hard_id: dc_marker_drift_lyoplate_dc_step05
+  scenario: dc_marker_drift
+  dataset: Lyoplate_DC
+  step: 5
+  step_column: Step05_CD11c|CD123
+  scales:
+    CD11c: 0.8607
+    CD123: 0.8521
+- hard_id: bead_residual_acute2020_step01
+  scenario: bead_residual
+  dataset: Acute2020
+  step: 1
+  step_column: Step01_Time|140Ce_Bead
+  scales:
+    Bead: 0.3679
+- hard_id: bead_residual_acute2021_step01
+  scenario: bead_residual
+  dataset: Acute2021
+  step: 1
+  step_column: Step01_Time|140Ce_Bead
+  scales:
+    Bead: 0.3679
+- hard_id: bead_residual_vaccine_step01
+  scenario: bead_residual
+  dataset: Vaccine
+  step: 1
+  step_column: Step01_Time|140Ce_Bead
+  scales:
+    Bead: 0.3679
+- hard_id: viability_drift_acute2020_step06
+  scenario: viability_drift
+  dataset: Acute2020
+  step: 6
+  step_column: Step06_Time|103Rh_Live_Dead
+  scales:
+    Live_Dead: 2.7183
+- hard_id: viability_drift_acute2021_step06
+  scenario: viability_drift
+  dataset: Acute2021
+  step: 6
+  step_column: Step06_Time|103Rh_Live_Dead
+  scales:
+    Live_Dead: 1.4191
+- hard_id: viability_drift_vaccine_step06
+  scenario: viability_drift
+  dataset: Vaccine
+  step: 6
+  step_column: Step06_Time|103Rh_Live_Dead
+  scales:
+    Live_Dead: 2.1598
+- hard_id: panel_global_acute2020_step29
+  scenario: panel_global
+  dataset: Acute2020
+  step: 29
+  step_column: Step29_145Nd_CD4|146Nd_CD8a
+  scales:
+    __all_protein_markers__: 1.2214
+- hard_id: panel_global_acute2021_step29
+  scenario: panel_global
+  dataset: Acute2021
+  step: 29
+  step_column: Step29_145Nd_CD4|146Nd_CD8a
+  scales:
+    __all_protein_markers__: 1.1853
+- hard_id: panel_global_vaccine_step29
+  scenario: panel_global
+  dataset: Vaccine
+  step: 29
+  step_column: Step29_145Nd_CD4|146Nd_CD8a
+  scales:
+    __all_protein_markers__: 1.1853
+- hard_id: panel_global_bjornson_step05
+  scenario: panel_global
+  dataset: Bjornson
+  step: 5
+  step_column: Step05_CD4_Gd156Di|CD8_Gd155Di
+  scales:
+    __all_protein_markers__: 1.1853
+- hard_id: panel_global_lyoplate_tcell_step02
+  scenario: panel_global
+  dataset: Lyoplate_tcell
+  step: 2
+  step_column: Step02_CD4|CD8
+  scales:
+    __all_protein_markers__: 1.1503
+- hard_id: panel_global_lyoplate_bcell_step01
+  scenario: panel_global
+  dataset: Lyoplate_bcell
+  step: 1
+  step_column: Step01_CD3|CD19
+  scales:
+    __all_protein_markers__: 1.1618
+- hard_id: panel_global_lyoplate_dc_step02
+  scenario: panel_global
+  dataset: Lyoplate_DC
+  step: 2
+  step_column: Step02_CD11c|CD16
+  scales:
+    __all_protein_markers__: 1.0513
+- hard_id: panel_global_lyoplate_treg_step02
+  scenario: panel_global
+  dataset: Lyoplate_treg
+  step: 2
+  step_column: Step02_CD3|CD4
+  scales:
+    __all_protein_markers__: 1.1052
+- hard_id: panel_global_fr_fcm_z74d_hc_step01
+  scenario: panel_global
+  dataset: FR-FCM-Z74D_hc
+  step: 1
+  step_column: Step01_CD4|CD8
+  scales:
+    __all_protein_markers__: 1.3364
+- hard_id: panel_global_fr_fcm_z74d_tissue_step01
+  scenario: panel_global
+  dataset: FR-FCM-Z74D_tissue
+  step: 1
+  step_column: Step01_CD4|CD8
+  scales:
+    __all_protein_markers__: 1.3231
+- hard_id: panel_global_frdr_covid19_step08
+  scenario: panel_global
+  dataset: FRDR_covid19
+  step: 8
+  step_column: Step08_CD19|CD3
+  scales:
+    __all_protein_markers__: 1.3771

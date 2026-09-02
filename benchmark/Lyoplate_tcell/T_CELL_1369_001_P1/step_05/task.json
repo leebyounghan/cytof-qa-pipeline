@@ -1,0 +1,37 @@
+{
+  "task_id": "Lyoplate_tcell__T_CELL_1369_001_P1__step_05",
+  "dataset": "Lyoplate_tcell",
+  "sample": "T_CELL_1369_001_P1",
+  "step": 5,
+  "parent": "Step02_CD4|CD8 == CD8",
+  "x_marker": "CCR7",
+  "y_marker": "CD45RA",
+  "annotation_column": "Step05_CCR7|CD45RA",
+  "categories": [
+    "CD8_Naive",
+    "CD8_Central_Memory",
+    "CD8_Effector_Memory",
+    "CD8_Effector",
+    "Unassigned"
+  ],
+  "note": "CD8 memory layout on CCR7 × CD45RA. Strategy: (1) CD8_Naive anchors on the dense blob at the upper-right corner (CCR7 very high, CD45RA high). (2) CD8_Effector (EMRA) sits to the left of CD8_Naive in the upper CD45RA band. (3) In the lower CD45RA band, CCR7 is bimodal — locate the left edge / shoulder of the CCR7+ peak; CD8_Central_Memory (lymph-node homing) sits at/right of this edge (includes the dense CCR7+ peak), CD8_Effector_Memory sits to its left.",
+  "tips": "CD8 differentiation subsets (mirror of Step 3 on the CD8 parent). CD8_Naive: CCR7+ CD45RA+. CD8_Central_Memory: CCR7+ CD45RA-. CD8_Effector_Memory: CCR7- CD45RA-. CD8_Effector: CCR7- CD45RA+ (the file label is shorthand for TEMRA). Useful co-markers: CD27/CD28 would refine the differentiation axis but are not in panel; CD57 would identify senescent / terminally differentiated CD8 but is also missing.",
+  "gating_context": "Root -> Step02_CD4|CD8(CD8)",
+  "gt_summary": {
+    "n_parent_cells": 12032,
+    "n_cells_per_category": {
+      "CD8_Naive": 4075,
+      "CD8_Central_Memory": 1646,
+      "CD8_Effector_Memory": 5214,
+      "CD8_Effector": 1082,
+      "Unassigned": 15
+    },
+    "population_proportions": {
+      "CD8_Naive": 0.3387,
+      "CD8_Central_Memory": 0.1368,
+      "CD8_Effector_Memory": 0.4333,
+      "CD8_Effector": 0.0899,
+      "Unassigned": 0.0012
+    }
+  }
+}

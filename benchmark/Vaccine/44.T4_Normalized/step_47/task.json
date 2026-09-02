@@ -1,0 +1,32 @@
+{
+  "task_id": "Vaccine__44.T4_Normalized__step_47",
+  "dataset": "Vaccine",
+  "sample": "44.T4_Normalized",
+  "step": 47,
+  "parent": "Step45_167Er_CD197_CCR7|145Nd_CD4 == CD4TEM3",
+  "x_marker": "173Yb_HLA-DR",
+  "y_marker": "161Dy_CD38",
+  "annotation_column": "Step47_173Yb_HLA-DR|161Dy_CD38",
+  "categories": [
+    "CD4TEM3/activated",
+    "CD4TEM3/CD38pos",
+    "CD4TEM3/activated+CD38pos",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step45_167Er_CD197_CCR7|145Nd_CD4(CD4TEM3)",
+  "gt_summary": {
+    "n_parent_cells": 1356,
+    "n_cells_per_category": {
+      "CD4TEM3/activated": 6,
+      "CD4TEM3/CD38pos": 91,
+      "CD4TEM3/activated+CD38pos": 70,
+      "Unassigned": 1189
+    },
+    "population_proportions": {
+      "CD4TEM3/activated": 0.0044,
+      "CD4TEM3/CD38pos": 0.0671,
+      "CD4TEM3/activated+CD38pos": 0.0516,
+      "Unassigned": 0.8768
+    }
+  }
+}

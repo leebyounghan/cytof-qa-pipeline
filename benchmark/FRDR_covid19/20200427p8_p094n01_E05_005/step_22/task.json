@@ -1,0 +1,28 @@
+{
+  "task_id": "FRDR_covid19__20200427p8_p094n01_E05_005__step_22",
+  "dataset": "FRDR_covid19",
+  "sample": "20200427p8_p094n01_E05_005",
+  "step": 22,
+  "parent": "Step19_CD1c|FSC == mDC2",
+  "x_marker": "Comp-PE-A",
+  "y_marker": "SSC-A",
+  "annotation_column": "Step22_CD86|SSC",
+  "categories": [
+    "mDC2_CD86p",
+    "Unassigned"
+  ],
+  "note": "mDC2_CD86p: activated mDC2 subset (CD1c- as labeled in this panel) — right cluster (CD86+); the CD86-low cluster on the left is excluded. Subject to the Step 19 nomenclature caveat.",
+  "tips": "Activation readout for the mDC2 subset (CD1c- as labeled in this panel). mDC2_CD86p: CD86+. Subject to the Step 19 nomenclature caveat. In-panel co-marker prior: HLA-DR tends to co-move with CD86 on DCs.",
+  "gating_context": "Root -> Step19_CD1c|FSC(mDC2)",
+  "gt_summary": {
+    "n_parent_cells": 140,
+    "n_cells_per_category": {
+      "mDC2_CD86p": 19,
+      "Unassigned": 121
+    },
+    "population_proportions": {
+      "mDC2_CD86p": 0.1357,
+      "Unassigned": 0.8643
+    }
+  }
+}

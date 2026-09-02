@@ -1,0 +1,28 @@
+{
+  "task_id": "FRDR_covid19__20200525p8_p156n01_D05_004__step_20",
+  "dataset": "FRDR_covid19",
+  "sample": "20200525p8_p156n01_D05_004",
+  "step": 20,
+  "parent": "Step18_CD11c|FSC == mDC",
+  "x_marker": "Comp-PE-A",
+  "y_marker": "FSC-A",
+  "annotation_column": "Step20_CD86|FSC",
+  "categories": [
+    "mDC_CD86p",
+    "Unassigned"
+  ],
+  "note": "mDC_CD86p: activated mDCs aggregated across both subtypes — right cluster (CD86+); the CD86-low cluster on the left is excluded.",
+  "tips": "Aggregate activation readout for all mDCs. mDC_CD86p: CD86+. In-panel co-marker prior: HLA-DR (Comp-BV510-A, from Step 14 parent) is up-regulated on mDC maturation alongside CD86 — complementary licensing readout.",
+  "gating_context": "Root -> Step18_CD11c|FSC(mDC)",
+  "gt_summary": {
+    "n_parent_cells": 96,
+    "n_cells_per_category": {
+      "mDC_CD86p": 41,
+      "Unassigned": 55
+    },
+    "population_proportions": {
+      "mDC_CD86p": 0.4271,
+      "Unassigned": 0.5729
+    }
+  }
+}

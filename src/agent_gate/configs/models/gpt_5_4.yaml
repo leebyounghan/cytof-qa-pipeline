@@ -1,0 +1,11 @@
+# GPT-5.4 (OpenAI API) — agent-gate config.
+# Use with run_agent_gate.sh. Requires OPENAI_API_KEY in the environment.
+model:
+  openai_id: gpt-5.4                 # → run_agent --model gpt-5.4
+  # served_name: defaults to "gpt-5.4"
+
+generation:
+  max_tokens: 32768                  # per-turn cap; the loop fires multiple turns
+  max_turns: 4                       # 1 initial render + up to 2 revisions + 1 final text
+  # temperature/top_p/presence_penalty/frequency_penalty left null
+  # → run_agent defaults (T=0.0, others server-side).

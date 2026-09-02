@@ -1,0 +1,26 @@
+{
+  "task_id": "Acute2021__HD1_Normalized__step_02",
+  "dataset": "Acute2021",
+  "sample": "HD1_Normalized",
+  "step": 2,
+  "parent": "Step01_Time|140Ce_Bead == Cleanup1",
+  "x_marker": "Time",
+  "y_marker": "Residual",
+  "annotation_column": "Step02_Time|Residual",
+  "categories": [
+    "Cleanup2",
+    "Unassigned"
+  ],
+  "gating_context": "Root -> Step01_Time|140Ce_Bead(Cleanup1)",
+  "gt_summary": {
+    "n_parent_cells": 209371,
+    "n_cells_per_category": {
+      "Cleanup2": 187194,
+      "Unassigned": 22177
+    },
+    "population_proportions": {
+      "Cleanup2": 0.8941,
+      "Unassigned": 0.1059
+    }
+  }
+}

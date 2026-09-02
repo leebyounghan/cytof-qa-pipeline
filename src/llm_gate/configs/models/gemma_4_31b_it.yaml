@@ -1,0 +1,21 @@
+# Gemma 4 31B dense (instruct-tuned) — LLM-Gate variant.
+# Mirrors Qwen 3.6-27B gate config (DP=4, TP=2). See c2s twin for rationale.
+model:
+  hf_id: google/gemma-4-31B-it
+  served_name: Gemma4-31B-it
+server:
+  data_parallel_size: 2
+  tensor_parallel_size: 2
+  max_model_len: 65536
+  gpu_memory_utilization: 0.9
+  enable_prefix_caching: true
+  trust_remote_code: true
+  enable_expert_parallel: false
+generation:
+  max_tokens: 32768
+  strip_think: true
+  temperature: 1.0
+  top_p: 0.95
+  top_k: 64
+  presence_penalty: 0.0
+  thinking: "on"

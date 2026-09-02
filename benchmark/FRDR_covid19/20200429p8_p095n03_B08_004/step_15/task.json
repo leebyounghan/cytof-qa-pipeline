@@ -1,0 +1,28 @@
+{
+  "task_id": "FRDR_covid19__20200429p8_p095n03_B08_004__step_15",
+  "dataset": "FRDR_covid19",
+  "sample": "20200429p8_p095n03_B08_004",
+  "step": 15,
+  "parent": "Step14_HLADR|SSC == HLADRp",
+  "x_marker": "Comp-PE-Cy7-A",
+  "y_marker": "Comp-BV421-A",
+  "annotation_column": "Step15_CD16|CD14",
+  "categories": [
+    "HLADRp_CD16n",
+    "Unassigned"
+  ],
+  "note": "Remove residual CD16+ contaminants from the DC candidate pool. HLADRp_CD16n: left cluster (CD16-, CD14 stays low because the parent already enforced CD14-low); the CD16+ tail on the right (residual CD16+ monocytes that spilled through) is excluded. CD14 (y) is a display/purity axis showing the parent gate's CD14-low quality.",
+  "tips": "Remove residual CD16+ contaminants from the DC candidate pool. HLADRp_CD16n: CD16- (classical DC populations are CD16-low; CD16+ events here are typically residual CD16+ monocytes that spilled through Non_monocytes, or CD16+ NK-like cells with HLA-DR expression). In-panel co-marker prior: y_marker CD14 (Comp-BV421-A) is shown as a display/purity axis — Non_monocytes parent has already enforced CD14-low; visible CD14+ residuals here help diagnose upstream gate quality but CD14 is not used for the call.",
+  "gating_context": "Root -> Step14_HLADR|SSC(HLADRp)",
+  "gt_summary": {
+    "n_parent_cells": 709,
+    "n_cells_per_category": {
+      "HLADRp_CD16n": 703,
+      "Unassigned": 6
+    },
+    "population_proportions": {
+      "HLADRp_CD16n": 0.9915,
+      "Unassigned": 0.0085
+    }
+  }
+}
