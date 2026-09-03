@@ -1,0 +1,6 @@
+# Python dependencies for convert_to_parquet.py
+# Tested with Python 3.9.6. Version floors are conservative; newer releases are fine.
+numpy>=1.21        # tested 1.26.4
+pandas>=1.3        # tested 1.5.3  (DataFrame, Categorical, read/to_parquet)
+pyarrow>=6.0       # tested 21.0.0 (Parquet engine + zstd compression)
+pyyaml>=5.1        # tested 6.0.3  (reads dataset_config.yaml)

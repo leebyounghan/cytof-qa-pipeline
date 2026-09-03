@@ -1,0 +1,26 @@
+name: Lyoplate_Treg
+cofactor: 150.0
+fcs_dir: SeraCare_Treg
+gslist_dir: gslist-treg
+markers:
+  protein:
+  - Live
+  - CD25
+  - CD4
+  - CCR4
+  - CD127
+  - CD45RO
+  - CD3
+  - HLADR
+  scatter:
+  - FSC-A
+  - SSC-A
+channel_marker_map:
+  Live: Viability
+  CD25: CD25
+  CD4: CD4
+  CCR4: CCR4
+  CD127: CD127
+  CD45RO: CD45RO
+  CD3: CD3
+  HLADR: HLA-DR

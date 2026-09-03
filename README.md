@@ -456,10 +456,11 @@ described in **Data Format** above.
 
 **Lyoplate cohorts** (`Lyoplate_tcell/treg/bcell/DC`) are *not* included in
 the deposit — they are distributed through ImmPort/ImmuneSpace under the
-NIAID-DAIT Data Use Agreement. Obtain the source FCS files there and rebuild
-the harmonized per-step parquet with the extraction scripts in this
-repository; their gating plans, per-step annotations, and splits are already
-in `benchmark/`.
+NIAID-DAIT Data Use Agreement. Obtain the GatingSetList exports there and
+rebuild the harmonized per-step parquet with
+[`data_pipeline/lyoplate/`](data_pipeline/lyoplate/README.md) (R
+`flowWorkspace` extraction → `convert_to_parquet.py`); their gating plans,
+per-step annotations, and splits are already in `benchmark/`.
 
 ## Citation
 
@@ -785,6 +786,7 @@ src/
   baselines/                       # flowDensity / FlowSOM / cyMAE — see src/baselines/README.md
 
 scripts/                           # seed-sweep launchers + aggregation
+data_pipeline/lyoplate/            # rebuild the Lyoplate cohorts from ImmPort GatingSetLists
 case_study/                        # paper-figure scripts (need your own run outputs)
 
 benchmark/                         # Generated tasks (tracked in git, PNGs excluded)

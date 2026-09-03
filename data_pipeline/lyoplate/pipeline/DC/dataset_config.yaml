@@ -1,0 +1,26 @@
+name: Lyoplate_DC
+cofactor: 150.0
+fcs_dir: SeraCare_DC
+gslist_dir: gslist-DC
+markers:
+  protein:
+  - Live
+  - CD56
+  - CD123
+  - CD11c
+  - CD16
+  - Lineage
+  - CD14
+  - HLADR
+  scatter:
+  - FSC-A
+  - SSC-A
+channel_marker_map:
+  Live: Viability
+  CD56: CD56
+  CD123: CD123
+  CD11c: CD11c
+  CD16: CD16
+  Lineage: Lineage
+  CD14: CD14
+  HLADR: HLA-DR

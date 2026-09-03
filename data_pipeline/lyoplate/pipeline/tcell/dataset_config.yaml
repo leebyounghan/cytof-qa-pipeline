@@ -1,0 +1,26 @@
+name: Lyoplate_Tcell
+cofactor: 150.0
+fcs_dir: SeraCare_Tcell
+gslist_dir: gslist-tcell
+markers:
+  protein:
+  - Live
+  - CCR7
+  - CD4
+  - CD45RA
+  - CD3
+  - HLADR
+  - CD38
+  - CD8
+  scatter:
+  - FSC-A
+  - SSC-A
+channel_marker_map:
+  Live: Viability
+  CCR7: CCR7
+  CD4: CD4
+  CD45RA: CD45RA
+  CD3: CD3
+  HLADR: HLA-DR
+  CD38: CD38
+  CD8: CD8

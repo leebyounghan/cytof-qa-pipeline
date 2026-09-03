@@ -1,0 +1,26 @@
+name: Lyoplate_Bcell
+cofactor: 150.0
+fcs_dir: SeraCare_Bcell
+gslist_dir: gslist-bcell
+markers:
+  protein:
+  - Live
+  - CD3
+  - CD19
+  - CD20
+  - IgD
+  - CD27
+  - CD38
+  - CD24
+  scatter:
+  - FSC-A
+  - SSC-A
+channel_marker_map:
+  Live: Viability
+  CD3: CD3
+  CD19: CD19
+  CD20: CD20
+  IgD: IgD
+  CD27: CD27
+  CD38: CD38
+  CD24: CD24
