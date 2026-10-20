@@ -64,8 +64,7 @@ _CYTOF_COHORTS = frozenset({'Acute2020', 'Acute2021', 'Bjornson', 'Vaccine'})
 def _detect_modality(cohort: str, step: dict) -> str:
     if cohort in _CYTOF_COHORTS:
         return 'cytof'
-    note = (step.get('note') or '') if isinstance(step, dict) else ''
-    return 'cytof' if 'CyTOF' in note else 'flow'
+    return 'flow'
 
 
 # ── Grid binning ────────────────────────────────────────────────────────────
@@ -334,8 +333,6 @@ def generate_c2s_grid(
         x_marker=xm_disp,
         y_marker=ym_disp,
         parent=step.get('parent', 'ALL'),
-        note=step.get('note', ''),
-        tips=step.get('tips', ''),
         options=_add_unassigned(step.get('annotation categories', [])),
         n_parent_cells=n_parent,
         axis_distribution={
@@ -559,8 +556,7 @@ def main() -> None:
                         default='auto',
                         help='Recorded in c2s_grid.json. "auto" detects '
                              'per-cohort (Acute2020/Acute2021/Bjornson/Vaccine '
-                             '→ cytof, others → flow unless task note says '
-                             'CyTOF).')
+                             '→ cytof, others → flow).')
     parser.add_argument('--no-plots', action='store_true',
                         help='Skip c2s_grid_scatter.png generation.')
     parser.add_argument('--n-workers', type=int, default=4,

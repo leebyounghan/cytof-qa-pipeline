@@ -21,7 +21,7 @@ You produce ONE JSON object — no tool calls, no follow-up turns. Output it as 
 For every named category at this step, output an axis-aligned rectangular gate on the (x, y) plane as `{x_min, x_max, y_min, y_max}`. Coordinates are in the **same numeric units** as the textual axis distribution and the scatter image's tick labels — do not invent a new scale.
 
 ## Step 1 — Estimate expected proportion from biology (before drawing any box)
-For every category in `[Categories]`, estimate its **expected proportion within this step's parent population** based on the description, the gating tips, and your prior knowledge of immunology / flow cytometry literature. Use rough percentages (e.g., 5%, 30%, ~70%) — you don't need exact numbers. Note when a category is rare (<10%), common (10–50%), or dominant (>50%).
+For every category in `[Categories]`, estimate its **expected proportion within this step's parent population** based on the description and your prior knowledge of immunology / flow cytometry literature. Use rough percentages (e.g., 5%, 30%, ~70%) — you don't need exact numbers. Note when a category is rare (<10%), common (10–50%), or dominant (>50%).
 
 This step is critical: many gating decisions depend on whether the population you're looking for is the bulk of the parent or a small minority. Neither the histogram nor the image alone tells you which named label corresponds to which mode — your biology prior must constrain that mapping. After estimating, use the proportions as a sanity check against the area each gate carves out: a category you expect to be rare should not end up covering the dominant mode, and vice versa.
 

@@ -52,34 +52,7 @@ from pathlib import Path
 import yaml
 
 from src.bench import parse_perturbations
-
-
-# ── Note YAML override (optional, mirrors src/llm) ──────────────────────────
-
-_DEFAULT_NOTES_PATH = Path(__file__).resolve().parents[2] / 'benchmark' / 'notes.yaml'
-
-
-def _load_notes(path: Path) -> dict:
-    if not path.exists():
-        return {}
-    with open(path) as f:
-        return yaml.safe_load(f) or {}
-
-
-def _lookup_note_override(
-    notes: dict, cohort: str | None, step: int | str | None,
-) -> str | None:
-    if not cohort or step is None:
-        return None
-    cohort_notes = notes.get(cohort) or {}
-    try:
-        step_int = int(step)
-    except (TypeError, ValueError):
-        return None
-    val = cohort_notes.get(step_int)
-    if isinstance(val, str) and val.strip():
-        return val.strip()
-    return None
+from src.notes import DEFAULT_NOTE_MODE, add_note_mode_arg, get_note
 
 
 # ── Ablation config ─────────────────────────────────────────────────────────
@@ -150,9 +123,7 @@ def format_prompt(
     use_top_hvp: bool = True,
     top_hvp_n: int | None = None,
     n_cells: int | None = None,
-    use_tips: bool = False,
-    notes: dict | None = None,
-    use_notes_yaml: bool = False,
+    note_mode: str = DEFAULT_NOTE_MODE,
 ) -> str:
     """Build one prompt for the step's anchor batch.
 
@@ -164,8 +135,6 @@ def format_prompt(
                     ``use_top_hvp=False``.
       n_cells     : when set, use only the first N anchors from c2s.json.
                     Default (None) uses every anchor.
-      use_tips    : when True, append the c2s.json ``tips`` field to the
-                    [Description] section. Default False — tips are off.
     """
     x_marker = data['x_marker']
     y_marker = data['y_marker']
@@ -211,19 +180,10 @@ def format_prompt(
     hvp_section = (f'\n[Top HVP markers (excl. axis)]\n{", ".join(top_hvp)}\n'
                    if use_top_hvp and top_hvp else '')
 
-    override = None
-    if use_notes_yaml and notes is not None:
-        cohort = data.get('cohort') or data.get('_cohort')
-        override = _lookup_note_override(notes, cohort, data.get('step'))
-    note = (override if override is not None
-            else (data.get('note') or '').strip())
-    desc_lines: list[str] = []
-    if note:
-        desc_lines.append(note)
-    if use_tips:
-        tips = (data.get('tips') or '').strip()
-        if tips:
-            desc_lines.append(f'Tips: {tips}')
+    desc_lines: list[str] = [
+        get_note(data.get('cohort') or data.get('_cohort'), data.get('step'),
+                 note_mode),
+    ]
     if 'Unassigned' in categories:
         desc_lines.append(
             "Unassigned: cells whose (x, y) position falls outside every "
@@ -280,9 +240,7 @@ def _write_variant(
     save_md: bool,
     n_cells: int | None = None,
     perturbation_name: str | None = None,
-    use_tips: bool = False,
-    notes: dict | None = None,
-    use_notes_yaml: bool = False,
+    note_mode: str = DEFAULT_NOTE_MODE,
     prompt_subdir: str | None = None,
 ) -> None:
     slug = ablation_slug(use_top_hvp=use_top_hvp, top_hvp_n=top_hvp_n)
@@ -298,9 +256,7 @@ def _write_variant(
         data,
         use_top_hvp=use_top_hvp, top_hvp_n=top_hvp_n,
         n_cells=n_cells,
-        use_tips=use_tips,
-        notes=notes,
-        use_notes_yaml=use_notes_yaml,
+        note_mode=note_mode,
     )
     if save_md:
         out_dir.mkdir(parents=True, exist_ok=True)
@@ -322,9 +278,7 @@ def process_json(
     ablation_all: bool = False,
     n_cells: int | None = None,
     perturbation_name: str | None = None,
-    use_tips: bool = False,
-    notes: dict | None = None,
-    use_notes_yaml: bool = False,
+    note_mode: str = DEFAULT_NOTE_MODE,
     prompt_subdir: str | None = None,
 ) -> None:
     json_path = Path(json_path)
@@ -339,7 +293,7 @@ def process_json(
         return
 
     # Inject cohort from path layout benchmark/{cohort}/{sample}/step_NN/c2s.json
-    # so notes.yaml override lookup works (c2s.json may not carry cohort).
+    # so the notes.yaml lookup works (c2s.json may not carry cohort).
     if '_cohort' not in data and 'cohort' not in data:
         try:
             data['_cohort'] = json_path.parents[2].name
@@ -356,17 +310,13 @@ def process_json(
             _write_variant(data, json_path, uth, n, save_md,
                            n_cells=n_cells,
                            perturbation_name=effective_pname,
-                           use_tips=use_tips,
-                           notes=notes,
-                           use_notes_yaml=use_notes_yaml,
+                           note_mode=note_mode,
                            prompt_subdir=prompt_subdir)
     else:
         _write_variant(data, json_path, use_top_hvp, top_hvp_n, save_md,
                        n_cells=n_cells,
                        perturbation_name=effective_pname,
-                       use_tips=use_tips,
-                       notes=notes,
-                       use_notes_yaml=use_notes_yaml,
+                       note_mode=note_mode,
                        prompt_subdir=prompt_subdir)
 
 
@@ -378,9 +328,7 @@ def process_batch(
     ablation_all: bool = False,
     n_cells: int | None = None,
     perturbation_name: str | None = None,
-    use_tips: bool = False,
-    notes: dict | None = None,
-    use_notes_yaml: bool = False,
+    note_mode: str = DEFAULT_NOTE_MODE,
     prompt_subdir: str | None = None,
 ) -> None:
     sample_dir = Path(sample_dir)
@@ -411,9 +359,7 @@ def process_batch(
             ablation_all=ablation_all,
             n_cells=n_cells,
             perturbation_name=perturbation_name,
-            use_tips=use_tips,
-            notes=notes,
-            use_notes_yaml=use_notes_yaml,
+            note_mode=note_mode,
             prompt_subdir=prompt_subdir,
         )
 
@@ -448,11 +394,6 @@ def main() -> None:
                         action='store_true',
                         help='Generate every ablation variant (currently: '
                              'full + nohvp) — one dir each.')
-    parser.add_argument('--with-tips', dest='with_tips',
-                        action='store_true',
-                        help='Include the task.json `tips` field (carried '
-                             'through c2s.json) in the [Description] section. '
-                             'Default: omit tips.')
     parser.add_argument(
         '--perturbation', action='append', default=[],
         help='Inline perturbation spec (repeatable; must match the spec '
@@ -461,14 +402,7 @@ def main() -> None:
     )
     parser.add_argument('--perturbation-name', default=None,
                         help='Override auto-derived perturbation slug.')
-    parser.add_argument('--with-notes-yaml', dest='with_notes_yaml',
-                        action='store_true',
-                        help='Override task.json `note` with the per-(cohort, '
-                             'step) entry from --notes-yaml-path. Default: '
-                             'off (use task.json note as-is).')
-    parser.add_argument('--notes-yaml-path', default=None,
-                        help='Path to notes.yaml. Default: benchmark/notes.yaml '
-                             '(may not exist — no-op then).')
+    add_note_mode_arg(parser)
     parser.add_argument('--prompt-subdir', dest='prompt_subdir', default=None,
                         help='Explicit prompt directory name (e.g. '
                              'c2s_clu_hvp10), written as a sibling of the '
@@ -491,10 +425,6 @@ def main() -> None:
         args.perturbation or [], name_override=args.perturbation_name,
     )
 
-    notes_path = (Path(args.notes_yaml_path) if args.notes_yaml_path
-                  else _DEFAULT_NOTES_PATH)
-    notes = _load_notes(notes_path) if args.with_notes_yaml else None
-
     common = dict(
         save_md=args.save_md,
         use_top_hvp=use_top_hvp,
@@ -502,9 +432,7 @@ def main() -> None:
         ablation_all=args.ablation_all,
         n_cells=args.n_cells,
         perturbation_name=perturbation_name,
-        use_tips=args.with_tips,
-        notes=notes,
-        use_notes_yaml=args.with_notes_yaml,
+        note_mode=args.note_mode,
         prompt_subdir=args.prompt_subdir,
     )
 

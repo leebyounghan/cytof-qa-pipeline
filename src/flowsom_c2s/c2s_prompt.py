@@ -5,10 +5,9 @@ For each sample, write ``flowsom_{ablation}/cells.md``. The LLM sees:
   1. Sample / panel context
   2. The flat ``leaf_categories`` list (terminal leaves only — same set as
      ``src/llm_gate_flat/`` via ``src.flat_eval.derive_leaf_set``)
-  3. Step descriptions (note + tips) as biological hints
-  4. Top HVP markers list (optional, controlled by ablation)
-  5. Per-cluster centroid + cell-sentence
-  6. Output schema instructions — multi-label leaf SET per cluster
+  3. Top HVP markers list (optional, controlled by ablation)
+  4. Per-cluster centroid + cell-sentence
+  5. Output schema instructions — multi-label leaf SET per cluster
 
 Ablations: ``full`` / ``hvp10`` / ``nohvp``.
 

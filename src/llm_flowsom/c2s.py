@@ -358,8 +358,6 @@ def generate_c2s(
         x_marker=xm_disp,
         y_marker=ym_disp,
         parent=step.get('parent', 'ALL'),
-        note=step.get('note', ''),
-        tips=step.get('tips', ''),
         options=_add_unassigned(step.get('annotation categories', [])),
         n_parent_cells=n_parent,
         top_hvp_markers=top_hvp,

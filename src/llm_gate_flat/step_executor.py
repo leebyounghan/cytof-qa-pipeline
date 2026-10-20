@@ -174,7 +174,7 @@ def execute_step(
         return None
 
     prompt_text = format_prompt(
-        task_dict, use_note=True, use_joint_2d=False, use_notes_yaml=True,
+        task_dict, use_note=True, use_joint_2d=False,
     )
 
     raw_text = llm_call(system_prompt, prompt_text)

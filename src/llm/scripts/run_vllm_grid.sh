@@ -237,7 +237,7 @@ if [[ "$BUILD_PREREQ" == "1" ]]; then
     # density-grid prompts never collide with the clustering c2s_{slug}/ dir.
     printf '%s\0' "${GRID_JSONS[@]}" | xargs -0 -P "$PREREQ_WORKERS" -I {} \
         python3 -m src.llm.c2s_prompt {} --save_md "${HVP_FLAG[@]}" \
-        --with-notes-yaml --prompt-subdir "$PROMPT_SUBDIR" \
+        --prompt-subdir "$PROMPT_SUBDIR" \
         > "/tmp/c2s_logs/c2s_grid_prompt_${SERVED_NAME}${SUFFIX_SPLIT}.log" 2>&1
     echo "  rendered ${#GRID_JSONS[@]} prompts → ${PROMPT_SUBDIR}/"
 else

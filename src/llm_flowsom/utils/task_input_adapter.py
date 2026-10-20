@@ -104,6 +104,4 @@ def _step_from_task(ti: TaskInput) -> dict:
         'y_marker': ti.y_marker,
         'annotation column name': ti.task['annotation_column'],
         'annotation categories': cats,
-        'note': ti.task.get('note', ''),
-        'tips': ti.task.get('tips', ''),
     }

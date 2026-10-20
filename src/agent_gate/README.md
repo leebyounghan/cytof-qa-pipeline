@@ -59,7 +59,7 @@ Flags inherited from llm_gate: `--modality {auto|cytof|flow}`, `--n-workers N`, 
 
 ## Step 2 — `src.agent_gate.prompt`: `gate_task.json` → `gate_{ablation}/cells.md`
 
-Identical to `src.llm_gate.prompt`. The agentic system prompt explains the tool-call protocol; the per-step `cells.md` only describes the categories + axis distribution, not the loop. Same `--with-joint-2d`, `--without-note`, `--without-notes-yaml`, and perturbation flags.
+Identical to `src.llm_gate.prompt`. The agentic system prompt explains the tool-call protocol; the per-step `cells.md` only describes the categories + axis distribution, not the loop. Same `--with-joint-2d`, `--without-note`, `--note-mode`, and perturbation flags.
 
 ```bash
 python -m src.agent_gate.prompt \

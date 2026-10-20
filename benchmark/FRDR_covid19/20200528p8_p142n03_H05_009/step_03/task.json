@@ -11,8 +11,6 @@
     "Singlets1",
     "Unassigned"
   ],
-  "note": "Singlets1: single cells (first doublet/aggregate exclusion) — events on the linear SSC-H ≈ SSC-A diagonal; off-diagonal events above the diagonal (SSC-A inflated relative to SSC-H, indicating coincident events / aggregates) and the SSC-A saturation edge at the top are excluded.",
-  "tips": "First singlet discrimination on the SSC-H × SSC-A diagonal — singlet events fall on the linear diagonal; doublets/aggregates deviate because area scales faster than height when two events are coincident.",
   "gating_context": "Root -> Step02_FSC-A|SSC-A(Cells)",
   "gt_summary": {
     "n_parent_cells": 17812,

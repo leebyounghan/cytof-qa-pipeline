@@ -72,16 +72,14 @@ Defines the hierarchical gating tree — step sequence, marker pairs, parent con
       "x_marker": "CD4",
       "y_marker": "CD8",
       "annotation column name": "Step01_CD4|CD8",
-      "annotation categories": ["CD4", "CD8", "CD4p_CD8p", "CD4n_CD8n"],
-      "note": "CD4: helper T cells — lower-right (CD4+, CD8-). CD8: ..."
+      "annotation categories": ["CD4", "CD8", "CD4p_CD8p", "CD4n_CD8n"]
     },
     {
       "step": 2,
       "parent": "Step01_CD4|CD8 == CD8",
       "x_marker": "CCR7", "y_marker": "CD45RA",
       "annotation column name": "Step02_CCR7|CD45RA_CD8",
-      "annotation categories": ["Naive_CD8", "CM_CD8", "EM_CD8", "EMRA_CD8"],
-      "note": "..."
+      "annotation categories": ["Naive_CD8", "CM_CD8", "EM_CD8", "EMRA_CD8"]
     }
   ]
 }
@@ -91,8 +89,8 @@ Key fields:
 - **`parent`**: which cells enter this step. `"ALL"` = all cells. Supports `==`, `!=`, `in`. Combine with `&` (e.g. `"Step01 == CD8 & Step02 != Unassigned"`).
 - **`x_marker` / `y_marker`**: the two markers to examine (channel names resolved via `meta.json`).
 - **`annotation categories`**: possible labels at this step (excluding `Unassigned`).
-- **`note`**: describes the **spatial shape of each population** in the GT biaxial plot — where each cluster sits, what the gate boundaries follow (valley between bimodal peaks, unimodal peak position, density-anchored cluster edges), and any strategy needed to identify each population. Calibrated against `biaxial_plot_gt.png` density structure across multiple samples — use this style when authoring or improving notes.
-- **`tips`**: optional. Marker-level / domain hints surfaced only when the prompt is rendered with tips enabled.
+
+Step prompts carry no note text from `gating_plan.json`. The `[Description]` note always comes from `benchmark/notes.yaml` (`src/notes.py`): each `(cohort, step)` entry has `definition` (category meanings), `rule` (region mapping for rule-based systems) and `details` (curated context). Prompt builders take `--note-mode {definition,definition_details}` (default `definition`); a missing entry is an error.
 
 ## Benchmark Structure
 

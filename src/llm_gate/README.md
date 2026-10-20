@@ -21,7 +21,7 @@ parquet → gate_task.json → gate_{ablation}/cells.md → pred.json → predic
 
 For every (sample, step) under `--datasets` / `--samples`, loads the parent population and writes `step_NN/gate_task.json`:
 
-- `step`, `parent`, `x_marker`, `y_marker`, `note`, `tips`, `options`, `n_parent_cells`, `modality`, `cofactor`
+- `step`, `parent`, `x_marker`, `y_marker`, `options`, `n_parent_cells`, `modality`, `cofactor`
 - `x_summary`, `y_summary` — per-axis min/max + q05/25/50/75/95
 - `axis_distribution` — per-axis 1-D 30-bin histogram
 - `joint_distribution` — 2-D peak/valley info on the joint heatmap
@@ -59,18 +59,19 @@ python -m src.llm_gate.prompt \
 python -m src.llm_gate.prompt \
     --batch benchmark/Acute2020/994588_Normalized --save_md --with-joint-2d
 
-# Drop the gating-plan note from [Description]
+# Drop the notes.yaml note from [Description]
 python -m src.llm_gate.prompt \
     --batch benchmark/Acute2020/994588_Normalized --save_md --without-note
 ```
 
 Flags:
 - `--save_md` — write to file. Off → stdout.
-- `--without-note` — exclude the gating-plan `note` from `[Description]`.
+- `--without-note` — exclude the `benchmark/notes.yaml` note from `[Description]`.
+- `--note-mode {definition,definition_details}` — which `notes.yaml` fields form the note (default `definition`).
 - `--with-joint-2d` — append the 2-D joint heatmap block after the 1-D bin lists.
 - `--perturbation` / `--hard-depletion` / `--hard-shift` — match the spec used in Step 1; reads `gate_task__{slug}.json`, writes to `gate_{ablation}__{slug}/`.
 
-Prompt ablations are selected with `--ablation {full,no_desc,no_hist,no_pv,anon}` and render into slug-named sibling directories (`gate_no_pv/cells.md`, ...), so variants coexist per step: `no_desc` drops `[Description]`, `no_hist` drops the whole `[Axis distribution]` section (histogram *and* peak/valley lines), `no_pv` keeps the histogram but strips the peak/valley (`P*`/`V*`) lines, `anon` anonymizes marker names. Per-(cohort, step) note overrides come from `benchmark/notes.yaml` (disable with `--without-notes-yaml`). `--with-joint-2d` overwrites the same `cells.md` in place, so for that comparison save runs under separate `results/` method names.
+Prompt ablations are selected with `--ablation {full,no_desc,no_hist,no_pv,anon}` and render into slug-named sibling directories (`gate_no_pv/cells.md`, ...), so variants coexist per step: `no_desc` drops `[Description]`, `no_hist` drops the whole `[Axis distribution]` section (histogram *and* peak/valley lines), `no_pv` keeps the histogram but strips the peak/valley (`P*`/`V*`) lines, `anon` anonymizes marker names. The `[Description]` note comes only from `benchmark/notes.yaml`; a missing `(cohort, step)` entry is an error. `--with-joint-2d` overwrites the same `cells.md` in place, so for that comparison save runs under separate `results/` method names.
 
 ### `cells.md` layout (default — 1-D bins only)
 

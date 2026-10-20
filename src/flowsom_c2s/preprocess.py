@@ -56,8 +56,6 @@ def build_task_json(
             "y_marker": s["y_marker"],
             "annotation_column": s["annotation column name"],
             "categories": list(s["annotation categories"]) + ["Unassigned"],
-            "note": s.get("note", ""),
-            "tips": s.get("tips", ""),
         })
 
     return {

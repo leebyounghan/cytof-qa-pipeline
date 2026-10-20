@@ -33,47 +33,11 @@ import json
 import sys
 from pathlib import Path
 
-import yaml
 
 from src.bench import parse_perturbations
 from src.agent_gate.utils.axis_distribution import render_axis_summary
 from src.agent_gate.utils.joint_distribution import render_joint_summary
-
-
-# ── Note YAML override ──────────────────────────────────────────────────────
-
-_NOTES_PATH = Path(__file__).resolve().parents[2] / 'benchmark' / 'notes.yaml'
-
-
-def _load_notes() -> dict:
-    """Load per-(cohort, step) note overrides from benchmark/notes.yaml.
-
-    The YAML's per-step note replaces ``data['note']`` in
-    :func:`format_prompt`. Returns an empty dict if the file is missing
-    or empty.
-    """
-    if not _NOTES_PATH.exists():
-        return {}
-    with open(_NOTES_PATH) as f:
-        return yaml.safe_load(f) or {}
-
-
-_NOTES = _load_notes()
-
-
-def lookup_note_override(cohort: str | None, step: int | str | None) -> str | None:
-    """Return the YAML-defined note for ``(cohort, step)`` or None."""
-    if not cohort or step is None:
-        return None
-    cohort_notes = _NOTES.get(cohort) or {}
-    try:
-        step_int = int(step)
-    except (TypeError, ValueError):
-        return None
-    val = cohort_notes.get(step_int)
-    if isinstance(val, str) and val.strip():
-        return val.strip()
-    return None
+from src.notes import DEFAULT_NOTE_MODE, add_note_mode_arg, get_note
 
 
 # ── Ablation config ─────────────────────────────────────────────────────────
@@ -208,7 +172,7 @@ def format_prompt(
     data: dict,
     use_note: bool = True,
     use_joint_2d: bool = False,
-    use_notes_yaml: bool = True,
+    note_mode: str = DEFAULT_NOTE_MODE,
 ) -> str:
     x_marker = data['x_marker']
     y_marker = data['y_marker']
@@ -218,17 +182,8 @@ def format_prompt(
 
     desc_lines: list[str] = []
     if use_note:
-        # YAML override (benchmark/notes.yaml) takes precedence
-        # over the task.json `note` field. Look up by (cohort, step) —
-        # cohort is read from data['cohort'] (set by src.agent_gate.task)
-        # or data['_cohort'] (injected by runners that bypass task.json).
-        override = None
-        if use_notes_yaml:
-            cohort = data.get('cohort') or data.get('_cohort')
-            override = lookup_note_override(cohort, data.get('step'))
-        note = override if override is not None else (data.get('note') or '').strip()
-        if note:
-            desc_lines.append(note)
+        desc_lines.append(get_note(data.get('cohort') or data.get('_cohort'),
+                                   data.get('step'), note_mode))
     if 'Unassigned' in categories:
         desc_lines.append(
             "Unassigned: cells whose (x, y) position falls outside every "
@@ -279,13 +234,13 @@ def _write_prompt(
     perturbation_name: str | None = None,
     use_note: bool = True,
     use_joint_2d: bool = False,
-    use_notes_yaml: bool = True,
+    note_mode: str = DEFAULT_NOTE_MODE,
 ) -> None:
     slug = ablation_slug()
     out_dir = ablation_dir(json_path, slug, perturbation_name=perturbation_name)
     prompt = format_prompt(
         data, use_note=use_note, use_joint_2d=use_joint_2d,
-        use_notes_yaml=use_notes_yaml,
+        note_mode=note_mode,
     )
     if save_md:
         out_dir.mkdir(parents=True, exist_ok=True)
@@ -305,7 +260,7 @@ def process_json(
     perturbation_name: str | None = None,
     use_note: bool = True,
     use_joint_2d: bool = False,
-    use_notes_yaml: bool = True,
+    note_mode: str = DEFAULT_NOTE_MODE,
 ) -> None:
     json_path = Path(json_path)
     if not json_path.exists():
@@ -316,7 +271,7 @@ def process_json(
         data = json.load(f)
 
     # Inject cohort from path layout benchmark/{cohort}/{sample}/step_NN/gate_task.json
-    # so notes.yaml override lookup works (task.json doesn't carry cohort itself).
+    # so the notes.yaml lookup works (task.json doesn't carry cohort itself).
     if '_cohort' not in data and 'cohort' not in data:
         try:
             data['_cohort'] = json_path.parents[2].name
@@ -328,7 +283,7 @@ def process_json(
                   perturbation_name=effective_pname,
                   use_note=use_note,
                   use_joint_2d=use_joint_2d,
-                  use_notes_yaml=use_notes_yaml)
+                  note_mode=note_mode)
 
 
 def process_batch(
@@ -337,7 +292,7 @@ def process_batch(
     perturbation_name: str | None = None,
     use_note: bool = True,
     use_joint_2d: bool = False,
-    use_notes_yaml: bool = True,
+    note_mode: str = DEFAULT_NOTE_MODE,
 ) -> None:
     sample_dir = Path(sample_dir)
     pattern = (f'step_*/gate_task__{perturbation_name}.json'
@@ -353,7 +308,7 @@ def process_batch(
             perturbation_name=perturbation_name,
             use_note=use_note,
             use_joint_2d=use_joint_2d,
-            use_notes_yaml=use_notes_yaml,
+            note_mode=note_mode,
         )
 
 
@@ -372,13 +327,9 @@ def main() -> None:
                         help='Save prompts to disk (default: print to stdout)')
     parser.add_argument('--without-note', dest='use_note',
                         action='store_false', default=True,
-                        help='Exclude the task.json `note` field from the '
+                        help='Exclude the benchmark/notes.yaml note from the '
                              '[Description] section. Default: include note.')
-    parser.add_argument('--without-notes-yaml', dest='use_notes_yaml',
-                        action='store_false', default=True,
-                        help='Disable the (cohort, step) override from '
-                             'benchmark/notes.yaml. Default: yaml '
-                             'overrides task.json note when present.')
+    add_note_mode_arg(parser)
     parser.add_argument('--with-joint-2d', dest='use_joint_2d',
                         action='store_true', default=False,
                         help='Append the 2-D joint-distribution heatmap '
@@ -419,7 +370,7 @@ def main() -> None:
         perturbation_name=perturbation_name,
         use_note=args.use_note,
         use_joint_2d=args.use_joint_2d,
-        use_notes_yaml=args.use_notes_yaml,
+        note_mode=args.note_mode,
     )
 
     if args.batch:
