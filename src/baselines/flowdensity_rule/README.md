@@ -156,9 +156,9 @@ missing`. No valley-count failures remain after the depth-based selection.
 
 ### Axes that need two valleys
 
-388 axis instances (6 rules × test samples). Before the selection rules
-were added, `all.cuts` returned exactly 2 cuts on only 57 of them (15%):
-231 returned 1 cut and 100 returned 3–7.
+388 axis instances (6 rules × test samples). `deGate(all.cuts = TRUE)`
+returned exactly 2 cuts on 57 of them (15%), 1 cut on 231 and 3–7 cuts on
+100.
 
 | Cohort step | Axis | n | `all_cuts` (=2) | `top_depth` | `split_rescue` | `middle_dropped` |
 |---|---|---|---|---|---|---|
@@ -178,11 +178,3 @@ The middle label is dropped on the other 188, which covers almost every FRDR
 s10 and Z74D s5 sample. Step-level F1 macro on these steps: Vaccine s18 0.505,
 FRDR s10 0.431, Acute2020 s18 0.430, Z74D_hc s5 0.301, Z74D_tissue s5 0.256,
 Acute2021 s18 0.202.
-
-### How the handling changed the totals
-
-| Version | Unsupported steps | 2-valley axes | F1 macro | Balanced acc |
-|---|---|---|---|---|
-| 1 | all `None` (wrong) | exact `all.cuts` count or fail | 0.477 | 0.589 |
-| 2 | single target | exact `all.cuts` count or fail | 0.515 | 0.631 |
-| 3 (current) | single target | depth selection / split rescue / middle dropped | 0.524 | 0.642 |
