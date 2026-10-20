@@ -24,7 +24,7 @@
 Bjornson:
   1:
     definition: |
-      Ir: nucleated events; this name does not by itself establish viability.
+      Ir: DNA1-high nucleated events.
     rule:
       x_marker: DNA1
       y_marker: Event_length
@@ -32,10 +32,10 @@ Bjornson:
       - [Unassigned, Ir]
       - [Unassigned, Ir]
     details: |
-      This is nucleated-event selection, not a viability decision. DNA1 supplies the nuclear signal; Event_length is displayed but is not a separate selection criterion in this workflow. An intact nucleus alone does not establish that an event is live.
+      Nucleated cells form the bright DNA1 population; lower DNA1 modes are debris or non-nucleated events.
   2:
     definition: |
-      CD45: leukocytes, or white blood cells.
+      CD45: all leukocytes, including granulocytes.
     rule:
       x_marker: DNA2
       y_marker: CD45_In115Di
@@ -43,10 +43,10 @@ Bjornson:
       - [Unassigned, Unassigned]
       - [Unassigned, CD45]
     details: |
-      The parent has already passed DNA1-based nucleated-event selection. This leukocyte step also rejects doublets and damaged or hyperploid nuclear events using DNA2; nuclear signal alone is not sufficient for acceptance. Keep the leukocyte identity and the abnormal-nuclear-event exclusion conceptually separate.
+      The parent has already passed DNA1-based nucleated-event selection. This leukocyte step also rejects doublets and damaged or hyperploid nuclear events using DNA2; nuclear signal alone is not sufficient for acceptance. Keep the leukocyte identity and the abnormal-nuclear-event exclusion conceptually separate. On the CD45 axis, only CD45-negative events are excluded.
   3:
     definition: |
-      Granulocyte: granulocytes. CD45hiCD66lo: the mononuclear leukocyte fraction designated by this panel label.
+      Granulocyte: CD66-high CD45-intermediate granulocytes. CD45hiCD66lo: CD45-high CD66-low mononuclear leukocytes.
     rule:
       x_marker: CD66_Gd158Di
       y_marker: CD45_In115Di
@@ -57,7 +57,7 @@ Bjornson:
       The parent is the retained leukocyte fraction. Granulocyte requires CD66 positivity without an additional CD45 requirement. CD45hiCD66lo requires low CD66 together with CD45 positivity; despite its name, it does not require a separate CD45-high subset. CD66-low/CD45-negative residuals are not assigned to that mononuclear label.
   4:
     definition: |
-      Bcells: B lymphocytes. Tcells: T lymphocytes. CD3negCD19neg: the non-B, non-T cell fraction.
+      Bcells: CD19-positive CD3-negative B lymphocytes. Tcells: CD3-positive CD19-negative T lymphocytes. CD3negCD19neg: CD3-negative CD19-negative non-B, non-T cells.
     rule:
       x_marker: CD3_Gd157Di
       y_marker: CD19_Yb173Di
@@ -68,7 +68,7 @@ Bjornson:
       The parent is the mononuclear leukocyte fraction. The CD3/CD19 double-negative label is a legitimate non-B, non-T compartment, not merely uncertainty between B and T identities. Negative annotation labels do not require zero-valued expression on the prepared axes.
   5:
     definition: |
-      CD4Tcells: helper T cells. CD8Tcells: cytotoxic T cells.
+      CD4Tcells: CD4-positive CD8-negative helper T cells. CD8Tcells: CD8-positive CD4-negative cytotoxic T cells.
     rule:
       x_marker: CD4_Gd156Di
       y_marker: CD8_Gd155Di
@@ -79,7 +79,7 @@ Bjornson:
       The parent is already T cells. This step names only helper and cytotoxic T cells; CD4/CD8 double-positive and double-negative T-cell fractions are outside the two named targets and remain Unassigned.
   6:
     definition: |
-      NKcells: natural killer cells. HLA-DRposCD7neg: the antigen-presenting cell fraction designated by this marker-coded label.
+      NKcells: CD7-positive HLA-DR-negative natural killer cells. HLA-DRposCD7neg: HLA-DR-positive CD7-negative antigen-presenting cells.
     rule:
       x_marker: CD7_Pr141Di
       y_marker: HLA-DR_Yb176Di
@@ -90,7 +90,7 @@ Bjornson:
       The parent is the non-B, non-T residual. This branch distinguishes NK cells from antigen-presenting cells, rather than repeating B/T selection. The CD7-negative/HLA-DR-negative residual, which can include basophil candidates, is outside the named NK/APC targets.
   7:
     definition: |
-      Monocytes: monocytes. CD11bnegCD16neg: the CD11b/CD16 double-negative residual cell fraction.
+      Monocytes: CD11b-positive monocytes, CD16-negative (classical) to CD16-positive (non-classical). CD11bnegCD16neg: CD11b-negative CD16-negative residual cells.
     rule:
       x_marker: CD16_Tb159Di
       y_marker: CD11b_Eu153Di
@@ -101,7 +101,7 @@ Bjornson:
       The parent is the antigen-presenting-cell branch of the non-B, non-T compartment. Monocytes is a combined monocyte label, not a CD16-defined monocyte subset: CD16 expression alone should not split this target. The CD11b/CD16 double-negative residual is kept separate for the downstream DC branch.
   8:
     definition: |
-      DCs: dendritic cells, combining conventional and plasmacytoid subsets.
+      DCs: cDC + pDC; CD11c-positive CD123-low conventional DCs plus CD11c-negative CD123-high plasmacytoid DCs.
     rule:
       x_marker: CD11c_Nd143Di
       y_marker: CD123_Nd148Di
@@ -109,11 +109,11 @@ Bjornson:
       - [Unassigned, DCs]
       - [DCs, Unassigned]
     details: |
-      DCs combines conventional and plasmacytoid dendritic cells under one output label. Their different CD11c/CD123 phenotypes must not be treated as requiring simultaneous expression of both markers. Non-DC residual events remain outside the combined target; combining the two subsets does not mean accepting every phenotype between them.
+      Union of cDC (CD11c⁺CD123⁻) and pDC (CD11c⁻CD123⁺).
 Lyoplate_bcell:
   1:
     definition: |
-      CD19pos: B-lineage cells. CD3pos: T-lineage cells.
+      CD19pos: CD19⁺CD3⁻ B-lineage cells. CD3pos: CD3⁺CD19⁻ T-lineage cells.
     rule:
       x_marker: CD3
       y_marker: CD19
@@ -124,7 +124,7 @@ Lyoplate_bcell:
       This entry step identifies B-lineage and T-lineage cells, not B-cell maturation subsets. The CD3/CD19 double-negative fraction is not a third named lineage target here and remains Unassigned.
   2:
     definition: |
-      CD19_CD20pos: the CD20-expressing B-lineage fraction. CD19_CD20neg: the B-lineage fraction designated as CD20 negative.
+      CD19_CD20pos: CD20⁺CD3⁻ B-lineage cells. CD19_CD20neg: CD20⁻CD3⁻ B-lineage cells.
     rule:
       x_marker: CD3
       y_marker: CD20
@@ -135,7 +135,7 @@ Lyoplate_bcell:
       The parent is already the B-lineage fraction selected by CD19 in the CD3/CD19 split. CD3 supplies lineage context rather than a new B-cell-subtype identity; CD20 distinguishes the two B-lineage labels. Interpret CD20-negative as the annotation's low/negative fraction within that parent, not a demand for a value of zero after the documented arcsinh transformation.
   3:
     definition: |
-      Naive: naive B cells. Memory_IgDpos: non-switched memory B cells. Memory_IgDneg: IgD-negative memory B cells. IgDneg_CD27neg: the IgD/CD27 double-negative B-cell fraction.
+      Naive: IgD⁺CD27⁻ naive B cells. Memory_IgDpos: IgD⁺CD27⁺ non-switched memory B cells. Memory_IgDneg: IgD⁻CD27⁺ IgD-negative (switched) memory B cells. IgDneg_CD27neg: IgD⁻CD27⁻ double-negative B cells.
     rule:
       x_marker: IgD
       y_marker: CD27
@@ -146,7 +146,7 @@ Lyoplate_bcell:
       The parent is the CD20-expressing B-cell fraction, not all input lymphocytes. IgD and CD27 distinguish naive, non-switched memory, IgD-negative memory, and double-negative B-cell categories. The double-negative label is a named B-cell compartment and must not be collapsed into Unassigned. Prepared expression values do not make negative equivalent to axis zero.
   4:
     definition: |
-      Transitional: immature transitional B cells.
+      Transitional: CD24-high CD38-high transitional B cells.
     rule:
       x_marker: CD38
       y_marker: CD24
@@ -157,7 +157,7 @@ Lyoplate_bcell:
       Transitional is an immature B-cell target within the CD20-expressing B-cell parent. Joint CD38/CD24 phenotype is relevant to this identity; neither marker alone should make every remaining B cell transitional. The remainder of the parent is not another named category at this step.
   5:
     definition: |
-      Plasmablasts: antibody-secreting B-lineage cells.
+      Plasmablasts: CD27-high CD38-high antibody-secreting B-lineage cells.
     rule:
       x_marker: CD38
       y_marker: CD27
@@ -169,7 +169,7 @@ Lyoplate_bcell:
 Lyoplate_DC:
   1:
     definition: |
-      Lin_neg_CD14pos: the lineage-negative monocyte fraction. Lin_neg_CD14neg: the lineage-negative non-monocyte fraction.
+      Lin_neg_CD14pos: Lineage⁻CD14⁺ monocytes. Lin_neg_CD14neg: Lineage⁻CD14⁻ non-monocyte cells.
     rule:
       x_marker: CD14
       y_marker: Lineage
@@ -180,7 +180,7 @@ Lyoplate_DC:
       These labels select lineage-negative fractions and then distinguish monocyte from non-monocyte candidates by CD14. Lin_neg_CD14neg is a candidate pool for subsequent NK/DC processing, not a claim that every cell in it is already a dendritic cell. Lineage-positive events are outside both named targets.
   2:
     definition: |
-      CD14pos_CD16pos: the CD16-expressing monocyte fraction.
+      CD14pos_CD16pos: CD16⁺CD11c⁺ monocytes.
     rule:
       x_marker: CD11c
       y_marker: CD16
@@ -213,7 +213,7 @@ Lyoplate_DC:
       The parent has already excluded the CD16/CD56-positive NK-like fractions from the lineage-negative, CD14-negative compartment. HLA-DR selection enriches APC/DC candidates; it does not distinguish final DC subtypes. SSC-A is a scatter context axis, and its documented clipped/rescaled coordinate is not a second molecular positivity label.
   5:
     definition: |
-      pDC: plasmacytoid dendritic cells. mDC: myeloid or conventional dendritic cells. CD11cpos_CD123pos: the CD11c/CD123 double-positive cell fraction. CD11cneg_CD123neg: the CD11c/CD123 double-negative cell fraction. These marker-coded names are annotation labels, not independent validation of cell identity.
+      pDC: CD123-high CD11c-low/negative plasmacytoid dendritic cells. mDC: CD11c-high CD123-low myeloid or conventional dendritic cells. CD11cpos_CD123pos: the CD11c/CD123 double-positive cell fraction. CD11cneg_CD123neg: the CD11c/CD123 double-negative cell fraction. These marker-coded names are annotation labels, not independent validation of cell identity.
     rule:
       x_marker: CD11c
       y_marker: CD123
@@ -225,7 +225,7 @@ Lyoplate_DC:
 Lyoplate_tcell:
   1:
     definition: |
-      CD3pos: T lymphocytes.
+      CD3pos: CD3⁺ T lymphocytes.
     rule:
       x_marker: CD3
       y_marker: SSC-A
@@ -236,7 +236,7 @@ Lyoplate_tcell:
       This step selects T-lineage cells; it does not yet distinguish CD4, CD8, or unconventional T-cell subsets. SSC-A supplies scatter context rather than a molecular subtype label. The documented scatter rescaling means its coordinate zero is a preprocessing endpoint, not a biological absence state.
   2:
     definition: |
-      CD4: helper T cells. CD8: cytotoxic T cells. DNT: double-negative T cells. DPT: double-positive T cells.
+      CD4: CD4⁺CD8⁻ helper T cells. CD8: CD4⁻CD8⁺ cytotoxic T cells. DNT: CD4⁻CD8⁻ double-negative T cells. DPT: CD4⁺CD8⁺ double-positive T cells.
     rule:
       x_marker: CD4
       y_marker: CD8
@@ -247,7 +247,7 @@ Lyoplate_tcell:
       The parent is already CD3-expressing T cells. DNT and DPT refer to CD4/CD8 double-negative and double-positive T-cell fractions, respectively; DNT does not mean non-T cells. All four are named targets. Positive/negative annotations should not be equated with raw zero/nonzero values or fixed quantiles of this parent.
   3:
     definition: |
-      CD4_Naive: naive helper T cells. CD4_Central_Memory: central memory helper T cells. CD4_Effector_Memory: effector memory helper T cells. CD4_Effector: CD45RA-reexpressing effector memory helper T cells (TEMRA).
+      CD4_Naive: CCR7⁺CD45RA⁺ naive helper T cells. CD4_Central_Memory: CCR7⁺CD45RA⁻ central memory helper T cells. CD4_Effector_Memory: CCR7⁻CD45RA⁻ effector memory helper T cells. CD4_Effector: CCR7⁻CD45RA⁺ CD45RA-reexpressing effector memory helper T cells (TEMRA).
     rule:
       x_marker: CCR7
       y_marker: CD45RA
@@ -269,7 +269,7 @@ Lyoplate_tcell:
       The parent is helper T cells. These are CD38/HLA-DR expression categories, separate from the CCR7/CD45RA differentiation labels applied to the same parent. The double-negative resting fraction is explicitly named, not an Unassigned default. A differentiation label alone does not determine the activation category.
   5:
     definition: |
-      CD8_Naive: naive cytotoxic T cells. CD8_Central_Memory: central memory cytotoxic T cells. CD8_Effector_Memory: effector memory cytotoxic T cells. CD8_Effector: CD45RA-reexpressing effector memory cytotoxic T cells (TEMRA).
+      CD8_Naive: CCR7⁺CD45RA⁺ naive cytotoxic T cells. CD8_Central_Memory: CCR7⁺CD45RA⁻ central memory cytotoxic T cells. CD8_Effector_Memory: CCR7⁻CD45RA⁻ effector memory cytotoxic T cells. CD8_Effector: CCR7⁻CD45RA⁺ CD45RA-reexpressing effector memory cytotoxic T cells (TEMRA).
     rule:
       x_marker: CCR7
       y_marker: CD45RA
@@ -292,7 +292,7 @@ Lyoplate_tcell:
 Lyoplate_treg:
   1:
     definition: |
-      CD3pos: T lymphocytes.
+      CD3pos: CD3⁺ T lymphocytes.
     rule:
       x_marker: CD3
       y_marker: SSC-A
@@ -303,7 +303,7 @@ Lyoplate_treg:
       This is T-lineage selection before helper-T and regulatory-T selection. It does not label Tregs directly. SSC-A is a scatter context axis whose documented rescaling does not define a molecular negative/positive threshold.
   2:
     definition: |
-      CD4pos: helper T cells.
+      CD4pos: CD3⁺CD4⁺ helper T cells.
     rule:
       x_marker: CD3
       y_marker: CD4
@@ -314,7 +314,7 @@ Lyoplate_treg:
       The parent has already been selected as CD3-expressing T cells. The new target is the helper-T fraction identified through CD4; the displayed CD3 axis carries inherited lineage context. CD8 and other non-helper T-cell branches are not additional named targets in this panel step.
   3:
     definition: |
-      Treg: regulatory T cells.
+      Treg: CD25-high CD127-low regulatory T cells.
     rule:
       x_marker: CD25
       y_marker: CD127
@@ -357,7 +357,7 @@ FRDR_covid19:
       Time_stable is an acquisition-quality target, not a CD1c-defined cell type. Its purpose is to retain acquisition-stable events while excluding drift, fluid disturbances, and channel-stability artifacts. Interpret CD1c together with acquisition time; CD1c expression alone does not establish temporal stability.
   2:
     definition: |
-      Cells: intact white blood cells.
+      Cells: FSC-A-intermediate-to-high intact white blood cells, SSC-A-low (lymphocytes) to SSC-A-high (granulocytes), excluding FSC-A-low debris.
     rule:
       x_marker: FSC-A
       y_marker: SSC-A
@@ -366,7 +366,7 @@ FRDR_covid19:
       The input has passed acquisition-stability selection. Cells is an inclusive intact-white-blood-cell target that includes lymphocytes, monocytes, and granulocytes; it is not a lymphocyte-only scatter gate. Debris and saturation artifacts are excluded. FSC-A/SSC-A describe scatter properties, not two binary molecular phenotypes.
   3:
     definition: |
-      Singlets1: single-cell events retained by the first singlet-selection step.
+      Singlets1: single-cell events with SSC-A matched to SSC-H (not SSC-A-high relative to SSC-H), retained by the first singlet-selection step.
     rule:
       x_marker: SSC-H
       y_marker: SSC-A
@@ -375,7 +375,7 @@ FRDR_covid19:
       The parent contains events retained as intact cells. Singlets1 rejects doublets and aggregates using consistency between SSC pulse height and pulse area. A normal cell-scatter identity does not itself establish a single-cell event. Pulse consistency is the technical criterion; no sample-specific diagonal position or saturation cutoff is supplied here.
   4:
     definition: |
-      Singlets2: single-cell events retained by the second singlet-selection step.
+      Singlets2: SSC-W-low (relative to SSC-A) single-cell events retained by the second singlet-selection step.
     rule:
       x_marker: SSC-W
       y_marker: SSC-A
@@ -384,7 +384,7 @@ FRDR_covid19:
       This is a second singlet-cleanup pass after height/area-based selection. SSC-W measures pulse width and supplies additional evidence for residual doublets or aggregates; passing the first singlet step does not make the second redundant. SSC-A remains pulse-area context, not a molecular cell-type label.
   5:
     definition: |
-      Live: events retained as the viable-cell fraction.
+      Live: viability-dye-low (L/D-negative) viable cells.
     rule:
       x_marker: Comp-PE-A
       y_marker: Comp-APC-Cy7-A
@@ -395,7 +395,7 @@ FRDR_covid19:
       The parent has already passed acquisition, intact-cell, and two singlet-cleanup stages. Live is a permissive viability-cleanup label in this workflow: it excludes only extremely high L/D dead-cell events rather than requiring every retained event to be strictly dye-negative. CD86 does not define viability. No dataset-specific exclusion coordinate or retained proportion is implied.
   6:
     definition: |
-      PMN: polymorphonuclear granulocytes. Non_PMN: mononuclear leukocytes.
+      PMN: SSC-A-high CD14-low/negative polymorphonuclear granulocytes. Non_PMN: SSC-A-low-to-intermediate mononuclear leukocytes.
     rule:
       x_marker: Comp-BV421-A
       y_marker: SSC-A
@@ -406,7 +406,7 @@ FRDR_covid19:
       The parent is the viable-cell fraction and still contains both granulocytes and mononuclear leukocytes. Non_PMN includes lymphocytes, monocytes, and DCs, so it is not synonymous with CD14-negative cells. SSC-A supplies granularity context while CD14 supplies monocyte-associated context; neither should be confused with viability already addressed upstream.
   7:
     definition: |
-      Neutrophils: neutrophils. Eosinophils: eosinophils.
+      Neutrophils: CD16-high granulocytes. Eosinophils: CD16-low granulocytes.
     rule:
       x_marker: Comp-PE-Cy7-A
       y_marker: FSC-A
@@ -417,7 +417,7 @@ FRDR_covid19:
       The parent is already the PMN/granulocyte fraction. CD16 distinguishes the named neutrophil and eosinophil targets in this panel; FSC-A is a scatter context axis, not a second lineage label. This step is not another granulocyte-versus-mononuclear decision.
   8:
     definition: |
-      B_Cells: B lymphocytes. T_Cells: T lymphocytes. Non_BT: the non-B, non-T cell fraction.
+      B_Cells: CD19-positive CD3-negative B lymphocytes. T_Cells: CD3-positive CD19-negative T lymphocytes. Non_BT: CD3-negative CD19-negative non-B, non-T cells.
     rule:
       x_marker: Comp-BV786-A
       y_marker: Comp-Alexa Fluor 700-A
@@ -428,7 +428,7 @@ FRDR_covid19:
       B/T identification is performed within mononuclear leukocytes after granulocyte separation. Non_BT is an explicit non-B, non-T compartment that also supplies downstream myeloid and basophil branches; it is not merely uncertainty between B_Cells and T_Cells. Negative labels do not require raw or transformed axis zero.
   9:
     definition: |
-      B_cells_CD86p: the CD86-expressing B-cell fraction.
+      B_cells_CD86p: CD86-positive CD3-negative B cells.
     rule:
       x_marker: Comp-PE-A
       y_marker: Comp-Alexa Fluor 700-A
@@ -439,7 +439,7 @@ FRDR_covid19:
       The parent is already B cells selected as CD19-expressing and CD3-negative in the lineage split. CD86 marks the named expression/activation-associated fraction. CD3 carries inherited lineage context rather than a new B-cell activation criterion; CD86 expression should not be used to reassign T-lineage identity.
   10:
     definition: |
-      Classical_monocytes: classical monocytes. Intermediate_monocytes: intermediate monocytes. Patrolling_monocytes: non-classical, or patrolling, monocytes. Non_monocytes: the residual non-monocyte fraction.
+      Classical_monocytes: CD14-high CD16-low/intermediate monocytes. Intermediate_monocytes: CD14-high CD16-high monocytes. Patrolling_monocytes: CD14-dim CD16-high monocytes. Non_monocytes: CD14-negative non-monocyte cells.
     rule:
       x_marker: Comp-PE-Cy7-A
       y_marker: Comp-BV421-A
@@ -451,7 +451,7 @@ FRDR_covid19:
       The parent is the non-B, non-T compartment, so it is not a pure monocyte parent. Non_monocytes is an explicitly named residual rather than an extra monocyte maturation state. Classical, intermediate, and patrolling labels refer to the monocyte subsets distinguished by CD14/CD16 phenotype; patrolling means non-classical monocytes, not every event with reduced CD14.
   11:
     definition: |
-      CM_CD86p: the CD86-expressing classical monocyte fraction; CM means classical monocyte.
+      CM_CD86p: CD86-positive classical monocytes; CM means classical monocyte.
     rule:
       x_marker: Comp-PE-A
       y_marker: SSC-A
@@ -462,7 +462,7 @@ FRDR_covid19:
       CM means classical monocyte, not central memory. The parent is already the classical-monocyte subset; this step labels its CD86-expressing fraction. SSC-A supplies scatter context and does not introduce another monocyte-subset identity.
   12:
     definition: |
-      IM_CD86p: the CD86-expressing intermediate monocyte fraction.
+      IM_CD86p: CD86-positive intermediate monocytes.
     rule:
       x_marker: Comp-PE-A
       y_marker: SSC-A
@@ -473,7 +473,7 @@ FRDR_covid19:
       The parent is already intermediate monocytes. The task selects the CD86-expressing fraction without redoing the CD14/CD16 monocyte split. Intermediate-monocyte membership alone does not imply CD86 expression or justify assigning the entire parent.
   13:
     definition: |
-      PM_CD86p: the CD86-expressing patrolling monocyte fraction.
+      PM_CD86p: CD86-positive patrolling monocytes.
     rule:
       x_marker: Comp-PE-A
       y_marker: FSC-A
@@ -484,7 +484,7 @@ FRDR_covid19:
       The parent is already patrolling/non-classical monocytes. CD86 expression defines the additional named fraction, rather than another maturation category. Do not infer that all parent events qualify merely from their non-classical-monocyte identity; FSC-A is scatter context.
   14:
     definition: |
-      HLADRp: the HLA-DR-expressing antigen-presenting cell fraction.
+      HLADRp: HLA-DR-positive antigen-presenting cells.
     rule:
       x_marker: Comp-BV510-A
       y_marker: SSC-A
@@ -495,7 +495,7 @@ FRDR_covid19:
       The parent is the Non_monocytes residual, not purified DCs. HLA-DR expression enriches antigen-presenting/DC candidates, which require further downstream distinctions. SSC-A is a context axis rather than an independent HLA-DR-positivity criterion.
   15:
     definition: |
-      HLADRp_CD16n: the CD16-negative DC-candidate fraction.
+      HLADRp_CD16n: CD16-negative CD14-negative DC candidates.
     rule:
       x_marker: Comp-PE-Cy7-A
       y_marker: Comp-BV421-A
@@ -506,7 +506,7 @@ FRDR_covid19:
       The parent is the HLA-DR-expressing APC-candidate fraction from Non_monocytes. This step removes residual CD16-expressing contaminants before DC annotation. CD14 records inherited monocyte-exclusion context; a negative CD16 call alone does not prove final dendritic-cell identity.
   16:
     definition: |
-      pDC: plasmacytoid dendritic cells. Non_pDC: the non-plasmacytoid DC-candidate fraction.
+      pDC: CD303-positive CD123-high plasmacytoid dendritic cells. Non_pDC: CD303-negative CD123-low non-plasmacytoid DC candidates.
     rule:
       x_marker: Comp-FITC-A
       y_marker: Comp-PerCP-Cy5-5-A
@@ -517,7 +517,7 @@ FRDR_covid19:
       The parent has undergone non-B/non-T, non-monocyte, HLA-DR, and residual-CD16 cleanup. The pDC target uses the joint CD303/CD123 phenotype. Non_pDC remains a DC-candidate fraction for the subsequent myeloid branch, not a claim that every residual event is already an mDC.
   17:
     definition: |
-      pDC_CD86p: the CD86-expressing plasmacytoid dendritic cell fraction.
+      pDC_CD86p: CD86-positive plasmacytoid dendritic cells.
     rule:
       x_marker: Comp-PE-A
       y_marker: FSC-A
@@ -528,7 +528,7 @@ FRDR_covid19:
       The parent is already the plasmacytoid DC fraction. CD86 identifies an additional expression/activation-associated fraction within pDCs; it is not the marker that originally establishes pDC identity. FSC-A is a scatter context axis.
   18:
     definition: |
-      mDC: myeloid or conventional dendritic cells.
+      mDC: CD11c-positive myeloid or conventional dendritic cells.
     rule:
       x_marker: Comp-BV650-A
       y_marker: FSC-A
@@ -550,7 +550,7 @@ FRDR_covid19:
       This is subtyping within the myeloid-DC parent. The panel's mDC1 label means CD1c-positive and mDC2 means CD1c-negative; their numeric suffixes must not be substituted with canonical cDC1/cDC2 identities. FSC-A supplies scatter context rather than changing this dataset-specific label convention.
   20:
     definition: |
-      mDC_CD86p: the CD86-expressing myeloid dendritic cell fraction.
+      mDC_CD86p: CD86-positive myeloid dendritic cells.
     rule:
       x_marker: Comp-PE-A
       y_marker: FSC-A
@@ -561,7 +561,7 @@ FRDR_covid19:
       The parent is the combined myeloid-DC fraction before the mDC1/mDC2 split. This CD86-expressing target aggregates both named subtypes; it must not be restricted to either one. FSC-A supplies scatter context.
   21:
     definition: |
-      mDC1_CD86p: the CD86-expressing fraction of this dataset's mDC1 subset, which denotes CD1c-positive myeloid dendritic cells.
+      mDC1_CD86p: CD86-positive cells of this dataset's mDC1 subset, which denotes CD1c-positive myeloid dendritic cells.
     rule:
       x_marker: Comp-PE-A
       y_marker: SSC-A
@@ -572,7 +572,7 @@ FRDR_covid19:
       The parent is this panel's mDC1 subset, meaning CD1c-positive myeloid DCs. CD86 is an additional expression/activation-associated annotation within that subset. Retain the panel's label convention rather than interpreting mDC1 as canonical cDC1; SSC-A is scatter context.
   22:
     definition: |
-      mDC2_CD86p: the CD86-expressing fraction of this dataset's mDC2 subset, which denotes CD1c-negative myeloid dendritic cells.
+      mDC2_CD86p: CD86-positive cells of this dataset's mDC2 subset, which denotes CD1c-negative myeloid dendritic cells.
     rule:
       x_marker: Comp-PE-A
       y_marker: SSC-A
@@ -594,7 +594,7 @@ FRDR_covid19:
       This branch starts from Non_BT in parallel with the monocyte/DC branch. The HLA-DR/CD14-negative target is a candidate residual that can include basophils and NK cells; it is not a final basophil label. Negative annotation does not require either prepared channel value to be zero.
   24:
     definition: |
-      Basophils: basophils.
+      Basophils: CD123-high CD16-negative basophils.
     rule:
       x_marker: Comp-PE-Cy7-A
       y_marker: Comp-PerCP-Cy5-5-A
@@ -606,7 +606,7 @@ FRDR_covid19:
 Acute2020:
   1:
     definition: |
-      Cleanup1: the cell-event fraction retained after calibration-bead exclusion. Bead: calibration beads.
+      Cleanup1: 140Ce-bead-negative cell events retained after calibration-bead exclusion. Bead: 140Ce-bead-positive calibration beads.
     rule:
       x_marker: Time
       y_marker: 140Ce_Bead
@@ -653,7 +653,7 @@ Acute2020:
       The parent has passed earlier acquisition-quality cleanup. Width supplies an additional technical check for wide-pulse doublets and aggregates; earlier QC acceptance is not proof of a single-cell event. No observed pulse-width range or sample-specific acceptance boundary is prescribed here.
   6:
     definition: |
-      Cleanup6: the cell-event fraction retained by viability cleanup.
+      Cleanup6: Live_Dead-low live cell events retained by viability cleanup.
     rule:
       x_marker: Time
       y_marker: 103Rh_Live_Dead
@@ -664,7 +664,7 @@ Acute2020:
       This is viability cleanup after earlier technical-event filtering. The Rh live/dead channel addresses dead-cell exclusion; passing bead and ion-cloud QC does not itself establish viability. Time is acquisition context, not a second viability marker.
   7:
     definition: |
-      Ir: nucleated cell events.
+      Ir: DNA1-high nucleated events.
     rule:
       x_marker: 191Ir_DNA1
       y_marker: Event_length
@@ -675,7 +675,7 @@ Acute2020:
       The parent has passed technical and viability cleanup. Ir selects nucleated cell events through DNA1; it is not another live/dead decision. Event_length is displayed but is not a separate biological subtype definition at this step.
   8:
     definition: |
-      CD45: leukocytes, or white blood cells.
+      CD45: all leukocytes, including granulocytes.
     rule:
       x_marker: 193Ir_DNA2
       y_marker: 89Y_CD45
@@ -683,10 +683,10 @@ Acute2020:
       - [Unassigned, Unassigned]
       - [Unassigned, CD45]
     details: |
-      The parent is already DNA1-positive nucleated events, but that does not guarantee acceptable single-cell nuclear content. This leukocyte step also excludes doublets, damaged or hyperploid nuclear events, and non-cell/debris events using DNA2 context, while CD45 supplies leukocyte identity. Do not reduce the target to CD45 positivity alone; no sample-specific DNA2 acceptance range is supplied.
+      The parent is already DNA1-positive nucleated events, but that does not guarantee acceptable single-cell nuclear content. This leukocyte step also excludes doublets, damaged or hyperploid nuclear events, and non-cell/debris events using DNA2 context, while CD45 supplies leukocyte identity. Do not reduce the target to CD45 positivity alone; no sample-specific DNA2 acceptance range is supplied. On the CD45 axis, only CD45-negative events are excluded.
   9:
     definition: |
-      Mononuclear: mononuclear leukocytes. Granulocyte: granulocytes. CD66bnegCD45lo: the residual event fraction designated as CD66b negative and CD45 low. CD45hiCD66bpos: the leukocyte fraction designated as CD45 high and CD66b positive.
+      Mononuclear: CD66b-negative CD45-high mononuclear leukocytes. Granulocyte: CD66b-positive CD45-intermediate granulocytes. CD66bnegCD45lo: the CD66b-negative CD45-low residual event fraction. CD45hiCD66bpos: the CD45-high CD66b-positive leukocyte fraction.
     rule:
       x_marker: 172Yb_CD66b
       y_marker: 89Y_CD45
@@ -719,7 +719,7 @@ Acute2020:
       The parent has already undergone CD14/CD56 cleanup. This step removes CD3-expressing T cells and CD123-expressing residuals before B-lineage annotation. The retained fraction is still a candidate pool rather than a final B-cell or plasmablast identity.
   12:
     definition: |
-      CD20neg: the residual fraction designated as CD20 negative. TotalCD19B: the mature B-cell fraction.
+      CD20neg: all CD20-negative events in the parent. TotalCD19B: CD19⁺CD20⁺ mature B cells.
     rule:
       x_marker: 144Nd_CD19
       y_marker: 171Yb_CD20
@@ -730,7 +730,7 @@ Acute2020:
       The parent is a cleaned B-lineage candidate pool, not an already purified mature-B population. TotalCD19B is the mature-B target; CD20neg is a separate residual that feeds plasmablast identification. CD20-negative membership alone does not establish a plasmablast.
   13:
     definition: |
-      NaiveB: naive B cells. IgDnegMemB: IgD-negative memory B cells. IgDposMemB: non-switched memory B cells.
+      NaiveB: IgD-positive CD27-negative naive B cells. IgDnegMemB: IgD-negative CD27-positive memory B cells. IgDposMemB: IgD-positive CD27-positive non-switched memory B cells.
     rule:
       x_marker: 174Yb_IgD
       y_marker: 154Sm_CD27
@@ -741,7 +741,7 @@ Acute2020:
       The parent is the mature-B fraction. NaiveB, IgD-positive memory, and IgD-negative memory are the named targets; the IgD/CD27 double-negative phenotype is not an additional named category here. Do not assign every remaining parent event to one of the three merely by elimination.
   14:
     definition: |
-      Plasmablast: antibody-secreting B-lineage cells.
+      Plasmablast: CD27-high CD38-high antibody-secreting B-lineage cells.
     rule:
       x_marker: 154Sm_CD27
       y_marker: 161Dy_CD38
@@ -752,7 +752,7 @@ Acute2020:
       Plasmablast identification is performed within the CD20-negative residual. CD20 loss is not sufficient for antibody-secreting-cell identity; joint CD27/CD38 phenotype is relevant. The entire residual must not automatically be called Plasmablast.
   15:
     definition: |
-      NonTNonB: the non-T, non-B cell fraction.
+      NonTNonB: CD19-negative CD3-negative non-T, non-B cells.
     rule:
       x_marker: 144Nd_CD19
       y_marker: 170Er_CD3
@@ -763,7 +763,7 @@ Acute2020:
       The parent is mononuclear leukocytes. NonTNonB is a shared residual for several innate and myeloid branches, not one final cell type. B/T exclusion does not establish monocyte, NK, DC, basophil, or ILC identity by itself.
   16:
     definition: |
-      NonBNonNK: the non-B, non-NK cell fraction.
+      NonBNonNK: CD56-negative CD20-negative non-B, non-NK cells.
     rule:
       x_marker: 163Dy_CD56_NCAM
       y_marker: 171Yb_CD20
@@ -774,7 +774,7 @@ Acute2020:
       The parent already excludes the main T/B fractions. This further cleanup removes NK-associated and residual B-associated events before monocyte and basophil/ILC processing. The retained NonBNonNK fraction remains heterogeneous and must not be equated with monocytes alone.
   17:
     definition: |
-      TotalMonocyte: monocytes, combining the monocyte subsets.
+      TotalMonocyte: CD11c-positive monocytes, CD14-high to CD14-low, combining the monocyte subsets.
     rule:
       x_marker: 147Sm_CD11c
       y_marker: 168Er_CD14
@@ -785,7 +785,7 @@ Acute2020:
       The parent has undergone T/B and NK/residual-B cleanup. TotalMonocyte combines classical, intermediate, and non-classical monocytes rather than selecting a CD14-high subset only. CD14 can distinguish later monocyte subsets; do not use the parent-cleanup label alone as proof of monocyte identity.
   18:
     definition: |
-      ClassicalMono: classical monocytes. TransitionalMono: intermediate monocytes. NonclassicalMono: non-classical, or patrolling, monocytes.
+      ClassicalMono: CD14-high CD38-high classical monocytes. TransitionalMono: CD14-intermediate CD38-intermediate monocytes. NonclassicalMono: CD14-low CD38-low non-classical monocytes.
     rule:
       x_marker: 161Dy_CD38
       y_marker: 168Er_CD14
@@ -797,7 +797,7 @@ Acute2020:
       The parent is the combined monocyte fraction. ClassicalMono, TransitionalMono, and NonclassicalMono are this panel's three monocyte annotations, with TransitionalMono denoting intermediate monocytes. CD38/CD14 is the displayed panel-specific phenotyping combination, not an instruction to infer maturation identity from acquisition quality or from the preceding cleanup labels.
   19:
     definition: |
-      Basophil: basophils. HLADRloCD123lo: the residual fraction designated as HLA-DR low and CD123 low.
+      Basophil: HLA-DR-negative CD123-high basophils. HLADRloCD123lo: the HLA-DR-low CD123-low residual fraction.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 143Nd_CD123_IL-3R
@@ -808,7 +808,7 @@ Acute2020:
       The parent is the non-T/non-B, non-NK residual. Basophil and the HLA-DR-low/CD123-low residual are distinct named outputs. The latter can supply ILC candidates downstream and must not be treated as a basophil merely because other lineages were removed upstream.
   20:
     definition: |
-      ILC: innate lymphoid cell candidates.
+      ILC: CD161⁺CD127⁺ innate lymphoid cell candidates.
     rule:
       x_marker: 151Eu_CD161
       y_marker: 176Yb_CD127_IL-7Ra
@@ -819,7 +819,7 @@ Acute2020:
       ILC identification is applied to the HLA-DR-low/CD123-low residual after lineage cleanup. CD161/CD127 supplies candidate-identification context; being in a lineage-excluded residual is not sufficient by itself to call every event an innate lymphoid cell.
   21:
     definition: |
-      NonTNonBCD14neg: the non-T, non-B, non-monocyte cell fraction.
+      NonTNonBCD14neg: CD14-negative CD3-negative non-T, non-B, non-monocyte cells.
     rule:
       x_marker: 168Er_CD14
       y_marker: 170Er_CD3
@@ -830,7 +830,7 @@ Acute2020:
       The parent already excludes T and B cells. This further CD14-negative selection removes monocyte-associated events before the NK/DC branch. CD3 carries inherited T-lineage exclusion context; the retained fraction is not a final NK or DC identity.
   22:
     definition: |
-      TotalDC: dendritic cells, combining dendritic cell subsets. TotalNK: natural killer cells, combining NK-cell subsets.
+      TotalDC: CD56-negative HLA-DR-high dendritic cells, combining dendritic cell subsets. TotalNK: CD56-positive HLA-DR-low natural killer cells, combining NK-cell subsets.
     rule:
       x_marker: 163Dy_CD56_NCAM
       y_marker: 173Yb_HLA-DR
@@ -841,7 +841,7 @@ Acute2020:
       The parent has undergone T/B and CD14-associated monocyte exclusion. TotalDC and TotalNK are combined lineage targets, not their later subtypes. Residual events that match neither DC nor NK phenotype remain outside the two named targets.
   23:
     definition: |
-      EarlyNK: the early-maturation NK-cell subset. LateNK: the late-maturation NK-cell subset.
+      EarlyNK: CD57-negative NK cells. LateNK: CD57-positive NK cells.
     rule:
       x_marker: 155Gd_CD57
       y_marker: 163Dy_CD56_NCAM
@@ -852,7 +852,7 @@ Acute2020:
       The parent is already NK cells. CD57 distinguishes the early- and late-maturation labels in this panel, while CD56 carries NK-lineage context. This is not a new NK-versus-non-NK decision, and maturation status must not be inferred from a presumed population frequency.
   24:
     definition: |
-      pDC: plasmacytoid dendritic cells. cDC: conventional dendritic cells.
+      pDC: CD11c-negative CD123-high plasmacytoid dendritic cells. cDC: CD11c-positive CD123-low conventional dendritic cells.
     rule:
       x_marker: 147Sm_CD11c
       y_marker: 143Nd_CD123_IL-3R
@@ -863,7 +863,7 @@ Acute2020:
       The parent is the combined DC fraction. Conventional and plasmacytoid DCs are separate named outputs, so total-DC membership is not a reason to force the same CD11c/CD123 phenotype on both. Further myeloid-DC refinement occurs only on the conventional branch.
   25:
     definition: |
-      mDC: myeloid dendritic cells.
+      mDC: CD38-positive CD123-low myeloid DCs.
     rule:
       x_marker: 161Dy_CD38
       y_marker: 143Nd_CD123_IL-3R
@@ -871,7 +871,7 @@ Acute2020:
       - [Unassigned, mDC]
       - [Unassigned, Unassigned]
     details: |
-      The parent is the conventional-DC fraction rather than all leukocytes or all DCs. mDC is a further target in this workflow; conventional-DC parent membership alone is not a substitute for the current CD38/CD123 phenotyping step.
+      The cDC parent still contains CD38-low non-DC myeloid cells (e.g. CD16⁺ monocytes).
   26:
     definition: |
       CD11cnegCD14neg: the CD11c/CD14 double-negative non-myeloid fraction.
@@ -885,7 +885,7 @@ Acute2020:
       The parent is mononuclear leukocytes. CD11c/CD14-negative selection supplies the non-myeloid candidate fraction for the T-cell branch; it is not itself the final T-cell label. Keep upstream exclusion separate from downstream positive T-lineage identification.
   27:
     definition: |
-      CD3T: T lymphocytes.
+      CD3T: CD3-positive CD19-negative T lymphocytes.
     rule:
       x_marker: 144Nd_CD19
       y_marker: 170Er_CD3
@@ -896,7 +896,7 @@ Acute2020:
       The parent has undergone CD11c/CD14 myeloid exclusion. CD3 supplies T-lineage identification before receptor-subtype annotation, while CD19 helps distinguish residual B-lineage events. The parent alone is not sufficient to assign every event to CD3T.
   28:
     definition: |
-      abT: alpha-beta T cells. gdT: gamma-delta T cells.
+      abT: TCRgd-negative CD3-positive alpha-beta T cells. gdT: TCRgd-positive CD3-positive gamma-delta T cells.
     rule:
       x_marker: 164Dy_TCRgd
       y_marker: 170Er_CD3
@@ -907,7 +907,7 @@ Acute2020:
       The parent is already T cells. The TCRgd-expressing branch denotes gamma-delta T cells and the other named branch denotes alpha-beta T cells; CD3 supplies inherited T-lineage context. Do not treat receptor-subtype separation as a second T-versus-non-T classification.
   29:
     definition: |
-      CD8: cytotoxic T cells. CD4: helper T cells. DPT: double-positive T cells. DNT: double-negative T cells.
+      CD8: CD4-negative CD8a-positive cytotoxic T cells. CD4: CD4-positive CD8a-negative helper T cells. DPT: CD4-positive CD8a-positive double-positive T cells. DNT: CD4-negative CD8a-negative double-negative T cells.
     rule:
       x_marker: 145Nd_CD4
       y_marker: 146Nd_CD8a
@@ -918,7 +918,7 @@ Acute2020:
       The parent is the alpha-beta T-cell fraction. DPT and DNT refer to CD4/CD8 co-expression categories within that T-cell lineage; DNT does not mean non-T cells. All four CD4/CD8 categories are named outputs here.
   30:
     definition: |
-      CD8Naive: naive cytotoxic T cells. CD8TEMRA: CD45RA-reexpressing effector memory cytotoxic T cells. CD8/CD45RAnegCD27pos: the CD27-retaining, CD45RA-negative memory CD8 T-cell fraction. CD8/CD45RAnegCD27neg: the CD45RA/CD27 double-negative memory CD8 T-cell fraction.
+      CD8Naive: CD45RA-positive CD27-positive naive cytotoxic T cells. CD8TEMRA: CD45RA-positive CD27-negative CD45RA-reexpressing effector memory cytotoxic T cells. CD8/CD45RAnegCD27pos: CD45RA-negative CD27-positive memory CD8 T cells. CD8/CD45RAnegCD27neg: CD45RA-negative CD27-negative memory CD8 T cells.
     rule:
       x_marker: 150Nd_CD45RA
       y_marker: 154Sm_CD27
@@ -929,7 +929,7 @@ Acute2020:
       The parent is cytotoxic alpha-beta T cells. CD45RA/CD27 provides the first differentiation split; the two CD45RA-negative fractions remain broader buckets that are subdivided by CCR7 downstream. CD8TEMRA denotes the CD45RA-reexpressing effector-memory category and must not be equated with naive cells solely because both retain CD45RA.
   31:
     definition: |
-      CD8Naive/activated: the activation-associated HLA-DR single-positive fraction of naive cytotoxic T cells. CD8Naive/CD38pos: the CD38 single-positive fraction of naive cytotoxic T cells. CD8Naive/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of naive cytotoxic T cells.
+      CD8Naive/activated: the HLA-DR-positive CD38-negative activated fraction of naive cytotoxic T cells. CD8Naive/CD38pos: the HLA-DR-negative CD38-positive fraction of naive cytotoxic T cells. CD8Naive/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of naive cytotoxic T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -940,7 +940,7 @@ Acute2020:
       The parent is naive CD8 T cells. HLA-DR/CD38 expression adds activation-associated annotation independently of naive differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   32:
     definition: |
-      CD8TCM: central memory cytotoxic T cells. CD8TEM1: the early-stage effector memory cytotoxic T-cell subset designated TEM1 in this panel (CD45RA-negative, CD27-positive, CCR7-negative).
+      CD8TCM: CCR7-positive CD8a-positive central memory cytotoxic T cells. CD8TEM1: CCR7-negative CD8a-positive early-stage effector memory cytotoxic T cells designated TEM1 in this panel (CD45RA-negative, CD27-positive, CCR7-negative).
     rule:
       x_marker: 167Er_CD197_CCR7
       y_marker: 146Nd_CD8a
@@ -951,7 +951,7 @@ Acute2020:
       The parent is the CD45RA-negative, CD27-retaining CD8 memory fraction. CCR7 distinguishes this panel's TCM and TEM1 categories; CD8 supplies inherited lineage context. TEM1 is the early-stage effector-memory label in this scheme, not the CD27-negative TEM2/TEM3 branch.
   33:
     definition: |
-      CD8TEM1/activated: the activation-associated HLA-DR single-positive fraction of this panel's early-stage TEM1 effector memory cytotoxic T cells (CD45RA-negative, CD27-positive, CCR7-negative). CD8TEM1/CD38pos: the CD38 single-positive fraction of this panel's early-stage TEM1 effector memory cytotoxic T cells (CD45RA-negative, CD27-positive, CCR7-negative). CD8TEM1/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of this panel's early-stage TEM1 effector memory cytotoxic T cells (CD45RA-negative, CD27-positive, CCR7-negative).
+      CD8TEM1/activated: the HLA-DR-positive CD38-negative activated fraction of this panel's early-stage TEM1 effector memory cytotoxic T cells (CD45RA-negative, CD27-positive, CCR7-negative). CD8TEM1/CD38pos: the HLA-DR-negative CD38-positive fraction of this panel's early-stage TEM1 effector memory cytotoxic T cells (CD45RA-negative, CD27-positive, CCR7-negative). CD8TEM1/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of this panel's early-stage TEM1 effector memory cytotoxic T cells (CD45RA-negative, CD27-positive, CCR7-negative).
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -962,7 +962,7 @@ Acute2020:
       The parent is this panel's CD8 TEM1 subset. HLA-DR/CD38 expression adds activation-associated annotation independently of TEM1 differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   34:
     definition: |
-      CD8TCM/activated: the activation-associated HLA-DR single-positive fraction of central memory cytotoxic T cells. CD8TCM/CD38pos: the CD38 single-positive fraction of central memory cytotoxic T cells. CD8TCM/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of central memory cytotoxic T cells.
+      CD8TCM/activated: the HLA-DR-positive CD38-negative activated fraction of central memory cytotoxic T cells. CD8TCM/CD38pos: the HLA-DR-negative CD38-positive fraction of central memory cytotoxic T cells. CD8TCM/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of central memory cytotoxic T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -973,7 +973,7 @@ Acute2020:
       The parent is CD8 central-memory T cells. HLA-DR/CD38 expression adds activation-associated annotation independently of central-memory differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   35:
     definition: |
-      CD8TEM2: the intermediate-stage effector memory cytotoxic T-cell subset designated TEM2 in this panel (CD45RA-negative, CD27-negative, CCR7-positive). CD8TEM3: the late-stage effector memory cytotoxic T-cell subset designated TEM3 in this panel (CD45RA-negative, CD27-negative, CCR7-negative). TEM1/TEM2/TEM3 denote this panel's annotation scheme; these names do not establish an obligatory developmental sequence.
+      CD8TEM2: CCR7-positive CD8a-positive intermediate-stage effector memory cytotoxic T cells designated TEM2 in this panel (CD45RA-negative, CD27-negative, CCR7-positive). CD8TEM3: CCR7-negative CD8a-positive late-stage effector memory cytotoxic T cells designated TEM3 in this panel (CD45RA-negative, CD27-negative, CCR7-negative). TEM1/TEM2/TEM3 denote this panel's annotation scheme; these names do not establish an obligatory developmental sequence.
     rule:
       x_marker: 167Er_CD197_CCR7
       y_marker: 146Nd_CD8a
@@ -984,7 +984,7 @@ Acute2020:
       The parent is the CD45RA-negative, CD27-negative CD8 memory fraction. CCR7 distinguishes the panel's TEM2 and TEM3 categories; CD8 is inherited lineage context. The numbered TEM labels encode this panel's annotation scheme and do not establish a mandatory developmental sequence.
   36:
     definition: |
-      CD8TEM3/activated: the activation-associated HLA-DR single-positive fraction of this panel's late-stage TEM3 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-negative). CD8TEM3/CD38pos: the CD38 single-positive fraction of this panel's late-stage TEM3 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-negative). CD8TEM3/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of this panel's late-stage TEM3 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-negative).
+      CD8TEM3/activated: the HLA-DR-positive CD38-negative activated fraction of this panel's late-stage TEM3 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-negative). CD8TEM3/CD38pos: the HLA-DR-negative CD38-positive fraction of this panel's late-stage TEM3 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-negative). CD8TEM3/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of this panel's late-stage TEM3 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-negative).
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -995,7 +995,7 @@ Acute2020:
       The parent is this panel's CD8 TEM3 subset. HLA-DR/CD38 expression adds activation-associated annotation independently of TEM3 differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   37:
     definition: |
-      CD8TEM2/activated: the activation-associated HLA-DR single-positive fraction of this panel's intermediate-stage TEM2 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-positive). CD8TEM2/CD38pos: the CD38 single-positive fraction of this panel's intermediate-stage TEM2 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-positive). CD8TEM2/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of this panel's intermediate-stage TEM2 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-positive).
+      CD8TEM2/activated: the HLA-DR-positive CD38-negative activated fraction of this panel's intermediate-stage TEM2 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-positive). CD8TEM2/CD38pos: the HLA-DR-negative CD38-positive fraction of this panel's intermediate-stage TEM2 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-positive). CD8TEM2/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of this panel's intermediate-stage TEM2 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-positive).
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1006,7 +1006,7 @@ Acute2020:
       The parent is this panel's CD8 TEM2 subset. HLA-DR/CD38 expression adds activation-associated annotation independently of TEM2 differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   38:
     definition: |
-      CD8TEMRA/activated: the activation-associated HLA-DR single-positive fraction of CD45RA-reexpressing effector memory cytotoxic T cells. CD8TEMRA/CD38pos: the CD38 single-positive fraction of CD45RA-reexpressing effector memory cytotoxic T cells. CD8TEMRA/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of CD45RA-reexpressing effector memory cytotoxic T cells.
+      CD8TEMRA/activated: the HLA-DR-positive CD38-negative activated fraction of CD45RA-reexpressing effector memory cytotoxic T cells. CD8TEMRA/CD38pos: the HLA-DR-negative CD38-positive fraction of CD45RA-reexpressing effector memory cytotoxic T cells. CD8TEMRA/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of CD45RA-reexpressing effector memory cytotoxic T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1017,7 +1017,7 @@ Acute2020:
       The parent is CD8 TEMRA cells. HLA-DR/CD38 expression adds activation-associated annotation independently of TEMRA differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   39:
     definition: |
-      nnCD8/activated: the activation-associated HLA-DR single-positive fraction of non-naive cytotoxic T cells. nnCD8/CD38pos: the CD38 single-positive fraction of non-naive cytotoxic T cells. nnCD8/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of non-naive cytotoxic T cells.
+      nnCD8/activated: the HLA-DR-positive CD38-negative activated fraction of non-naive cytotoxic T cells. nnCD8/CD38pos: the HLA-DR-negative CD38-positive fraction of non-naive cytotoxic T cells. nnCD8/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of non-naive cytotoxic T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1028,7 +1028,7 @@ Acute2020:
       The parent is non-naive CD8 T cells. HLA-DR/CD38 expression adds activation-associated annotation independently of the combined non-naive differentiation categories; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   40:
     definition: |
-      CD4Naive: naive helper T cells. CD4TEMRA: CD45RA-reexpressing effector memory helper T cells. CD4/CD45RAnegCD27pos: the CD27-retaining, CD45RA-negative memory CD4 T-cell fraction. CD4/CD45RAnegCD27neg: the CD45RA/CD27 double-negative memory CD4 T-cell fraction.
+      CD4Naive: CD45RA-positive CD27-positive naive helper T cells. CD4TEMRA: CD45RA-positive CD27-negative CD45RA-reexpressing effector memory helper T cells. CD4/CD45RAnegCD27pos: CD45RA-negative CD27-positive memory CD4 T cells. CD4/CD45RAnegCD27neg: CD45RA-negative CD27-negative memory CD4 T cells.
     rule:
       x_marker: 150Nd_CD45RA
       y_marker: 154Sm_CD27
@@ -1039,7 +1039,7 @@ Acute2020:
       The parent is helper alpha-beta T cells. CD45RA/CD27 gives the initial differentiation split; the CD45RA-negative fractions require later CCR7 annotation for their TCM/TEM labels. CD4TEMRA is the CD45RA-reexpressing effector-memory category, not a synonym for the naive CD45RA-expressing category.
   41:
     definition: |
-      CD4Naive/activated: the activation-associated HLA-DR single-positive fraction of naive helper T cells. CD4Naive/CD38pos: the CD38 single-positive fraction of naive helper T cells. CD4Naive/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of naive helper T cells.
+      CD4Naive/activated: the HLA-DR-positive CD38-negative activated fraction of naive helper T cells. CD4Naive/CD38pos: the HLA-DR-negative CD38-positive fraction of naive helper T cells. CD4Naive/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of naive helper T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1050,7 +1050,7 @@ Acute2020:
       The parent is naive CD4 T cells. HLA-DR/CD38 expression adds activation-associated annotation independently of naive differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   42:
     definition: |
-      CD4TCM: central memory helper T cells. CD4TEM1: the early-stage effector memory helper T-cell subset designated TEM1 in this panel (CD45RA-negative, CD27-positive, CCR7-negative).
+      CD4TCM: CCR7-positive CD4-positive central memory helper T cells. CD4TEM1: CCR7-negative CD4-positive early-stage effector memory helper T cells designated TEM1 in this panel (CD45RA-negative, CD27-positive, CCR7-negative).
     rule:
       x_marker: 167Er_CD197_CCR7
       y_marker: 145Nd_CD4
@@ -1061,7 +1061,7 @@ Acute2020:
       The parent is the CD45RA-negative, CD27-retaining CD4 memory fraction. CCR7 distinguishes this panel's TCM and TEM1 categories; CD4 supplies inherited helper-lineage context. Do not confuse this branch with the CD27-negative TEM2/TEM3 branch.
   43:
     definition: |
-      CD4TEM1/activated: the activation-associated HLA-DR single-positive fraction of this panel's early-stage TEM1 effector memory helper T cells (CD45RA-negative, CD27-positive, CCR7-negative). CD4TEM1/CD38pos: the CD38 single-positive fraction of this panel's early-stage TEM1 effector memory helper T cells (CD45RA-negative, CD27-positive, CCR7-negative). CD4TEM1/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of this panel's early-stage TEM1 effector memory helper T cells (CD45RA-negative, CD27-positive, CCR7-negative).
+      CD4TEM1/activated: the HLA-DR-positive CD38-negative activated fraction of this panel's early-stage TEM1 effector memory helper T cells (CD45RA-negative, CD27-positive, CCR7-negative). CD4TEM1/CD38pos: the HLA-DR-negative CD38-positive fraction of this panel's early-stage TEM1 effector memory helper T cells (CD45RA-negative, CD27-positive, CCR7-negative). CD4TEM1/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of this panel's early-stage TEM1 effector memory helper T cells (CD45RA-negative, CD27-positive, CCR7-negative).
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1072,7 +1072,7 @@ Acute2020:
       The parent is this panel's CD4 TEM1 subset. HLA-DR/CD38 expression adds activation-associated annotation independently of TEM1 differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   44:
     definition: |
-      CD4TCM/activated: the activation-associated HLA-DR single-positive fraction of central memory helper T cells. CD4TCM/CD38pos: the CD38 single-positive fraction of central memory helper T cells. CD4TCM/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of central memory helper T cells.
+      CD4TCM/activated: the HLA-DR-positive CD38-negative activated fraction of central memory helper T cells. CD4TCM/CD38pos: the HLA-DR-negative CD38-positive fraction of central memory helper T cells. CD4TCM/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of central memory helper T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1083,7 +1083,7 @@ Acute2020:
       The parent is CD4 central-memory T cells. HLA-DR/CD38 expression adds activation-associated annotation independently of central-memory differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   45:
     definition: |
-      CD4TEM2: the intermediate-stage effector memory helper T-cell subset designated TEM2 in this panel (CD45RA-negative, CD27-negative, CCR7-positive). CD4TEM3: the late-stage effector memory helper T-cell subset designated TEM3 in this panel (CD45RA-negative, CD27-negative, CCR7-negative). TEM1/TEM2/TEM3 denote this panel's annotation scheme; these names do not establish an obligatory developmental sequence.
+      CD4TEM2: CCR7-positive CD4-positive intermediate-stage effector memory helper T cells designated TEM2 in this panel (CD45RA-negative, CD27-negative, CCR7-positive). CD4TEM3: CCR7-negative CD4-positive late-stage effector memory helper T cells designated TEM3 in this panel (CD45RA-negative, CD27-negative, CCR7-negative). TEM1/TEM2/TEM3 denote this panel's annotation scheme; these names do not establish an obligatory developmental sequence.
     rule:
       x_marker: 167Er_CD197_CCR7
       y_marker: 145Nd_CD4
@@ -1094,7 +1094,7 @@ Acute2020:
       The parent is the CD45RA-negative, CD27-negative CD4 memory fraction. CCR7 distinguishes the panel's TEM2 and TEM3 categories while CD4 carries inherited lineage context. These numbered labels are panel-specific and do not prove a universal sequence of memory-cell differentiation.
   46:
     definition: |
-      CD4TEM2/activated: the activation-associated HLA-DR single-positive fraction of this panel's intermediate-stage TEM2 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-positive). CD4TEM2/CD38pos: the CD38 single-positive fraction of this panel's intermediate-stage TEM2 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-positive). CD4TEM2/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of this panel's intermediate-stage TEM2 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-positive).
+      CD4TEM2/activated: the HLA-DR-positive CD38-negative activated fraction of this panel's intermediate-stage TEM2 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-positive). CD4TEM2/CD38pos: the HLA-DR-negative CD38-positive fraction of this panel's intermediate-stage TEM2 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-positive). CD4TEM2/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of this panel's intermediate-stage TEM2 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-positive).
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1105,7 +1105,7 @@ Acute2020:
       The parent is this panel's CD4 TEM2 subset. HLA-DR/CD38 expression adds activation-associated annotation independently of TEM2 differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   47:
     definition: |
-      CD4TEM3/activated: the activation-associated HLA-DR single-positive fraction of this panel's late-stage TEM3 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-negative). CD4TEM3/CD38pos: the CD38 single-positive fraction of this panel's late-stage TEM3 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-negative). CD4TEM3/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of this panel's late-stage TEM3 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-negative).
+      CD4TEM3/activated: the HLA-DR-positive CD38-negative activated fraction of this panel's late-stage TEM3 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-negative). CD4TEM3/CD38pos: the HLA-DR-negative CD38-positive fraction of this panel's late-stage TEM3 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-negative). CD4TEM3/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of this panel's late-stage TEM3 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-negative).
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1116,7 +1116,7 @@ Acute2020:
       The parent is this panel's CD4 TEM3 subset. HLA-DR/CD38 expression adds activation-associated annotation independently of TEM3 differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   48:
     definition: |
-      CD4TEMRA/activated: the activation-associated HLA-DR single-positive fraction of CD45RA-reexpressing effector memory helper T cells. CD4TEMRA/CD38pos: the CD38 single-positive fraction of CD45RA-reexpressing effector memory helper T cells. CD4TEMRA/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of CD45RA-reexpressing effector memory helper T cells.
+      CD4TEMRA/activated: the HLA-DR-positive CD38-negative activated fraction of CD45RA-reexpressing effector memory helper T cells. CD4TEMRA/CD38pos: the HLA-DR-negative CD38-positive fraction of CD45RA-reexpressing effector memory helper T cells. CD4TEMRA/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of CD45RA-reexpressing effector memory helper T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1127,7 +1127,7 @@ Acute2020:
       The parent is CD4 TEMRA cells. HLA-DR/CD38 expression adds activation-associated annotation independently of TEMRA differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   49:
     definition: |
-      nnCD4/activated: the activation-associated HLA-DR single-positive fraction of non-naive helper T cells. nnCD4/CD38pos: the CD38 single-positive fraction of non-naive helper T cells. nnCD4/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of non-naive helper T cells.
+      nnCD4/activated: the HLA-DR-positive CD38-negative activated fraction of non-naive helper T cells. nnCD4/CD38pos: the HLA-DR-negative CD38-positive fraction of non-naive helper T cells. nnCD4/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of non-naive helper T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1138,7 +1138,7 @@ Acute2020:
       The parent is non-naive CD4 T cells. HLA-DR/CD38 expression adds activation-associated annotation independently of the combined non-naive differentiation categories; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   50:
     definition: |
-      nnCD4CXCR5pos: the CXCR5-expressing non-naive helper T-cell fraction, including Tfh-like cells. nnCD4CXCR5neg: the CXCR5-negative non-naive helper T-cell fraction.
+      nnCD4CXCR5pos: CXCR5-positive CD4-positive non-naive helper T cells, including Tfh-like cells. nnCD4CXCR5neg: CXCR5-negative CD4-positive non-naive helper T cells.
     rule:
       x_marker: 158Gd_CD185_CXCR5
       y_marker: 145Nd_CD4
@@ -1149,7 +1149,7 @@ Acute2020:
       The parent is non-naive helper T cells, combining the memory/effector categories after naive-cell exclusion. CXCR5 distinguishes follicular-helper-like from non-follicular fractions; CD4 carries inherited helper-lineage context. The CXCR5-expressing label includes Tfh-like cells and does not independently establish germinal-center identity.
   51:
     definition: |
-      nnCD4CXCR5pos/activated: the activation-associated HLA-DR single-positive fraction of CXCR5-expressing non-naive helper T cells (Tfh-like). nnCD4CXCR5pos/CD38pos: the CD38 single-positive fraction of CXCR5-expressing non-naive helper T cells (Tfh-like). nnCD4CXCR5pos/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of CXCR5-expressing non-naive helper T cells (Tfh-like).
+      nnCD4CXCR5pos/activated: the HLA-DR-positive CD38-negative activated fraction of CXCR5-expressing non-naive helper T cells (Tfh-like). nnCD4CXCR5pos/CD38pos: the HLA-DR-negative CD38-positive fraction of CXCR5-expressing non-naive helper T cells (Tfh-like). nnCD4CXCR5pos/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of CXCR5-expressing non-naive helper T cells (Tfh-like).
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1160,7 +1160,7 @@ Acute2020:
       The parent is the CXCR5-expressing non-naive helper-T fraction. HLA-DR/CD38 expression adds activation-associated annotation independently of follicular-helper-like identity; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   52:
     definition: |
-      Treg: regulatory T cells.
+      Treg: CD25-high CD127-low regulatory T cells.
     rule:
       x_marker: 153Eu_CD25_IL-2Ra
       y_marker: 176Yb_CD127_IL-7Ra
@@ -1171,7 +1171,7 @@ Acute2020:
       Treg identification is restricted to the non-naive helper-T parent. The target therefore covers memory/effector Treg candidates; resting naive Tregs were excluded upstream and must not be recovered by widening this gate. Interpret the CD25/CD127 phenotype as additional identification within that selected parent, not a synonym for the entire parent.
   53:
     definition: |
-      Treg/activated: the activation-associated HLA-DR single-positive fraction of regulatory T cells. Treg/CD38pos: the CD38 single-positive fraction of regulatory T cells. Treg/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of regulatory T cells.
+      Treg/activated: the HLA-DR-positive CD38-negative activated fraction of regulatory T cells. Treg/CD38pos: the HLA-DR-negative CD38-positive fraction of regulatory T cells. Treg/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of regulatory T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1182,7 +1182,7 @@ Acute2020:
       The parent is the selected regulatory-T fraction. HLA-DR/CD38 expression adds activation-associated annotation independently of regulatory-T identity; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   54:
     definition: |
-      Th1: type-1 helper T-cell phenotype fraction. Th17: type-17 helper T-cell phenotype fraction. NonTh1NonTh17: the non-Th1, non-Th17 helper T-cell fraction.
+      Th1: CXCR3-positive CCR6-negative type-1 helper T cells. Th17: CCR6-positive CXCR3-negative type-17 helper T cells. NonTh1NonTh17: CCR6-negative CXCR3-negative non-Th1, non-Th17 helper T cells.
     rule:
       x_marker: 141Pr_CD196_CCR6
       y_marker: 156Gd_CD183_CXCR3
@@ -1193,7 +1193,7 @@ Acute2020:
       The parent is the non-follicular, non-naive helper-T fraction. This panel's Th17 annotation may also include Th22-like cells; it is not a separately purified Th17 lineage. NonTh1NonTh17 is a named residual containing Th2 candidates and uncommitted phenotypes, with Th2 resolved downstream. The Th1 target here uses the panel's CCR6-negative/CXCR3-positive category; do not import the broader Z74D Th1/17-inclusive naming convention.
   55:
     definition: |
-      Th1/activated: the activation-associated HLA-DR single-positive fraction of type-1 helper T cells. Th1/CD38pos: the CD38 single-positive fraction of type-1 helper T cells. Th1/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of type-1 helper T cells.
+      Th1/activated: the HLA-DR-positive CD38-negative activated fraction of type-1 helper T cells. Th1/CD38pos: the HLA-DR-negative CD38-positive fraction of type-1 helper T cells. Th1/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of type-1 helper T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1204,7 +1204,7 @@ Acute2020:
       The parent is the selected Th1 fraction. HLA-DR/CD38 expression adds activation-associated annotation independently of Th1-associated phenotype; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   56:
     definition: |
-      Th17/activated: the activation-associated HLA-DR single-positive fraction of type-17 helper T cells. Th17/CD38pos: the CD38 single-positive fraction of type-17 helper T cells. Th17/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of type-17 helper T cells.
+      Th17/activated: the HLA-DR-positive CD38-negative activated fraction of type-17 helper T cells. Th17/CD38pos: the HLA-DR-negative CD38-positive fraction of type-17 helper T cells. Th17/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of type-17 helper T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1215,7 +1215,7 @@ Acute2020:
       The parent is the selected Th17-associated fraction, which can also include Th22-like cells in this panel. HLA-DR/CD38 expression adds activation-associated annotation independently of the panel's Th17-associated phenotype; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   57:
     definition: |
-      Th2: type-2 helper T-cell phenotype fraction.
+      Th2: CCR4-positive CXCR3-negative type-2 helper T cells.
     rule:
       x_marker: 152Sm_CD194_CCR4
       y_marker: 156Gd_CD183_CXCR3
@@ -1226,7 +1226,7 @@ Acute2020:
       The parent has already excluded the Th1 and Th17-associated fractions from non-follicular memory helper T cells. CCR4 is interpreted in that restricted context for the Th2 target; it is not a universal Th2 identifier across an unrestricted T-cell sample. CXCR3 carries the inherited exclusion context.
   58:
     definition: |
-      Th2/activated: the activation-associated HLA-DR single-positive fraction of type-2 helper T cells. Th2/CD38pos: the CD38 single-positive fraction of type-2 helper T cells. Th2/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of type-2 helper T cells.
+      Th2/activated: the HLA-DR-positive CD38-negative activated fraction of type-2 helper T cells. Th2/CD38pos: the HLA-DR-negative CD38-positive fraction of type-2 helper T cells. Th2/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of type-2 helper T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1237,7 +1237,7 @@ Acute2020:
       The parent is the selected Th2 fraction. HLA-DR/CD38 expression adds activation-associated annotation independently of Th2-associated phenotype; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   59:
     definition: |
-      DNT/activated: the activation-associated HLA-DR single-positive fraction of double-negative T cells. DNT/CD38pos: the CD38 single-positive fraction of double-negative T cells. DNT/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of double-negative T cells.
+      DNT/activated: the HLA-DR-positive CD38-negative activated fraction of double-negative T cells. DNT/CD38pos: the HLA-DR-negative CD38-positive fraction of double-negative T cells. DNT/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of double-negative T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1248,7 +1248,7 @@ Acute2020:
       The parent is CD4/CD8 double-negative alpha-beta T cells. HLA-DR/CD38 expression adds activation-associated annotation independently of double-negative T-cell identity; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   60:
     definition: |
-      DPT/activated: the activation-associated HLA-DR single-positive fraction of double-positive T cells. DPT/CD38pos: the CD38 single-positive fraction of double-positive T cells. DPT/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of double-positive T cells.
+      DPT/activated: the HLA-DR-positive CD38-negative activated fraction of double-positive T cells. DPT/CD38pos: the HLA-DR-negative CD38-positive fraction of double-positive T cells. DPT/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of double-positive T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1259,7 +1259,7 @@ Acute2020:
       The parent is CD4/CD8 double-positive alpha-beta T cells. HLA-DR/CD38 expression adds activation-associated annotation independently of double-positive T-cell identity; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   61:
     definition: |
-      MAITNKT: mucosal-associated invariant T-cell and natural killer T-cell candidates. The combined name does not independently establish either identity.
+      MAITNKT: CD161-high mucosal-associated invariant T-cell and natural killer T-cell candidates. The combined name does not independently establish either identity.
     rule:
       x_marker: 145Nd_CD4
       y_marker: 151Eu_CD161
@@ -1270,7 +1270,7 @@ Acute2020:
       The parent is alpha-beta T cells, so gamma-delta T cells were excluded upstream. MAITNKT is the combined MAIT/invariant-NKT candidate label in this panel, rather than a separation of those two identities. The displayed CD4/CD161 phenotype alone does not independently confirm either identity or justify labeling all unconventional T-cell candidates.
   62:
     definition: |
-      Neutrophil: neutrophils. Eosinophil: eosinophils.
+      Neutrophil: CD16-high CD294-negative neutrophils. Eosinophil: CD16-negative CD294-positive eosinophils.
     rule:
       x_marker: 148Nd_CD16
       y_marker: 166Er_CD294
@@ -1282,7 +1282,7 @@ Acute2020:
 Acute2021:
   1:
     definition: |
-      Cleanup1: the cell-event fraction retained after calibration-bead exclusion. Bead: calibration beads.
+      Cleanup1: 140Ce-bead-negative cell events retained after calibration-bead exclusion. Bead: 140Ce-bead-positive calibration beads.
     rule:
       x_marker: Time
       y_marker: 140Ce_Bead
@@ -1329,7 +1329,7 @@ Acute2021:
       The parent has passed earlier acquisition-quality cleanup. Width supplies an additional technical check for wide-pulse doublets and aggregates; earlier QC acceptance is not proof of a single-cell event. No observed pulse-width range or sample-specific acceptance boundary is prescribed here.
   6:
     definition: |
-      Cleanup6: the cell-event fraction retained by viability cleanup.
+      Cleanup6: Live_Dead-low live cell events retained by viability cleanup.
     rule:
       x_marker: Time
       y_marker: 103Rh_Live_Dead
@@ -1340,7 +1340,7 @@ Acute2021:
       This is viability cleanup after earlier technical-event filtering. The Rh live/dead channel addresses dead-cell exclusion; passing bead and ion-cloud QC does not itself establish viability. Time is acquisition context, not a second viability marker.
   7:
     definition: |
-      Ir: nucleated cell events.
+      Ir: DNA1-high nucleated events.
     rule:
       x_marker: 191Ir_DNA1
       y_marker: Event_length
@@ -1351,7 +1351,7 @@ Acute2021:
       The parent has passed technical and viability cleanup. Ir selects nucleated cell events through DNA1; it is not another live/dead decision. Event_length is displayed but is not a separate biological subtype definition at this step.
   8:
     definition: |
-      CD45: leukocytes, or white blood cells.
+      CD45: all leukocytes, including granulocytes.
     rule:
       x_marker: 193Ir_DNA2
       y_marker: 89Y_CD45
@@ -1359,10 +1359,10 @@ Acute2021:
       - [Unassigned, Unassigned]
       - [Unassigned, CD45]
     details: |
-      The parent is already DNA1-positive nucleated events, but that does not guarantee acceptable single-cell nuclear content. This leukocyte step also excludes doublets, damaged or hyperploid nuclear events, and non-cell/debris events using DNA2 context, while CD45 supplies leukocyte identity. Do not reduce the target to CD45 positivity alone; no sample-specific DNA2 acceptance range is supplied.
+      The parent is already DNA1-positive nucleated events, but that does not guarantee acceptable single-cell nuclear content. This leukocyte step also excludes doublets, damaged or hyperploid nuclear events, and non-cell/debris events using DNA2 context, while CD45 supplies leukocyte identity. Do not reduce the target to CD45 positivity alone; no sample-specific DNA2 acceptance range is supplied. On the CD45 axis, only CD45-negative events are excluded.
   9:
     definition: |
-      Mononuclear: mononuclear leukocytes. Granulocyte: granulocytes. CD66bnegCD45lo: the residual event fraction designated as CD66b negative and CD45 low. CD45hiCD66bpos: the leukocyte fraction designated as CD45 high and CD66b positive.
+      Mononuclear: CD66b-negative CD45-high mononuclear leukocytes. Granulocyte: CD66b-positive CD45-intermediate granulocytes. CD66bnegCD45lo: the CD66b-negative CD45-low residual event fraction. CD45hiCD66bpos: the CD45-high CD66b-positive leukocyte fraction.
     rule:
       x_marker: 172Yb_CD66b
       y_marker: 89Y_CD45
@@ -1395,7 +1395,7 @@ Acute2021:
       The parent has already undergone CD14/CD56 cleanup. This step removes CD3-expressing T cells and CD123-expressing residuals before B-lineage annotation. The retained fraction is still a candidate pool rather than a final B-cell or plasmablast identity.
   12:
     definition: |
-      CD20neg: the residual fraction designated as CD20 negative. TotalCD19B: the mature B-cell fraction.
+      CD20neg: all CD20-negative events in the parent. TotalCD19B: CD19⁺CD20⁺ mature B cells.
     rule:
       x_marker: 144Nd_CD19
       y_marker: 171Yb_CD20
@@ -1406,7 +1406,7 @@ Acute2021:
       The parent is a cleaned B-lineage candidate pool, not an already purified mature-B population. TotalCD19B is the mature-B target; CD20neg is a separate residual that feeds plasmablast identification. CD20-negative membership alone does not establish a plasmablast.
   13:
     definition: |
-      NaiveB: naive B cells. IgDnegMemB: IgD-negative memory B cells. IgDposMemB: non-switched memory B cells.
+      NaiveB: IgD-positive CD27-negative naive B cells. IgDnegMemB: IgD-negative CD27-positive memory B cells. IgDposMemB: IgD-positive CD27-positive non-switched memory B cells.
     rule:
       x_marker: 174Yb_IgD
       y_marker: 154Sm_CD27
@@ -1417,7 +1417,7 @@ Acute2021:
       The parent is the mature-B fraction. NaiveB, IgD-positive memory, and IgD-negative memory are the named targets; the IgD/CD27 double-negative phenotype is not an additional named category here. Do not assign every remaining parent event to one of the three merely by elimination.
   14:
     definition: |
-      Plasmablast: antibody-secreting B-lineage cells.
+      Plasmablast: CD27-high CD38-high antibody-secreting B-lineage cells.
     rule:
       x_marker: 154Sm_CD27
       y_marker: 161Dy_CD38
@@ -1428,7 +1428,7 @@ Acute2021:
       Plasmablast identification is performed within the CD20-negative residual. CD20 loss is not sufficient for antibody-secreting-cell identity; joint CD27/CD38 phenotype is relevant. The entire residual must not automatically be called Plasmablast.
   15:
     definition: |
-      NonTNonB: the non-T, non-B cell fraction.
+      NonTNonB: CD19-negative CD3-negative non-T, non-B cells.
     rule:
       x_marker: 144Nd_CD19
       y_marker: 170Er_CD3
@@ -1439,7 +1439,7 @@ Acute2021:
       The parent is mononuclear leukocytes. NonTNonB is a shared residual for several innate and myeloid branches, not one final cell type. B/T exclusion does not establish monocyte, NK, DC, basophil, or ILC identity by itself.
   16:
     definition: |
-      NonBNonNK: the non-B, non-NK cell fraction.
+      NonBNonNK: CD56-negative CD20-negative non-B, non-NK cells.
     rule:
       x_marker: 163Dy_CD56_NCAM
       y_marker: 171Yb_CD20
@@ -1450,7 +1450,7 @@ Acute2021:
       The parent already excludes the main T/B fractions. This further cleanup removes NK-associated and residual B-associated events before monocyte and basophil/ILC processing. The retained NonBNonNK fraction remains heterogeneous and must not be equated with monocytes alone.
   17:
     definition: |
-      TotalMonocyte: monocytes, combining the monocyte subsets.
+      TotalMonocyte: CD11c-positive monocytes, CD14-high to CD14-low, combining the monocyte subsets.
     rule:
       x_marker: 147Sm_CD11c
       y_marker: 168Er_CD14
@@ -1461,7 +1461,7 @@ Acute2021:
       The parent has undergone T/B and NK/residual-B cleanup. TotalMonocyte combines classical, intermediate, and non-classical monocytes rather than selecting a CD14-high subset only. CD14 can distinguish later monocyte subsets; do not use the parent-cleanup label alone as proof of monocyte identity.
   18:
     definition: |
-      ClassicalMono: classical monocytes. TransitionalMono: intermediate monocytes. NonclassicalMono: non-classical, or patrolling, monocytes.
+      ClassicalMono: CD14-high CD38-high classical monocytes. TransitionalMono: CD14-intermediate CD38-intermediate monocytes. NonclassicalMono: CD14-low CD38-low non-classical monocytes.
     rule:
       x_marker: 161Dy_CD38
       y_marker: 168Er_CD14
@@ -1473,7 +1473,7 @@ Acute2021:
       The parent is the combined monocyte fraction. ClassicalMono, TransitionalMono, and NonclassicalMono are this panel's three monocyte annotations, with TransitionalMono denoting intermediate monocytes. CD38/CD14 is the displayed panel-specific phenotyping combination, not an instruction to infer maturation identity from acquisition quality or from the preceding cleanup labels.
   19:
     definition: |
-      Basophil: basophils. HLADRloCD123lo: the residual fraction designated as HLA-DR low and CD123 low.
+      Basophil: HLA-DR-negative CD123-high basophils. HLADRloCD123lo: the HLA-DR-low CD123-low residual fraction.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 143Nd_CD123_IL-3R
@@ -1484,7 +1484,7 @@ Acute2021:
       The parent is the non-T/non-B, non-NK residual. Basophil and the HLA-DR-low/CD123-low residual are distinct named outputs. The latter can supply ILC candidates downstream and must not be treated as a basophil merely because other lineages were removed upstream.
   20:
     definition: |
-      ILC: innate lymphoid cell candidates.
+      ILC: CD161⁺CD127⁺ innate lymphoid cell candidates.
     rule:
       x_marker: 151Eu_CD161
       y_marker: 176Yb_CD127_IL-7Ra
@@ -1495,7 +1495,7 @@ Acute2021:
       ILC identification is applied to the HLA-DR-low/CD123-low residual after lineage cleanup. CD161/CD127 supplies candidate-identification context; being in a lineage-excluded residual is not sufficient by itself to call every event an innate lymphoid cell.
   21:
     definition: |
-      NonTNonBCD14neg: the non-T, non-B, non-monocyte cell fraction.
+      NonTNonBCD14neg: CD14-negative CD3-negative non-T, non-B, non-monocyte cells.
     rule:
       x_marker: 168Er_CD14
       y_marker: 170Er_CD3
@@ -1506,7 +1506,7 @@ Acute2021:
       The parent already excludes T and B cells. This further CD14-negative selection removes monocyte-associated events before the NK/DC branch. CD3 carries inherited T-lineage exclusion context; the retained fraction is not a final NK or DC identity.
   22:
     definition: |
-      TotalDC: dendritic cells, combining dendritic cell subsets. TotalNK: natural killer cells, combining NK-cell subsets.
+      TotalDC: CD56-negative HLA-DR-high dendritic cells, combining dendritic cell subsets. TotalNK: CD56-positive HLA-DR-low natural killer cells, combining NK-cell subsets.
     rule:
       x_marker: 163Dy_CD56_NCAM
       y_marker: 173Yb_HLA-DR
@@ -1517,7 +1517,7 @@ Acute2021:
       The parent has undergone T/B and CD14-associated monocyte exclusion. TotalDC and TotalNK are combined lineage targets, not their later subtypes. Residual events that match neither DC nor NK phenotype remain outside the two named targets.
   23:
     definition: |
-      EarlyNK: the early-maturation NK-cell subset. LateNK: the late-maturation NK-cell subset.
+      EarlyNK: CD57-negative NK cells. LateNK: CD57-positive NK cells.
     rule:
       x_marker: 155Gd_CD57
       y_marker: 163Dy_CD56_NCAM
@@ -1528,7 +1528,7 @@ Acute2021:
       The parent is already NK cells. CD57 distinguishes the early- and late-maturation labels in this panel, while CD56 carries NK-lineage context. This is not a new NK-versus-non-NK decision, and maturation status must not be inferred from a presumed population frequency.
   24:
     definition: |
-      pDC: plasmacytoid dendritic cells. cDC: conventional dendritic cells.
+      pDC: CD11c-negative CD123-high plasmacytoid dendritic cells. cDC: CD11c-positive CD123-low conventional dendritic cells.
     rule:
       x_marker: 147Sm_CD11c
       y_marker: 143Nd_CD123_IL-3R
@@ -1539,7 +1539,7 @@ Acute2021:
       The parent is the combined DC fraction. Conventional and plasmacytoid DCs are separate named outputs, so total-DC membership is not a reason to force the same CD11c/CD123 phenotype on both. Further myeloid-DC refinement occurs only on the conventional branch.
   25:
     definition: |
-      mDC: myeloid dendritic cells.
+      mDC: CD38-positive CD123-low myeloid DCs.
     rule:
       x_marker: 161Dy_CD38
       y_marker: 143Nd_CD123_IL-3R
@@ -1547,7 +1547,7 @@ Acute2021:
       - [Unassigned, mDC]
       - [Unassigned, Unassigned]
     details: |
-      The parent is the conventional-DC fraction rather than all leukocytes or all DCs. mDC is a further target in this workflow; conventional-DC parent membership alone is not a substitute for the current CD38/CD123 phenotyping step.
+      The cDC parent still contains CD38-low non-DC myeloid cells (e.g. CD16⁺ monocytes).
   26:
     definition: |
       CD11cnegCD14neg: the CD11c/CD14 double-negative non-myeloid fraction.
@@ -1561,7 +1561,7 @@ Acute2021:
       The parent is mononuclear leukocytes. CD11c/CD14-negative selection supplies the non-myeloid candidate fraction for the T-cell branch; it is not itself the final T-cell label. Keep upstream exclusion separate from downstream positive T-lineage identification.
   27:
     definition: |
-      CD3T: T lymphocytes.
+      CD3T: CD3-positive CD19-negative T lymphocytes.
     rule:
       x_marker: 144Nd_CD19
       y_marker: 170Er_CD3
@@ -1572,7 +1572,7 @@ Acute2021:
       The parent has undergone CD11c/CD14 myeloid exclusion. CD3 supplies T-lineage identification before receptor-subtype annotation, while CD19 helps distinguish residual B-lineage events. The parent alone is not sufficient to assign every event to CD3T.
   28:
     definition: |
-      abT: alpha-beta T cells. gdT: gamma-delta T cells.
+      abT: TCRgd-negative CD3-positive alpha-beta T cells. gdT: TCRgd-positive CD3-positive gamma-delta T cells.
     rule:
       x_marker: 164Dy_TCRgd
       y_marker: 170Er_CD3
@@ -1583,7 +1583,7 @@ Acute2021:
       The parent is already T cells. The TCRgd-expressing branch denotes gamma-delta T cells and the other named branch denotes alpha-beta T cells; CD3 supplies inherited T-lineage context. Do not treat receptor-subtype separation as a second T-versus-non-T classification.
   29:
     definition: |
-      CD8: cytotoxic T cells. CD4: helper T cells. DPT: double-positive T cells. DNT: double-negative T cells.
+      CD8: CD4-negative CD8a-positive cytotoxic T cells. CD4: CD4-positive CD8a-negative helper T cells. DPT: CD4-positive CD8a-positive double-positive T cells. DNT: CD4-negative CD8a-negative double-negative T cells.
     rule:
       x_marker: 145Nd_CD4
       y_marker: 146Nd_CD8a
@@ -1594,7 +1594,7 @@ Acute2021:
       The parent is the alpha-beta T-cell fraction. DPT and DNT refer to CD4/CD8 co-expression categories within that T-cell lineage; DNT does not mean non-T cells. All four CD4/CD8 categories are named outputs here.
   30:
     definition: |
-      CD8Naive: naive cytotoxic T cells. CD8TEMRA: CD45RA-reexpressing effector memory cytotoxic T cells. CD8/CD45RAnegCD27pos: the CD27-retaining, CD45RA-negative memory CD8 T-cell fraction. CD8/CD45RAnegCD27neg: the CD45RA/CD27 double-negative memory CD8 T-cell fraction.
+      CD8Naive: CD45RA-positive CD27-positive naive cytotoxic T cells. CD8TEMRA: CD45RA-positive CD27-negative CD45RA-reexpressing effector memory cytotoxic T cells. CD8/CD45RAnegCD27pos: CD45RA-negative CD27-positive memory CD8 T cells. CD8/CD45RAnegCD27neg: CD45RA-negative CD27-negative memory CD8 T cells.
     rule:
       x_marker: 150Nd_CD45RA
       y_marker: 154Sm_CD27
@@ -1605,7 +1605,7 @@ Acute2021:
       The parent is cytotoxic alpha-beta T cells. CD45RA/CD27 provides the first differentiation split; the two CD45RA-negative fractions remain broader buckets that are subdivided by CCR7 downstream. CD8TEMRA denotes the CD45RA-reexpressing effector-memory category and must not be equated with naive cells solely because both retain CD45RA.
   31:
     definition: |
-      CD8Naive/activated: the activation-associated HLA-DR single-positive fraction of naive cytotoxic T cells. CD8Naive/CD38pos: the CD38 single-positive fraction of naive cytotoxic T cells. CD8Naive/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of naive cytotoxic T cells.
+      CD8Naive/activated: the HLA-DR-positive CD38-negative activated fraction of naive cytotoxic T cells. CD8Naive/CD38pos: the HLA-DR-negative CD38-positive fraction of naive cytotoxic T cells. CD8Naive/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of naive cytotoxic T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1616,7 +1616,7 @@ Acute2021:
       The parent is naive CD8 T cells. HLA-DR/CD38 expression adds activation-associated annotation independently of naive differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   32:
     definition: |
-      CD8TCM: central memory cytotoxic T cells. CD8TEM1: the early-stage effector memory cytotoxic T-cell subset designated TEM1 in this panel (CD45RA-negative, CD27-positive, CCR7-negative).
+      CD8TCM: CCR7-positive CD8a-positive central memory cytotoxic T cells. CD8TEM1: CCR7-negative CD8a-positive early-stage effector memory cytotoxic T cells designated TEM1 in this panel (CD45RA-negative, CD27-positive, CCR7-negative).
     rule:
       x_marker: 167Er_CD197_CCR7
       y_marker: 146Nd_CD8a
@@ -1627,7 +1627,7 @@ Acute2021:
       The parent is the CD45RA-negative, CD27-retaining CD8 memory fraction. CCR7 distinguishes this panel's TCM and TEM1 categories; CD8 supplies inherited lineage context. TEM1 is the early-stage effector-memory label in this scheme, not the CD27-negative TEM2/TEM3 branch.
   33:
     definition: |
-      CD8TEM1/activated: the activation-associated HLA-DR single-positive fraction of this panel's early-stage TEM1 effector memory cytotoxic T cells (CD45RA-negative, CD27-positive, CCR7-negative). CD8TEM1/CD38pos: the CD38 single-positive fraction of this panel's early-stage TEM1 effector memory cytotoxic T cells (CD45RA-negative, CD27-positive, CCR7-negative). CD8TEM1/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of this panel's early-stage TEM1 effector memory cytotoxic T cells (CD45RA-negative, CD27-positive, CCR7-negative).
+      CD8TEM1/activated: the HLA-DR-positive CD38-negative activated fraction of this panel's early-stage TEM1 effector memory cytotoxic T cells (CD45RA-negative, CD27-positive, CCR7-negative). CD8TEM1/CD38pos: the HLA-DR-negative CD38-positive fraction of this panel's early-stage TEM1 effector memory cytotoxic T cells (CD45RA-negative, CD27-positive, CCR7-negative). CD8TEM1/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of this panel's early-stage TEM1 effector memory cytotoxic T cells (CD45RA-negative, CD27-positive, CCR7-negative).
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1638,7 +1638,7 @@ Acute2021:
       The parent is this panel's CD8 TEM1 subset. HLA-DR/CD38 expression adds activation-associated annotation independently of TEM1 differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   34:
     definition: |
-      CD8TCM/activated: the activation-associated HLA-DR single-positive fraction of central memory cytotoxic T cells. CD8TCM/CD38pos: the CD38 single-positive fraction of central memory cytotoxic T cells. CD8TCM/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of central memory cytotoxic T cells.
+      CD8TCM/activated: the HLA-DR-positive CD38-negative activated fraction of central memory cytotoxic T cells. CD8TCM/CD38pos: the HLA-DR-negative CD38-positive fraction of central memory cytotoxic T cells. CD8TCM/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of central memory cytotoxic T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1649,7 +1649,7 @@ Acute2021:
       The parent is CD8 central-memory T cells. HLA-DR/CD38 expression adds activation-associated annotation independently of central-memory differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   35:
     definition: |
-      CD8TEM2: the intermediate-stage effector memory cytotoxic T-cell subset designated TEM2 in this panel (CD45RA-negative, CD27-negative, CCR7-positive). CD8TEM3: the late-stage effector memory cytotoxic T-cell subset designated TEM3 in this panel (CD45RA-negative, CD27-negative, CCR7-negative). TEM1/TEM2/TEM3 denote this panel's annotation scheme; these names do not establish an obligatory developmental sequence.
+      CD8TEM2: CCR7-positive CD8a-positive intermediate-stage effector memory cytotoxic T cells designated TEM2 in this panel (CD45RA-negative, CD27-negative, CCR7-positive). CD8TEM3: CCR7-negative CD8a-positive late-stage effector memory cytotoxic T cells designated TEM3 in this panel (CD45RA-negative, CD27-negative, CCR7-negative). TEM1/TEM2/TEM3 denote this panel's annotation scheme; these names do not establish an obligatory developmental sequence.
     rule:
       x_marker: 167Er_CD197_CCR7
       y_marker: 146Nd_CD8a
@@ -1660,7 +1660,7 @@ Acute2021:
       The parent is the CD45RA-negative, CD27-negative CD8 memory fraction. CCR7 distinguishes the panel's TEM2 and TEM3 categories; CD8 is inherited lineage context. The numbered TEM labels encode this panel's annotation scheme and do not establish a mandatory developmental sequence.
   36:
     definition: |
-      CD8TEM3/activated: the activation-associated HLA-DR single-positive fraction of this panel's late-stage TEM3 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-negative). CD8TEM3/CD38pos: the CD38 single-positive fraction of this panel's late-stage TEM3 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-negative). CD8TEM3/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of this panel's late-stage TEM3 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-negative).
+      CD8TEM3/activated: the HLA-DR-positive CD38-negative activated fraction of this panel's late-stage TEM3 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-negative). CD8TEM3/CD38pos: the HLA-DR-negative CD38-positive fraction of this panel's late-stage TEM3 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-negative). CD8TEM3/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of this panel's late-stage TEM3 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-negative).
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1671,7 +1671,7 @@ Acute2021:
       The parent is this panel's CD8 TEM3 subset. HLA-DR/CD38 expression adds activation-associated annotation independently of TEM3 differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   37:
     definition: |
-      CD8TEM2/activated: the activation-associated HLA-DR single-positive fraction of this panel's intermediate-stage TEM2 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-positive). CD8TEM2/CD38pos: the CD38 single-positive fraction of this panel's intermediate-stage TEM2 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-positive). CD8TEM2/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of this panel's intermediate-stage TEM2 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-positive).
+      CD8TEM2/activated: the HLA-DR-positive CD38-negative activated fraction of this panel's intermediate-stage TEM2 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-positive). CD8TEM2/CD38pos: the HLA-DR-negative CD38-positive fraction of this panel's intermediate-stage TEM2 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-positive). CD8TEM2/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of this panel's intermediate-stage TEM2 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-positive).
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1682,7 +1682,7 @@ Acute2021:
       The parent is this panel's CD8 TEM2 subset. HLA-DR/CD38 expression adds activation-associated annotation independently of TEM2 differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   38:
     definition: |
-      CD8TEMRA/activated: the activation-associated HLA-DR single-positive fraction of CD45RA-reexpressing effector memory cytotoxic T cells. CD8TEMRA/CD38pos: the CD38 single-positive fraction of CD45RA-reexpressing effector memory cytotoxic T cells. CD8TEMRA/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of CD45RA-reexpressing effector memory cytotoxic T cells.
+      CD8TEMRA/activated: the HLA-DR-positive CD38-negative activated fraction of CD45RA-reexpressing effector memory cytotoxic T cells. CD8TEMRA/CD38pos: the HLA-DR-negative CD38-positive fraction of CD45RA-reexpressing effector memory cytotoxic T cells. CD8TEMRA/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of CD45RA-reexpressing effector memory cytotoxic T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1693,7 +1693,7 @@ Acute2021:
       The parent is CD8 TEMRA cells. HLA-DR/CD38 expression adds activation-associated annotation independently of TEMRA differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   39:
     definition: |
-      nnCD8/activated: the activation-associated HLA-DR single-positive fraction of non-naive cytotoxic T cells. nnCD8/CD38pos: the CD38 single-positive fraction of non-naive cytotoxic T cells. nnCD8/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of non-naive cytotoxic T cells.
+      nnCD8/activated: the HLA-DR-positive CD38-negative activated fraction of non-naive cytotoxic T cells. nnCD8/CD38pos: the HLA-DR-negative CD38-positive fraction of non-naive cytotoxic T cells. nnCD8/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of non-naive cytotoxic T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1704,7 +1704,7 @@ Acute2021:
       The parent is non-naive CD8 T cells. HLA-DR/CD38 expression adds activation-associated annotation independently of the combined non-naive differentiation categories; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   40:
     definition: |
-      CD4Naive: naive helper T cells. CD4TEMRA: CD45RA-reexpressing effector memory helper T cells. CD4/CD45RAnegCD27pos: the CD27-retaining, CD45RA-negative memory CD4 T-cell fraction. CD4/CD45RAnegCD27neg: the CD45RA/CD27 double-negative memory CD4 T-cell fraction.
+      CD4Naive: CD45RA-positive CD27-positive naive helper T cells. CD4TEMRA: CD45RA-positive CD27-negative CD45RA-reexpressing effector memory helper T cells. CD4/CD45RAnegCD27pos: CD45RA-negative CD27-positive memory CD4 T cells. CD4/CD45RAnegCD27neg: CD45RA-negative CD27-negative memory CD4 T cells.
     rule:
       x_marker: 150Nd_CD45RA
       y_marker: 154Sm_CD27
@@ -1715,7 +1715,7 @@ Acute2021:
       The parent is helper alpha-beta T cells. CD45RA/CD27 gives the initial differentiation split; the CD45RA-negative fractions require later CCR7 annotation for their TCM/TEM labels. CD4TEMRA is the CD45RA-reexpressing effector-memory category, not a synonym for the naive CD45RA-expressing category.
   41:
     definition: |
-      CD4Naive/activated: the activation-associated HLA-DR single-positive fraction of naive helper T cells. CD4Naive/CD38pos: the CD38 single-positive fraction of naive helper T cells. CD4Naive/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of naive helper T cells.
+      CD4Naive/activated: the HLA-DR-positive CD38-negative activated fraction of naive helper T cells. CD4Naive/CD38pos: the HLA-DR-negative CD38-positive fraction of naive helper T cells. CD4Naive/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of naive helper T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1726,7 +1726,7 @@ Acute2021:
       The parent is naive CD4 T cells. HLA-DR/CD38 expression adds activation-associated annotation independently of naive differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   42:
     definition: |
-      CD4TCM: central memory helper T cells. CD4TEM1: the early-stage effector memory helper T-cell subset designated TEM1 in this panel (CD45RA-negative, CD27-positive, CCR7-negative).
+      CD4TCM: CCR7-positive CD4-positive central memory helper T cells. CD4TEM1: CCR7-negative CD4-positive early-stage effector memory helper T cells designated TEM1 in this panel (CD45RA-negative, CD27-positive, CCR7-negative).
     rule:
       x_marker: 167Er_CD197_CCR7
       y_marker: 145Nd_CD4
@@ -1737,7 +1737,7 @@ Acute2021:
       The parent is the CD45RA-negative, CD27-retaining CD4 memory fraction. CCR7 distinguishes this panel's TCM and TEM1 categories; CD4 supplies inherited helper-lineage context. Do not confuse this branch with the CD27-negative TEM2/TEM3 branch.
   43:
     definition: |
-      CD4TEM1/activated: the activation-associated HLA-DR single-positive fraction of this panel's early-stage TEM1 effector memory helper T cells (CD45RA-negative, CD27-positive, CCR7-negative). CD4TEM1/CD38pos: the CD38 single-positive fraction of this panel's early-stage TEM1 effector memory helper T cells (CD45RA-negative, CD27-positive, CCR7-negative). CD4TEM1/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of this panel's early-stage TEM1 effector memory helper T cells (CD45RA-negative, CD27-positive, CCR7-negative).
+      CD4TEM1/activated: the HLA-DR-positive CD38-negative activated fraction of this panel's early-stage TEM1 effector memory helper T cells (CD45RA-negative, CD27-positive, CCR7-negative). CD4TEM1/CD38pos: the HLA-DR-negative CD38-positive fraction of this panel's early-stage TEM1 effector memory helper T cells (CD45RA-negative, CD27-positive, CCR7-negative). CD4TEM1/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of this panel's early-stage TEM1 effector memory helper T cells (CD45RA-negative, CD27-positive, CCR7-negative).
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1748,7 +1748,7 @@ Acute2021:
       The parent is this panel's CD4 TEM1 subset. HLA-DR/CD38 expression adds activation-associated annotation independently of TEM1 differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   44:
     definition: |
-      CD4TCM/activated: the activation-associated HLA-DR single-positive fraction of central memory helper T cells. CD4TCM/CD38pos: the CD38 single-positive fraction of central memory helper T cells. CD4TCM/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of central memory helper T cells.
+      CD4TCM/activated: the HLA-DR-positive CD38-negative activated fraction of central memory helper T cells. CD4TCM/CD38pos: the HLA-DR-negative CD38-positive fraction of central memory helper T cells. CD4TCM/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of central memory helper T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1759,7 +1759,7 @@ Acute2021:
       The parent is CD4 central-memory T cells. HLA-DR/CD38 expression adds activation-associated annotation independently of central-memory differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   45:
     definition: |
-      CD4TEM2: the intermediate-stage effector memory helper T-cell subset designated TEM2 in this panel (CD45RA-negative, CD27-negative, CCR7-positive). CD4TEM3: the late-stage effector memory helper T-cell subset designated TEM3 in this panel (CD45RA-negative, CD27-negative, CCR7-negative). TEM1/TEM2/TEM3 denote this panel's annotation scheme; these names do not establish an obligatory developmental sequence.
+      CD4TEM2: CCR7-positive CD4-positive intermediate-stage effector memory helper T cells designated TEM2 in this panel (CD45RA-negative, CD27-negative, CCR7-positive). CD4TEM3: CCR7-negative CD4-positive late-stage effector memory helper T cells designated TEM3 in this panel (CD45RA-negative, CD27-negative, CCR7-negative). TEM1/TEM2/TEM3 denote this panel's annotation scheme; these names do not establish an obligatory developmental sequence.
     rule:
       x_marker: 167Er_CD197_CCR7
       y_marker: 145Nd_CD4
@@ -1770,7 +1770,7 @@ Acute2021:
       The parent is the CD45RA-negative, CD27-negative CD4 memory fraction. CCR7 distinguishes the panel's TEM2 and TEM3 categories while CD4 carries inherited lineage context. These numbered labels are panel-specific and do not prove a universal sequence of memory-cell differentiation.
   46:
     definition: |
-      CD4TEM2/activated: the activation-associated HLA-DR single-positive fraction of this panel's intermediate-stage TEM2 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-positive). CD4TEM2/CD38pos: the CD38 single-positive fraction of this panel's intermediate-stage TEM2 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-positive). CD4TEM2/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of this panel's intermediate-stage TEM2 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-positive).
+      CD4TEM2/activated: the HLA-DR-positive CD38-negative activated fraction of this panel's intermediate-stage TEM2 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-positive). CD4TEM2/CD38pos: the HLA-DR-negative CD38-positive fraction of this panel's intermediate-stage TEM2 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-positive). CD4TEM2/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of this panel's intermediate-stage TEM2 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-positive).
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1781,7 +1781,7 @@ Acute2021:
       The parent is this panel's CD4 TEM2 subset. HLA-DR/CD38 expression adds activation-associated annotation independently of TEM2 differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   47:
     definition: |
-      CD4TEM3/activated: the activation-associated HLA-DR single-positive fraction of this panel's late-stage TEM3 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-negative). CD4TEM3/CD38pos: the CD38 single-positive fraction of this panel's late-stage TEM3 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-negative). CD4TEM3/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of this panel's late-stage TEM3 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-negative).
+      CD4TEM3/activated: the HLA-DR-positive CD38-negative activated fraction of this panel's late-stage TEM3 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-negative). CD4TEM3/CD38pos: the HLA-DR-negative CD38-positive fraction of this panel's late-stage TEM3 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-negative). CD4TEM3/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of this panel's late-stage TEM3 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-negative).
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1792,7 +1792,7 @@ Acute2021:
       The parent is this panel's CD4 TEM3 subset. HLA-DR/CD38 expression adds activation-associated annotation independently of TEM3 differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   48:
     definition: |
-      CD4TEMRA/activated: the activation-associated HLA-DR single-positive fraction of CD45RA-reexpressing effector memory helper T cells. CD4TEMRA/CD38pos: the CD38 single-positive fraction of CD45RA-reexpressing effector memory helper T cells. CD4TEMRA/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of CD45RA-reexpressing effector memory helper T cells.
+      CD4TEMRA/activated: the HLA-DR-positive CD38-negative activated fraction of CD45RA-reexpressing effector memory helper T cells. CD4TEMRA/CD38pos: the HLA-DR-negative CD38-positive fraction of CD45RA-reexpressing effector memory helper T cells. CD4TEMRA/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of CD45RA-reexpressing effector memory helper T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1803,7 +1803,7 @@ Acute2021:
       The parent is CD4 TEMRA cells. HLA-DR/CD38 expression adds activation-associated annotation independently of TEMRA differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   49:
     definition: |
-      nnCD4/activated: the activation-associated HLA-DR single-positive fraction of non-naive helper T cells. nnCD4/CD38pos: the CD38 single-positive fraction of non-naive helper T cells. nnCD4/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of non-naive helper T cells.
+      nnCD4/activated: the HLA-DR-positive CD38-negative activated fraction of non-naive helper T cells. nnCD4/CD38pos: the HLA-DR-negative CD38-positive fraction of non-naive helper T cells. nnCD4/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of non-naive helper T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1814,7 +1814,7 @@ Acute2021:
       The parent is non-naive CD4 T cells. HLA-DR/CD38 expression adds activation-associated annotation independently of the combined non-naive differentiation categories; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   50:
     definition: |
-      nnCD4CXCR5pos: the CXCR5-expressing non-naive helper T-cell fraction, including Tfh-like cells. nnCD4CXCR5neg: the CXCR5-negative non-naive helper T-cell fraction.
+      nnCD4CXCR5pos: CXCR5-positive CD4-positive non-naive helper T cells, including Tfh-like cells. nnCD4CXCR5neg: CXCR5-negative CD4-positive non-naive helper T cells.
     rule:
       x_marker: 158Gd_CD185_CXCR5
       y_marker: 145Nd_CD4
@@ -1825,7 +1825,7 @@ Acute2021:
       The parent is non-naive helper T cells, combining the memory/effector categories after naive-cell exclusion. CXCR5 distinguishes follicular-helper-like from non-follicular fractions; CD4 carries inherited helper-lineage context. The CXCR5-expressing label includes Tfh-like cells and does not independently establish germinal-center identity.
   51:
     definition: |
-      nnCD4CXCR5pos/activated: the activation-associated HLA-DR single-positive fraction of CXCR5-expressing non-naive helper T cells (Tfh-like). nnCD4CXCR5pos/CD38pos: the CD38 single-positive fraction of CXCR5-expressing non-naive helper T cells (Tfh-like). nnCD4CXCR5pos/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of CXCR5-expressing non-naive helper T cells (Tfh-like).
+      nnCD4CXCR5pos/activated: the HLA-DR-positive CD38-negative activated fraction of CXCR5-expressing non-naive helper T cells (Tfh-like). nnCD4CXCR5pos/CD38pos: the HLA-DR-negative CD38-positive fraction of CXCR5-expressing non-naive helper T cells (Tfh-like). nnCD4CXCR5pos/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of CXCR5-expressing non-naive helper T cells (Tfh-like).
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1836,7 +1836,7 @@ Acute2021:
       The parent is the CXCR5-expressing non-naive helper-T fraction. HLA-DR/CD38 expression adds activation-associated annotation independently of follicular-helper-like identity; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   52:
     definition: |
-      Treg: regulatory T cells.
+      Treg: CD25-high CD127-low regulatory T cells.
     rule:
       x_marker: 153Eu_CD25_IL-2Ra
       y_marker: 176Yb_CD127_IL-7Ra
@@ -1847,7 +1847,7 @@ Acute2021:
       Treg identification is restricted to the non-naive helper-T parent. The target therefore covers memory/effector Treg candidates; resting naive Tregs were excluded upstream and must not be recovered by widening this gate. Interpret the CD25/CD127 phenotype as additional identification within that selected parent, not a synonym for the entire parent.
   53:
     definition: |
-      Treg/activated: the activation-associated HLA-DR single-positive fraction of regulatory T cells. Treg/CD38pos: the CD38 single-positive fraction of regulatory T cells. Treg/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of regulatory T cells.
+      Treg/activated: the HLA-DR-positive CD38-negative activated fraction of regulatory T cells. Treg/CD38pos: the HLA-DR-negative CD38-positive fraction of regulatory T cells. Treg/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of regulatory T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1858,7 +1858,7 @@ Acute2021:
       The parent is the selected regulatory-T fraction. HLA-DR/CD38 expression adds activation-associated annotation independently of regulatory-T identity; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   54:
     definition: |
-      Th1: type-1 helper T-cell phenotype fraction. Th17: type-17 helper T-cell phenotype fraction. NonTh1NonTh17: the non-Th1, non-Th17 helper T-cell fraction.
+      Th1: CXCR3-positive CCR6-negative type-1 helper T cells. Th17: CCR6-positive CXCR3-negative type-17 helper T cells. NonTh1NonTh17: CCR6-negative CXCR3-negative non-Th1, non-Th17 helper T cells.
     rule:
       x_marker: 141Pr_CD196_CCR6
       y_marker: 156Gd_CD183_CXCR3
@@ -1869,7 +1869,7 @@ Acute2021:
       The parent is the non-follicular, non-naive helper-T fraction. This panel's Th17 annotation may also include Th22-like cells; it is not a separately purified Th17 lineage. NonTh1NonTh17 is a named residual containing Th2 candidates and uncommitted phenotypes, with Th2 resolved downstream. The Th1 target here uses the panel's CCR6-negative/CXCR3-positive category; do not import the broader Z74D Th1/17-inclusive naming convention.
   55:
     definition: |
-      Th1/activated: the activation-associated HLA-DR single-positive fraction of type-1 helper T cells. Th1/CD38pos: the CD38 single-positive fraction of type-1 helper T cells. Th1/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of type-1 helper T cells.
+      Th1/activated: the HLA-DR-positive CD38-negative activated fraction of type-1 helper T cells. Th1/CD38pos: the HLA-DR-negative CD38-positive fraction of type-1 helper T cells. Th1/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of type-1 helper T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1880,7 +1880,7 @@ Acute2021:
       The parent is the selected Th1 fraction. HLA-DR/CD38 expression adds activation-associated annotation independently of Th1-associated phenotype; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   56:
     definition: |
-      Th17/activated: the activation-associated HLA-DR single-positive fraction of type-17 helper T cells. Th17/CD38pos: the CD38 single-positive fraction of type-17 helper T cells. Th17/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of type-17 helper T cells.
+      Th17/activated: the HLA-DR-positive CD38-negative activated fraction of type-17 helper T cells. Th17/CD38pos: the HLA-DR-negative CD38-positive fraction of type-17 helper T cells. Th17/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of type-17 helper T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1891,7 +1891,7 @@ Acute2021:
       The parent is the selected Th17-associated fraction, which can also include Th22-like cells in this panel. HLA-DR/CD38 expression adds activation-associated annotation independently of the panel's Th17-associated phenotype; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   57:
     definition: |
-      Th2: type-2 helper T-cell phenotype fraction.
+      Th2: CCR4-positive CXCR3-negative type-2 helper T cells.
     rule:
       x_marker: 152Sm_CD194_CCR4
       y_marker: 156Gd_CD183_CXCR3
@@ -1902,7 +1902,7 @@ Acute2021:
       The parent has already excluded the Th1 and Th17-associated fractions from non-follicular memory helper T cells. CCR4 is interpreted in that restricted context for the Th2 target; it is not a universal Th2 identifier across an unrestricted T-cell sample. CXCR3 carries the inherited exclusion context.
   58:
     definition: |
-      Th2/activated: the activation-associated HLA-DR single-positive fraction of type-2 helper T cells. Th2/CD38pos: the CD38 single-positive fraction of type-2 helper T cells. Th2/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of type-2 helper T cells.
+      Th2/activated: the HLA-DR-positive CD38-negative activated fraction of type-2 helper T cells. Th2/CD38pos: the HLA-DR-negative CD38-positive fraction of type-2 helper T cells. Th2/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of type-2 helper T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1913,7 +1913,7 @@ Acute2021:
       The parent is the selected Th2 fraction. HLA-DR/CD38 expression adds activation-associated annotation independently of Th2-associated phenotype; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   59:
     definition: |
-      DNT/activated: the activation-associated HLA-DR single-positive fraction of double-negative T cells. DNT/CD38pos: the CD38 single-positive fraction of double-negative T cells. DNT/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of double-negative T cells.
+      DNT/activated: the HLA-DR-positive CD38-negative activated fraction of double-negative T cells. DNT/CD38pos: the HLA-DR-negative CD38-positive fraction of double-negative T cells. DNT/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of double-negative T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1924,7 +1924,7 @@ Acute2021:
       The parent is CD4/CD8 double-negative alpha-beta T cells. HLA-DR/CD38 expression adds activation-associated annotation independently of double-negative T-cell identity; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   60:
     definition: |
-      DPT/activated: the activation-associated HLA-DR single-positive fraction of double-positive T cells. DPT/CD38pos: the CD38 single-positive fraction of double-positive T cells. DPT/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of double-positive T cells.
+      DPT/activated: the HLA-DR-positive CD38-negative activated fraction of double-positive T cells. DPT/CD38pos: the HLA-DR-negative CD38-positive fraction of double-positive T cells. DPT/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of double-positive T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -1935,7 +1935,7 @@ Acute2021:
       The parent is CD4/CD8 double-positive alpha-beta T cells. HLA-DR/CD38 expression adds activation-associated annotation independently of double-positive T-cell identity; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   61:
     definition: |
-      MAITNKT: mucosal-associated invariant T-cell and natural killer T-cell candidates. The combined name does not independently establish either identity.
+      MAITNKT: CD161-high mucosal-associated invariant T-cell and natural killer T-cell candidates. The combined name does not independently establish either identity.
     rule:
       x_marker: 145Nd_CD4
       y_marker: 151Eu_CD161
@@ -1946,7 +1946,7 @@ Acute2021:
       The parent is alpha-beta T cells, so gamma-delta T cells were excluded upstream. MAITNKT is the combined MAIT/invariant-NKT candidate label in this panel, rather than a separation of those two identities. The displayed CD4/CD161 phenotype alone does not independently confirm either identity or justify labeling all unconventional T-cell candidates.
   62:
     definition: |
-      Neutrophil: neutrophils. Eosinophil: eosinophils.
+      Neutrophil: CD16-high CD294-negative neutrophils. Eosinophil: CD16-negative CD294-positive eosinophils.
     rule:
       x_marker: 148Nd_CD16
       y_marker: 166Er_CD294
@@ -1958,7 +1958,7 @@ Acute2021:
 Vaccine:
   1:
     definition: |
-      Cleanup1: the cell-event fraction retained after calibration-bead exclusion. Bead: calibration beads.
+      Cleanup1: 140Ce-bead-negative cell events retained after calibration-bead exclusion. Bead: 140Ce-bead-positive calibration beads.
     rule:
       x_marker: Time
       y_marker: 140Ce_Bead
@@ -2005,7 +2005,7 @@ Vaccine:
       The parent has passed earlier acquisition-quality cleanup. Width supplies an additional technical check for wide-pulse doublets and aggregates; earlier QC acceptance is not proof of a single-cell event. No observed pulse-width range or sample-specific acceptance boundary is prescribed here.
   6:
     definition: |
-      Cleanup6: the cell-event fraction retained by viability cleanup.
+      Cleanup6: Live_Dead-low live cell events retained by viability cleanup.
     rule:
       x_marker: Time
       y_marker: 103Rh_Live_Dead
@@ -2016,7 +2016,7 @@ Vaccine:
       This is viability cleanup after earlier technical-event filtering. The Rh live/dead channel addresses dead-cell exclusion; passing bead and ion-cloud QC does not itself establish viability. Time is acquisition context, not a second viability marker.
   7:
     definition: |
-      Ir: nucleated cell events.
+      Ir: DNA1-high nucleated events.
     rule:
       x_marker: 191Ir_DNA1
       y_marker: Event_length
@@ -2027,7 +2027,7 @@ Vaccine:
       The parent has passed technical and viability cleanup. Ir selects nucleated cell events through DNA1; it is not another live/dead decision. Event_length is displayed but is not a separate biological subtype definition at this step.
   8:
     definition: |
-      CD45: leukocytes, or white blood cells.
+      CD45: all leukocytes, including granulocytes.
     rule:
       x_marker: 193Ir_DNA2
       y_marker: 89Y_CD45
@@ -2035,10 +2035,10 @@ Vaccine:
       - [Unassigned, Unassigned]
       - [Unassigned, CD45]
     details: |
-      The parent is already DNA1-positive nucleated events, but that does not guarantee acceptable single-cell nuclear content. This leukocyte step also excludes doublets, damaged or hyperploid nuclear events, and non-cell/debris events using DNA2 context, while CD45 supplies leukocyte identity. Do not reduce the target to CD45 positivity alone; no sample-specific DNA2 acceptance range is supplied.
+      The parent is already DNA1-positive nucleated events, but that does not guarantee acceptable single-cell nuclear content. This leukocyte step also excludes doublets, damaged or hyperploid nuclear events, and non-cell/debris events using DNA2 context, while CD45 supplies leukocyte identity. Do not reduce the target to CD45 positivity alone; no sample-specific DNA2 acceptance range is supplied. On the CD45 axis, only CD45-negative events are excluded.
   9:
     definition: |
-      Mononuclear: mononuclear leukocytes. Granulocyte: granulocytes. CD66bnegCD45lo: the residual event fraction designated as CD66b negative and CD45 low. CD45hiCD66bpos: the leukocyte fraction designated as CD45 high and CD66b positive.
+      Mononuclear: CD66b-negative CD45-high mononuclear leukocytes. Granulocyte: CD66b-positive CD45-intermediate granulocytes. CD66bnegCD45lo: the CD66b-negative CD45-low residual event fraction. CD45hiCD66bpos: the CD45-high CD66b-positive leukocyte fraction.
     rule:
       x_marker: 172Yb_CD66b
       y_marker: 89Y_CD45
@@ -2071,7 +2071,7 @@ Vaccine:
       The parent has already undergone CD14/CD56 cleanup. This step removes CD3-expressing T cells and CD123-expressing residuals before B-lineage annotation. The retained fraction is still a candidate pool rather than a final B-cell or plasmablast identity.
   12:
     definition: |
-      CD20neg: the residual fraction designated as CD20 negative. TotalCD19B: the mature B-cell fraction.
+      CD20neg: all CD20-negative events in the parent. TotalCD19B: CD19⁺CD20⁺ mature B cells.
     rule:
       x_marker: 144Nd_CD19
       y_marker: 171Yb_CD20
@@ -2082,7 +2082,7 @@ Vaccine:
       The parent is a cleaned B-lineage candidate pool, not an already purified mature-B population. TotalCD19B is the mature-B target; CD20neg is a separate residual that feeds plasmablast identification. CD20-negative membership alone does not establish a plasmablast.
   13:
     definition: |
-      NaiveB: naive B cells. IgDnegMemB: IgD-negative memory B cells. IgDposMemB: non-switched memory B cells.
+      NaiveB: IgD-positive CD27-negative naive B cells. IgDnegMemB: IgD-negative CD27-positive memory B cells. IgDposMemB: IgD-positive CD27-positive non-switched memory B cells.
     rule:
       x_marker: 174Yb_IgD
       y_marker: 154Sm_CD27
@@ -2093,7 +2093,7 @@ Vaccine:
       The parent is the mature-B fraction. NaiveB, IgD-positive memory, and IgD-negative memory are the named targets; the IgD/CD27 double-negative phenotype is not an additional named category here. Do not assign every remaining parent event to one of the three merely by elimination.
   14:
     definition: |
-      Plasmablast: antibody-secreting B-lineage cells.
+      Plasmablast: CD27-high CD38-high antibody-secreting B-lineage cells.
     rule:
       x_marker: 154Sm_CD27
       y_marker: 161Dy_CD38
@@ -2104,7 +2104,7 @@ Vaccine:
       Plasmablast identification is performed within the CD20-negative residual. CD20 loss is not sufficient for antibody-secreting-cell identity; joint CD27/CD38 phenotype is relevant. The entire residual must not automatically be called Plasmablast.
   15:
     definition: |
-      NonTNonB: the non-T, non-B cell fraction.
+      NonTNonB: CD19-negative CD3-negative non-T, non-B cells.
     rule:
       x_marker: 144Nd_CD19
       y_marker: 170Er_CD3
@@ -2115,7 +2115,7 @@ Vaccine:
       The parent is mononuclear leukocytes. NonTNonB is a shared residual for several innate and myeloid branches, not one final cell type. B/T exclusion does not establish monocyte, NK, DC, basophil, or ILC identity by itself.
   16:
     definition: |
-      NonBNonNK: the non-B, non-NK cell fraction.
+      NonBNonNK: CD56-negative CD20-negative non-B, non-NK cells.
     rule:
       x_marker: 163Dy_CD56_NCAM
       y_marker: 171Yb_CD20
@@ -2126,7 +2126,7 @@ Vaccine:
       The parent already excludes the main T/B fractions. This further cleanup removes NK-associated and residual B-associated events before monocyte and basophil/ILC processing. The retained NonBNonNK fraction remains heterogeneous and must not be equated with monocytes alone.
   17:
     definition: |
-      TotalMonocyte: monocytes, combining the monocyte subsets.
+      TotalMonocyte: CD11c-positive monocytes, CD14-high to CD14-low, combining the monocyte subsets.
     rule:
       x_marker: 147Sm_CD11c
       y_marker: 168Er_CD14
@@ -2137,7 +2137,7 @@ Vaccine:
       The parent has undergone T/B and NK/residual-B cleanup. TotalMonocyte combines classical, intermediate, and non-classical monocytes rather than selecting a CD14-high subset only. CD14 can distinguish later monocyte subsets; do not use the parent-cleanup label alone as proof of monocyte identity.
   18:
     definition: |
-      ClassicalMono: classical monocytes. TransitionalMono: intermediate monocytes. NonclassicalMono: non-classical, or patrolling, monocytes.
+      ClassicalMono: CD14-high CD38-high classical monocytes. TransitionalMono: CD14-intermediate CD38-intermediate monocytes. NonclassicalMono: CD14-low CD38-low non-classical monocytes.
     rule:
       x_marker: 161Dy_CD38
       y_marker: 168Er_CD14
@@ -2149,7 +2149,7 @@ Vaccine:
       The parent is the combined monocyte fraction. ClassicalMono, TransitionalMono, and NonclassicalMono are this panel's three monocyte annotations, with TransitionalMono denoting intermediate monocytes. CD38/CD14 is the displayed panel-specific phenotyping combination, not an instruction to infer maturation identity from acquisition quality or from the preceding cleanup labels.
   19:
     definition: |
-      Basophil: basophils. HLADRloCD123lo: the residual fraction designated as HLA-DR low and CD123 low.
+      Basophil: HLA-DR-negative CD123-high basophils. HLADRloCD123lo: the HLA-DR-low CD123-low residual fraction.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 143Nd_CD123_IL-3R
@@ -2160,7 +2160,7 @@ Vaccine:
       The parent is the non-T/non-B, non-NK residual. Basophil and the HLA-DR-low/CD123-low residual are distinct named outputs. The latter can supply ILC candidates downstream and must not be treated as a basophil merely because other lineages were removed upstream.
   20:
     definition: |
-      ILC: innate lymphoid cell candidates.
+      ILC: CD161⁺CD127⁺ innate lymphoid cell candidates.
     rule:
       x_marker: 151Eu_CD161
       y_marker: 176Yb_CD127_IL-7Ra
@@ -2171,7 +2171,7 @@ Vaccine:
       ILC identification is applied to the HLA-DR-low/CD123-low residual after lineage cleanup. CD161/CD127 supplies candidate-identification context; being in a lineage-excluded residual is not sufficient by itself to call every event an innate lymphoid cell.
   21:
     definition: |
-      NonTNonBCD14neg: the non-T, non-B, non-monocyte cell fraction.
+      NonTNonBCD14neg: CD14-negative CD3-negative non-T, non-B, non-monocyte cells.
     rule:
       x_marker: 168Er_CD14
       y_marker: 170Er_CD3
@@ -2182,7 +2182,7 @@ Vaccine:
       The parent already excludes T and B cells. This further CD14-negative selection removes monocyte-associated events before the NK/DC branch. CD3 carries inherited T-lineage exclusion context; the retained fraction is not a final NK or DC identity.
   22:
     definition: |
-      TotalDC: dendritic cells, combining dendritic cell subsets. TotalNK: natural killer cells, combining NK-cell subsets.
+      TotalDC: CD56-negative HLA-DR-high dendritic cells, combining dendritic cell subsets. TotalNK: CD56-positive HLA-DR-low natural killer cells, combining NK-cell subsets.
     rule:
       x_marker: 163Dy_CD56_NCAM
       y_marker: 173Yb_HLA-DR
@@ -2193,7 +2193,7 @@ Vaccine:
       The parent has undergone T/B and CD14-associated monocyte exclusion. TotalDC and TotalNK are combined lineage targets, not their later subtypes. Residual events that match neither DC nor NK phenotype remain outside the two named targets.
   23:
     definition: |
-      EarlyNK: the early-maturation NK-cell subset. LateNK: the late-maturation NK-cell subset.
+      EarlyNK: CD57-negative NK cells. LateNK: CD57-positive NK cells.
     rule:
       x_marker: 155Gd_CD57
       y_marker: 163Dy_CD56_NCAM
@@ -2204,7 +2204,7 @@ Vaccine:
       The parent is already NK cells. CD57 distinguishes the early- and late-maturation labels in this panel, while CD56 carries NK-lineage context. This is not a new NK-versus-non-NK decision, and maturation status must not be inferred from a presumed population frequency.
   24:
     definition: |
-      pDC: plasmacytoid dendritic cells. cDC: conventional dendritic cells.
+      pDC: CD11c-negative CD123-high plasmacytoid dendritic cells. cDC: CD11c-positive CD123-low conventional dendritic cells.
     rule:
       x_marker: 147Sm_CD11c
       y_marker: 143Nd_CD123_IL-3R
@@ -2215,7 +2215,7 @@ Vaccine:
       The parent is the combined DC fraction. Conventional and plasmacytoid DCs are separate named outputs, so total-DC membership is not a reason to force the same CD11c/CD123 phenotype on both. Further myeloid-DC refinement occurs only on the conventional branch.
   25:
     definition: |
-      mDC: myeloid dendritic cells.
+      mDC: CD38-positive CD123-low myeloid DCs.
     rule:
       x_marker: 161Dy_CD38
       y_marker: 143Nd_CD123_IL-3R
@@ -2223,7 +2223,7 @@ Vaccine:
       - [Unassigned, mDC]
       - [Unassigned, Unassigned]
     details: |
-      The parent is the conventional-DC fraction rather than all leukocytes or all DCs. mDC is a further target in this workflow; conventional-DC parent membership alone is not a substitute for the current CD38/CD123 phenotyping step.
+      The cDC parent still contains CD38-low non-DC myeloid cells (e.g. CD16⁺ monocytes).
   26:
     definition: |
       CD11cnegCD14neg: the CD11c/CD14 double-negative non-myeloid fraction.
@@ -2237,7 +2237,7 @@ Vaccine:
       The parent is mononuclear leukocytes. CD11c/CD14-negative selection supplies the non-myeloid candidate fraction for the T-cell branch; it is not itself the final T-cell label. Keep upstream exclusion separate from downstream positive T-lineage identification.
   27:
     definition: |
-      CD3T: T lymphocytes.
+      CD3T: CD3-positive CD19-negative T lymphocytes.
     rule:
       x_marker: 144Nd_CD19
       y_marker: 170Er_CD3
@@ -2248,7 +2248,7 @@ Vaccine:
       The parent has undergone CD11c/CD14 myeloid exclusion. CD3 supplies T-lineage identification before receptor-subtype annotation, while CD19 helps distinguish residual B-lineage events. The parent alone is not sufficient to assign every event to CD3T.
   28:
     definition: |
-      abT: alpha-beta T cells. gdT: gamma-delta T cells.
+      abT: TCRgd-negative CD3-positive alpha-beta T cells. gdT: TCRgd-positive CD3-positive gamma-delta T cells.
     rule:
       x_marker: 164Dy_TCRgd
       y_marker: 170Er_CD3
@@ -2259,7 +2259,7 @@ Vaccine:
       The parent is already T cells. The TCRgd-expressing branch denotes gamma-delta T cells and the other named branch denotes alpha-beta T cells; CD3 supplies inherited T-lineage context. Do not treat receptor-subtype separation as a second T-versus-non-T classification.
   29:
     definition: |
-      CD8: cytotoxic T cells. CD4: helper T cells. DPT: double-positive T cells. DNT: double-negative T cells.
+      CD8: CD4-negative CD8a-positive cytotoxic T cells. CD4: CD4-positive CD8a-negative helper T cells. DPT: CD4-positive CD8a-positive double-positive T cells. DNT: CD4-negative CD8a-negative double-negative T cells.
     rule:
       x_marker: 145Nd_CD4
       y_marker: 146Nd_CD8a
@@ -2270,7 +2270,7 @@ Vaccine:
       The parent is the alpha-beta T-cell fraction. DPT and DNT refer to CD4/CD8 co-expression categories within that T-cell lineage; DNT does not mean non-T cells. All four CD4/CD8 categories are named outputs here.
   30:
     definition: |
-      CD8Naive: naive cytotoxic T cells. CD8TEMRA: CD45RA-reexpressing effector memory cytotoxic T cells. CD8/CD45RAnegCD27pos: the CD27-retaining, CD45RA-negative memory CD8 T-cell fraction. CD8/CD45RAnegCD27neg: the CD45RA/CD27 double-negative memory CD8 T-cell fraction.
+      CD8Naive: CD45RA-positive CD27-positive naive cytotoxic T cells. CD8TEMRA: CD45RA-positive CD27-negative CD45RA-reexpressing effector memory cytotoxic T cells. CD8/CD45RAnegCD27pos: CD45RA-negative CD27-positive memory CD8 T cells. CD8/CD45RAnegCD27neg: CD45RA-negative CD27-negative memory CD8 T cells.
     rule:
       x_marker: 150Nd_CD45RA
       y_marker: 154Sm_CD27
@@ -2281,7 +2281,7 @@ Vaccine:
       The parent is cytotoxic alpha-beta T cells. CD45RA/CD27 provides the first differentiation split; the two CD45RA-negative fractions remain broader buckets that are subdivided by CCR7 downstream. CD8TEMRA denotes the CD45RA-reexpressing effector-memory category and must not be equated with naive cells solely because both retain CD45RA.
   31:
     definition: |
-      CD8Naive/activated: the activation-associated HLA-DR single-positive fraction of naive cytotoxic T cells. CD8Naive/CD38pos: the CD38 single-positive fraction of naive cytotoxic T cells. CD8Naive/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of naive cytotoxic T cells.
+      CD8Naive/activated: the HLA-DR-positive CD38-negative activated fraction of naive cytotoxic T cells. CD8Naive/CD38pos: the HLA-DR-negative CD38-positive fraction of naive cytotoxic T cells. CD8Naive/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of naive cytotoxic T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -2292,7 +2292,7 @@ Vaccine:
       The parent is naive CD8 T cells. HLA-DR/CD38 expression adds activation-associated annotation independently of naive differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   32:
     definition: |
-      CD8TCM: central memory cytotoxic T cells. CD8TEM1: the early-stage effector memory cytotoxic T-cell subset designated TEM1 in this panel (CD45RA-negative, CD27-positive, CCR7-negative).
+      CD8TCM: CCR7-positive CD8a-positive central memory cytotoxic T cells. CD8TEM1: CCR7-negative CD8a-positive early-stage effector memory cytotoxic T cells designated TEM1 in this panel (CD45RA-negative, CD27-positive, CCR7-negative).
     rule:
       x_marker: 167Er_CD197_CCR7
       y_marker: 146Nd_CD8a
@@ -2303,7 +2303,7 @@ Vaccine:
       The parent is the CD45RA-negative, CD27-retaining CD8 memory fraction. CCR7 distinguishes this panel's TCM and TEM1 categories; CD8 supplies inherited lineage context. TEM1 is the early-stage effector-memory label in this scheme, not the CD27-negative TEM2/TEM3 branch.
   33:
     definition: |
-      CD8TEM1/activated: the activation-associated HLA-DR single-positive fraction of this panel's early-stage TEM1 effector memory cytotoxic T cells (CD45RA-negative, CD27-positive, CCR7-negative). CD8TEM1/CD38pos: the CD38 single-positive fraction of this panel's early-stage TEM1 effector memory cytotoxic T cells (CD45RA-negative, CD27-positive, CCR7-negative). CD8TEM1/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of this panel's early-stage TEM1 effector memory cytotoxic T cells (CD45RA-negative, CD27-positive, CCR7-negative).
+      CD8TEM1/activated: the HLA-DR-positive CD38-negative activated fraction of this panel's early-stage TEM1 effector memory cytotoxic T cells (CD45RA-negative, CD27-positive, CCR7-negative). CD8TEM1/CD38pos: the HLA-DR-negative CD38-positive fraction of this panel's early-stage TEM1 effector memory cytotoxic T cells (CD45RA-negative, CD27-positive, CCR7-negative). CD8TEM1/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of this panel's early-stage TEM1 effector memory cytotoxic T cells (CD45RA-negative, CD27-positive, CCR7-negative).
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -2314,7 +2314,7 @@ Vaccine:
       The parent is this panel's CD8 TEM1 subset. HLA-DR/CD38 expression adds activation-associated annotation independently of TEM1 differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   34:
     definition: |
-      CD8TCM/activated: the activation-associated HLA-DR single-positive fraction of central memory cytotoxic T cells. CD8TCM/CD38pos: the CD38 single-positive fraction of central memory cytotoxic T cells. CD8TCM/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of central memory cytotoxic T cells.
+      CD8TCM/activated: the HLA-DR-positive CD38-negative activated fraction of central memory cytotoxic T cells. CD8TCM/CD38pos: the HLA-DR-negative CD38-positive fraction of central memory cytotoxic T cells. CD8TCM/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of central memory cytotoxic T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -2325,7 +2325,7 @@ Vaccine:
       The parent is CD8 central-memory T cells. HLA-DR/CD38 expression adds activation-associated annotation independently of central-memory differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   35:
     definition: |
-      CD8TEM2: the intermediate-stage effector memory cytotoxic T-cell subset designated TEM2 in this panel (CD45RA-negative, CD27-negative, CCR7-positive). CD8TEM3: the late-stage effector memory cytotoxic T-cell subset designated TEM3 in this panel (CD45RA-negative, CD27-negative, CCR7-negative). TEM1/TEM2/TEM3 denote this panel's annotation scheme; these names do not establish an obligatory developmental sequence.
+      CD8TEM2: CCR7-positive CD8a-positive intermediate-stage effector memory cytotoxic T cells designated TEM2 in this panel (CD45RA-negative, CD27-negative, CCR7-positive). CD8TEM3: CCR7-negative CD8a-positive late-stage effector memory cytotoxic T cells designated TEM3 in this panel (CD45RA-negative, CD27-negative, CCR7-negative). TEM1/TEM2/TEM3 denote this panel's annotation scheme; these names do not establish an obligatory developmental sequence.
     rule:
       x_marker: 167Er_CD197_CCR7
       y_marker: 146Nd_CD8a
@@ -2336,7 +2336,7 @@ Vaccine:
       The parent is the CD45RA-negative, CD27-negative CD8 memory fraction. CCR7 distinguishes the panel's TEM2 and TEM3 categories; CD8 is inherited lineage context. The numbered TEM labels encode this panel's annotation scheme and do not establish a mandatory developmental sequence.
   36:
     definition: |
-      CD8TEM3/activated: the activation-associated HLA-DR single-positive fraction of this panel's late-stage TEM3 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-negative). CD8TEM3/CD38pos: the CD38 single-positive fraction of this panel's late-stage TEM3 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-negative). CD8TEM3/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of this panel's late-stage TEM3 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-negative).
+      CD8TEM3/activated: the HLA-DR-positive CD38-negative activated fraction of this panel's late-stage TEM3 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-negative). CD8TEM3/CD38pos: the HLA-DR-negative CD38-positive fraction of this panel's late-stage TEM3 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-negative). CD8TEM3/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of this panel's late-stage TEM3 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-negative).
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -2347,7 +2347,7 @@ Vaccine:
       The parent is this panel's CD8 TEM3 subset. HLA-DR/CD38 expression adds activation-associated annotation independently of TEM3 differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   37:
     definition: |
-      CD8TEM2/activated: the activation-associated HLA-DR single-positive fraction of this panel's intermediate-stage TEM2 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-positive). CD8TEM2/CD38pos: the CD38 single-positive fraction of this panel's intermediate-stage TEM2 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-positive). CD8TEM2/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of this panel's intermediate-stage TEM2 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-positive).
+      CD8TEM2/activated: the HLA-DR-positive CD38-negative activated fraction of this panel's intermediate-stage TEM2 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-positive). CD8TEM2/CD38pos: the HLA-DR-negative CD38-positive fraction of this panel's intermediate-stage TEM2 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-positive). CD8TEM2/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of this panel's intermediate-stage TEM2 effector memory cytotoxic T cells (CD45RA-negative, CD27-negative, CCR7-positive).
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -2358,7 +2358,7 @@ Vaccine:
       The parent is this panel's CD8 TEM2 subset. HLA-DR/CD38 expression adds activation-associated annotation independently of TEM2 differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   38:
     definition: |
-      CD8TEMRA/activated: the activation-associated HLA-DR single-positive fraction of CD45RA-reexpressing effector memory cytotoxic T cells. CD8TEMRA/CD38pos: the CD38 single-positive fraction of CD45RA-reexpressing effector memory cytotoxic T cells. CD8TEMRA/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of CD45RA-reexpressing effector memory cytotoxic T cells.
+      CD8TEMRA/activated: the HLA-DR-positive CD38-negative activated fraction of CD45RA-reexpressing effector memory cytotoxic T cells. CD8TEMRA/CD38pos: the HLA-DR-negative CD38-positive fraction of CD45RA-reexpressing effector memory cytotoxic T cells. CD8TEMRA/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of CD45RA-reexpressing effector memory cytotoxic T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -2369,7 +2369,7 @@ Vaccine:
       The parent is CD8 TEMRA cells. HLA-DR/CD38 expression adds activation-associated annotation independently of TEMRA differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   39:
     definition: |
-      nnCD8/activated: the activation-associated HLA-DR single-positive fraction of non-naive cytotoxic T cells. nnCD8/CD38pos: the CD38 single-positive fraction of non-naive cytotoxic T cells. nnCD8/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of non-naive cytotoxic T cells.
+      nnCD8/activated: the HLA-DR-positive CD38-negative activated fraction of non-naive cytotoxic T cells. nnCD8/CD38pos: the HLA-DR-negative CD38-positive fraction of non-naive cytotoxic T cells. nnCD8/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of non-naive cytotoxic T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -2380,7 +2380,7 @@ Vaccine:
       The parent is non-naive CD8 T cells. HLA-DR/CD38 expression adds activation-associated annotation independently of the combined non-naive differentiation categories; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   40:
     definition: |
-      CD4Naive: naive helper T cells. CD4TEMRA: CD45RA-reexpressing effector memory helper T cells. CD4/CD45RAnegCD27pos: the CD27-retaining, CD45RA-negative memory CD4 T-cell fraction. CD4/CD45RAnegCD27neg: the CD45RA/CD27 double-negative memory CD4 T-cell fraction.
+      CD4Naive: CD45RA-positive CD27-positive naive helper T cells. CD4TEMRA: CD45RA-positive CD27-negative CD45RA-reexpressing effector memory helper T cells. CD4/CD45RAnegCD27pos: CD45RA-negative CD27-positive memory CD4 T cells. CD4/CD45RAnegCD27neg: CD45RA-negative CD27-negative memory CD4 T cells.
     rule:
       x_marker: 150Nd_CD45RA
       y_marker: 154Sm_CD27
@@ -2391,7 +2391,7 @@ Vaccine:
       The parent is helper alpha-beta T cells. CD45RA/CD27 gives the initial differentiation split; the CD45RA-negative fractions require later CCR7 annotation for their TCM/TEM labels. CD4TEMRA is the CD45RA-reexpressing effector-memory category, not a synonym for the naive CD45RA-expressing category.
   41:
     definition: |
-      CD4Naive/activated: the activation-associated HLA-DR single-positive fraction of naive helper T cells. CD4Naive/CD38pos: the CD38 single-positive fraction of naive helper T cells. CD4Naive/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of naive helper T cells.
+      CD4Naive/activated: the HLA-DR-positive CD38-negative activated fraction of naive helper T cells. CD4Naive/CD38pos: the HLA-DR-negative CD38-positive fraction of naive helper T cells. CD4Naive/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of naive helper T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -2402,7 +2402,7 @@ Vaccine:
       The parent is naive CD4 T cells. HLA-DR/CD38 expression adds activation-associated annotation independently of naive differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   42:
     definition: |
-      CD4TCM: central memory helper T cells. CD4TEM1: the early-stage effector memory helper T-cell subset designated TEM1 in this panel (CD45RA-negative, CD27-positive, CCR7-negative).
+      CD4TCM: CCR7-positive CD4-positive central memory helper T cells. CD4TEM1: CCR7-negative CD4-positive early-stage effector memory helper T cells designated TEM1 in this panel (CD45RA-negative, CD27-positive, CCR7-negative).
     rule:
       x_marker: 167Er_CD197_CCR7
       y_marker: 145Nd_CD4
@@ -2413,7 +2413,7 @@ Vaccine:
       The parent is the CD45RA-negative, CD27-retaining CD4 memory fraction. CCR7 distinguishes this panel's TCM and TEM1 categories; CD4 supplies inherited helper-lineage context. Do not confuse this branch with the CD27-negative TEM2/TEM3 branch.
   43:
     definition: |
-      CD4TEM1/activated: the activation-associated HLA-DR single-positive fraction of this panel's early-stage TEM1 effector memory helper T cells (CD45RA-negative, CD27-positive, CCR7-negative). CD4TEM1/CD38pos: the CD38 single-positive fraction of this panel's early-stage TEM1 effector memory helper T cells (CD45RA-negative, CD27-positive, CCR7-negative). CD4TEM1/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of this panel's early-stage TEM1 effector memory helper T cells (CD45RA-negative, CD27-positive, CCR7-negative).
+      CD4TEM1/activated: the HLA-DR-positive CD38-negative activated fraction of this panel's early-stage TEM1 effector memory helper T cells (CD45RA-negative, CD27-positive, CCR7-negative). CD4TEM1/CD38pos: the HLA-DR-negative CD38-positive fraction of this panel's early-stage TEM1 effector memory helper T cells (CD45RA-negative, CD27-positive, CCR7-negative). CD4TEM1/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of this panel's early-stage TEM1 effector memory helper T cells (CD45RA-negative, CD27-positive, CCR7-negative).
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -2424,7 +2424,7 @@ Vaccine:
       The parent is this panel's CD4 TEM1 subset. HLA-DR/CD38 expression adds activation-associated annotation independently of TEM1 differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   44:
     definition: |
-      CD4TCM/activated: the activation-associated HLA-DR single-positive fraction of central memory helper T cells. CD4TCM/CD38pos: the CD38 single-positive fraction of central memory helper T cells. CD4TCM/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of central memory helper T cells.
+      CD4TCM/activated: the HLA-DR-positive CD38-negative activated fraction of central memory helper T cells. CD4TCM/CD38pos: the HLA-DR-negative CD38-positive fraction of central memory helper T cells. CD4TCM/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of central memory helper T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -2435,7 +2435,7 @@ Vaccine:
       The parent is CD4 central-memory T cells. HLA-DR/CD38 expression adds activation-associated annotation independently of central-memory differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   45:
     definition: |
-      CD4TEM2: the intermediate-stage effector memory helper T-cell subset designated TEM2 in this panel (CD45RA-negative, CD27-negative, CCR7-positive). CD4TEM3: the late-stage effector memory helper T-cell subset designated TEM3 in this panel (CD45RA-negative, CD27-negative, CCR7-negative). TEM1/TEM2/TEM3 denote this panel's annotation scheme; these names do not establish an obligatory developmental sequence.
+      CD4TEM2: CCR7-positive CD4-positive intermediate-stage effector memory helper T cells designated TEM2 in this panel (CD45RA-negative, CD27-negative, CCR7-positive). CD4TEM3: CCR7-negative CD4-positive late-stage effector memory helper T cells designated TEM3 in this panel (CD45RA-negative, CD27-negative, CCR7-negative). TEM1/TEM2/TEM3 denote this panel's annotation scheme; these names do not establish an obligatory developmental sequence.
     rule:
       x_marker: 167Er_CD197_CCR7
       y_marker: 145Nd_CD4
@@ -2446,7 +2446,7 @@ Vaccine:
       The parent is the CD45RA-negative, CD27-negative CD4 memory fraction. CCR7 distinguishes the panel's TEM2 and TEM3 categories while CD4 carries inherited lineage context. These numbered labels are panel-specific and do not prove a universal sequence of memory-cell differentiation.
   46:
     definition: |
-      CD4TEM2/activated: the activation-associated HLA-DR single-positive fraction of this panel's intermediate-stage TEM2 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-positive). CD4TEM2/CD38pos: the CD38 single-positive fraction of this panel's intermediate-stage TEM2 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-positive). CD4TEM2/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of this panel's intermediate-stage TEM2 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-positive).
+      CD4TEM2/activated: the HLA-DR-positive CD38-negative activated fraction of this panel's intermediate-stage TEM2 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-positive). CD4TEM2/CD38pos: the HLA-DR-negative CD38-positive fraction of this panel's intermediate-stage TEM2 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-positive). CD4TEM2/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of this panel's intermediate-stage TEM2 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-positive).
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -2457,7 +2457,7 @@ Vaccine:
       The parent is this panel's CD4 TEM2 subset. HLA-DR/CD38 expression adds activation-associated annotation independently of TEM2 differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   47:
     definition: |
-      CD4TEM3/activated: the activation-associated HLA-DR single-positive fraction of this panel's late-stage TEM3 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-negative). CD4TEM3/CD38pos: the CD38 single-positive fraction of this panel's late-stage TEM3 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-negative). CD4TEM3/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of this panel's late-stage TEM3 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-negative).
+      CD4TEM3/activated: the HLA-DR-positive CD38-negative activated fraction of this panel's late-stage TEM3 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-negative). CD4TEM3/CD38pos: the HLA-DR-negative CD38-positive fraction of this panel's late-stage TEM3 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-negative). CD4TEM3/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of this panel's late-stage TEM3 effector memory helper T cells (CD45RA-negative, CD27-negative, CCR7-negative).
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -2468,7 +2468,7 @@ Vaccine:
       The parent is this panel's CD4 TEM3 subset. HLA-DR/CD38 expression adds activation-associated annotation independently of TEM3 differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   48:
     definition: |
-      CD4TEMRA/activated: the activation-associated HLA-DR single-positive fraction of CD45RA-reexpressing effector memory helper T cells. CD4TEMRA/CD38pos: the CD38 single-positive fraction of CD45RA-reexpressing effector memory helper T cells. CD4TEMRA/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of CD45RA-reexpressing effector memory helper T cells.
+      CD4TEMRA/activated: the HLA-DR-positive CD38-negative activated fraction of CD45RA-reexpressing effector memory helper T cells. CD4TEMRA/CD38pos: the HLA-DR-negative CD38-positive fraction of CD45RA-reexpressing effector memory helper T cells. CD4TEMRA/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of CD45RA-reexpressing effector memory helper T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -2479,7 +2479,7 @@ Vaccine:
       The parent is CD4 TEMRA cells. HLA-DR/CD38 expression adds activation-associated annotation independently of TEMRA differentiation; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   49:
     definition: |
-      nnCD4/activated: the activation-associated HLA-DR single-positive fraction of non-naive helper T cells. nnCD4/CD38pos: the CD38 single-positive fraction of non-naive helper T cells. nnCD4/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of non-naive helper T cells.
+      nnCD4/activated: the HLA-DR-positive CD38-negative activated fraction of non-naive helper T cells. nnCD4/CD38pos: the HLA-DR-negative CD38-positive fraction of non-naive helper T cells. nnCD4/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of non-naive helper T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -2490,7 +2490,7 @@ Vaccine:
       The parent is non-naive CD4 T cells. HLA-DR/CD38 expression adds activation-associated annotation independently of the combined non-naive differentiation categories; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   50:
     definition: |
-      nnCD4CXCR5pos: the CXCR5-expressing non-naive helper T-cell fraction, including Tfh-like cells. nnCD4CXCR5neg: the CXCR5-negative non-naive helper T-cell fraction.
+      nnCD4CXCR5pos: CXCR5-positive CD4-positive non-naive helper T cells, including Tfh-like cells. nnCD4CXCR5neg: CXCR5-negative CD4-positive non-naive helper T cells.
     rule:
       x_marker: 158Gd_CD185_CXCR5
       y_marker: 145Nd_CD4
@@ -2501,7 +2501,7 @@ Vaccine:
       The parent is non-naive helper T cells, combining the memory/effector categories after naive-cell exclusion. CXCR5 distinguishes follicular-helper-like from non-follicular fractions; CD4 carries inherited helper-lineage context. The CXCR5-expressing label includes Tfh-like cells and does not independently establish germinal-center identity.
   51:
     definition: |
-      nnCD4CXCR5pos/activated: the activation-associated HLA-DR single-positive fraction of CXCR5-expressing non-naive helper T cells (Tfh-like). nnCD4CXCR5pos/CD38pos: the CD38 single-positive fraction of CXCR5-expressing non-naive helper T cells (Tfh-like). nnCD4CXCR5pos/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of CXCR5-expressing non-naive helper T cells (Tfh-like).
+      nnCD4CXCR5pos/activated: the HLA-DR-positive CD38-negative activated fraction of CXCR5-expressing non-naive helper T cells (Tfh-like). nnCD4CXCR5pos/CD38pos: the HLA-DR-negative CD38-positive fraction of CXCR5-expressing non-naive helper T cells (Tfh-like). nnCD4CXCR5pos/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of CXCR5-expressing non-naive helper T cells (Tfh-like).
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -2512,7 +2512,7 @@ Vaccine:
       The parent is the CXCR5-expressing non-naive helper-T fraction. HLA-DR/CD38 expression adds activation-associated annotation independently of follicular-helper-like identity; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   52:
     definition: |
-      Treg: regulatory T cells.
+      Treg: CD25-high CD127-low regulatory T cells.
     rule:
       x_marker: 153Eu_CD25_IL-2Ra
       y_marker: 176Yb_CD127_IL-7Ra
@@ -2523,7 +2523,7 @@ Vaccine:
       Treg identification is restricted to the non-naive helper-T parent. The target therefore covers memory/effector Treg candidates; resting naive Tregs were excluded upstream and must not be recovered by widening this gate. Interpret the CD25/CD127 phenotype as additional identification within that selected parent, not a synonym for the entire parent.
   53:
     definition: |
-      Treg/activated: the activation-associated HLA-DR single-positive fraction of regulatory T cells. Treg/CD38pos: the CD38 single-positive fraction of regulatory T cells. Treg/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of regulatory T cells.
+      Treg/activated: the HLA-DR-positive CD38-negative activated fraction of regulatory T cells. Treg/CD38pos: the HLA-DR-negative CD38-positive fraction of regulatory T cells. Treg/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of regulatory T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -2534,7 +2534,7 @@ Vaccine:
       The parent is the selected regulatory-T fraction. HLA-DR/CD38 expression adds activation-associated annotation independently of regulatory-T identity; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   54:
     definition: |
-      Th1: type-1 helper T-cell phenotype fraction. Th17: type-17 helper T-cell phenotype fraction. NonTh1NonTh17: the non-Th1, non-Th17 helper T-cell fraction.
+      Th1: CXCR3-positive CCR6-negative type-1 helper T cells. Th17: CCR6-positive CXCR3-negative type-17 helper T cells. NonTh1NonTh17: CCR6-negative CXCR3-negative non-Th1, non-Th17 helper T cells.
     rule:
       x_marker: 141Pr_CD196_CCR6
       y_marker: 156Gd_CD183_CXCR3
@@ -2545,7 +2545,7 @@ Vaccine:
       The parent is the non-follicular, non-naive helper-T fraction. This panel's Th17 annotation may also include Th22-like cells; it is not a separately purified Th17 lineage. NonTh1NonTh17 is a named residual containing Th2 candidates and uncommitted phenotypes, with Th2 resolved downstream. The Th1 target here uses the panel's CCR6-negative/CXCR3-positive category; do not import the broader Z74D Th1/17-inclusive naming convention.
   55:
     definition: |
-      Th1/activated: the activation-associated HLA-DR single-positive fraction of type-1 helper T cells. Th1/CD38pos: the CD38 single-positive fraction of type-1 helper T cells. Th1/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of type-1 helper T cells.
+      Th1/activated: the HLA-DR-positive CD38-negative activated fraction of type-1 helper T cells. Th1/CD38pos: the HLA-DR-negative CD38-positive fraction of type-1 helper T cells. Th1/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of type-1 helper T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -2556,7 +2556,7 @@ Vaccine:
       The parent is the selected Th1 fraction. HLA-DR/CD38 expression adds activation-associated annotation independently of Th1-associated phenotype; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   56:
     definition: |
-      Th17/activated: the activation-associated HLA-DR single-positive fraction of type-17 helper T cells. Th17/CD38pos: the CD38 single-positive fraction of type-17 helper T cells. Th17/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of type-17 helper T cells.
+      Th17/activated: the HLA-DR-positive CD38-negative activated fraction of type-17 helper T cells. Th17/CD38pos: the HLA-DR-negative CD38-positive fraction of type-17 helper T cells. Th17/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of type-17 helper T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -2567,7 +2567,7 @@ Vaccine:
       The parent is the selected Th17-associated fraction, which can also include Th22-like cells in this panel. HLA-DR/CD38 expression adds activation-associated annotation independently of the panel's Th17-associated phenotype; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   57:
     definition: |
-      Th2: type-2 helper T-cell phenotype fraction.
+      Th2: CCR4-positive CXCR3-negative type-2 helper T cells.
     rule:
       x_marker: 152Sm_CD194_CCR4
       y_marker: 156Gd_CD183_CXCR3
@@ -2578,7 +2578,7 @@ Vaccine:
       The parent has already excluded the Th1 and Th17-associated fractions from non-follicular memory helper T cells. CCR4 is interpreted in that restricted context for the Th2 target; it is not a universal Th2 identifier across an unrestricted T-cell sample. CXCR3 carries the inherited exclusion context.
   58:
     definition: |
-      Th2/activated: the activation-associated HLA-DR single-positive fraction of type-2 helper T cells. Th2/CD38pos: the CD38 single-positive fraction of type-2 helper T cells. Th2/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of type-2 helper T cells.
+      Th2/activated: the HLA-DR-positive CD38-negative activated fraction of type-2 helper T cells. Th2/CD38pos: the HLA-DR-negative CD38-positive fraction of type-2 helper T cells. Th2/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of type-2 helper T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -2589,7 +2589,7 @@ Vaccine:
       The parent is the selected Th2 fraction. HLA-DR/CD38 expression adds activation-associated annotation independently of Th2-associated phenotype; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   59:
     definition: |
-      DNT/activated: the activation-associated HLA-DR single-positive fraction of double-negative T cells. DNT/CD38pos: the CD38 single-positive fraction of double-negative T cells. DNT/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of double-negative T cells.
+      DNT/activated: the HLA-DR-positive CD38-negative activated fraction of double-negative T cells. DNT/CD38pos: the HLA-DR-negative CD38-positive fraction of double-negative T cells. DNT/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of double-negative T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -2600,7 +2600,7 @@ Vaccine:
       The parent is CD4/CD8 double-negative alpha-beta T cells. HLA-DR/CD38 expression adds activation-associated annotation independently of double-negative T-cell identity; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   60:
     definition: |
-      DPT/activated: the activation-associated HLA-DR single-positive fraction of double-positive T cells. DPT/CD38pos: the CD38 single-positive fraction of double-positive T cells. DPT/activated+CD38pos: the HLA-DR/CD38 double-positive fraction of double-positive T cells.
+      DPT/activated: the HLA-DR-positive CD38-negative activated fraction of double-positive T cells. DPT/CD38pos: the HLA-DR-negative CD38-positive fraction of double-positive T cells. DPT/activated+CD38pos: the HLA-DR-positive CD38-positive fraction of double-positive T cells.
     rule:
       x_marker: 173Yb_HLA-DR
       y_marker: 161Dy_CD38
@@ -2611,7 +2611,7 @@ Vaccine:
       The parent is CD4/CD8 double-positive alpha-beta T cells. HLA-DR/CD38 expression adds activation-associated annotation independently of double-positive T-cell identity; do not redo the upstream subtype assignment. The named outputs are HLA-DR single-positive, CD38 single-positive, and double-positive fractions. The double-negative resting fraction is not another named target at this step and remains Unassigned.
   61:
     definition: |
-      MAITNKT: mucosal-associated invariant T-cell and natural killer T-cell candidates. The combined name does not independently establish either identity.
+      MAITNKT: CD161-high mucosal-associated invariant T-cell and natural killer T-cell candidates. The combined name does not independently establish either identity.
     rule:
       x_marker: 145Nd_CD4
       y_marker: 151Eu_CD161
@@ -2622,7 +2622,7 @@ Vaccine:
       The parent is alpha-beta T cells, so gamma-delta T cells were excluded upstream. MAITNKT is the combined MAIT/invariant-NKT candidate label in this panel, rather than a separation of those two identities. The displayed CD4/CD161 phenotype alone does not independently confirm either identity or justify labeling all unconventional T-cell candidates.
   62:
     definition: |
-      Neutrophil: neutrophils. Eosinophil: eosinophils.
+      Neutrophil: CD16-high CD294-negative neutrophils. Eosinophil: CD16-negative CD294-positive eosinophils.
     rule:
       x_marker: 148Nd_CD16
       y_marker: 166Er_CD294
@@ -2634,7 +2634,7 @@ Vaccine:
 FR-FCM-Z74D_hc:
   1:
     definition: |
-      CD4: helper T cells. CD8: cytotoxic T cells. CD4p_CD8p: double-positive T cells. CD4n_CD8n: double-negative T cells.
+      CD4: CD4⁺CD8⁻ helper T cells. CD8: CD4⁻CD8⁺ cytotoxic T cells. CD4p_CD8p: CD4⁺CD8⁺ double-positive T cells. CD4n_CD8n: CD4⁻CD8⁻ double-negative T cells.
     rule:
       x_marker: CD4
       y_marker: CD8
@@ -2645,7 +2645,7 @@ FR-FCM-Z74D_hc:
       This is the entry CD4/CD8 split for the available T-cell input. Double-positive and double-negative T cells are explicit named targets, not events to force into the helper or cytotoxic label. The gating plan does not specify earlier sample cleanup, so this step should not invent additional upstream selection assumptions.
   2:
     definition: |
-      Naive_CD8: naive cytotoxic T cells. CM_CD8: central memory cytotoxic T cells. EM_CD8: effector memory cytotoxic T cells. EMRA_CD8: CD45RA-reexpressing effector memory cytotoxic T cells.
+      Naive_CD8: CCR7⁺CD45RA⁺ naive cytotoxic T cells. CM_CD8: CCR7⁺CD45RA⁻ central memory cytotoxic T cells. EM_CD8: CCR7⁻CD45RA⁻ effector memory cytotoxic T cells. EMRA_CD8: CCR7⁻CD45RA⁺ CD45RA-reexpressing effector memory cytotoxic T cells.
     rule:
       x_marker: CCR7
       y_marker: CD45RA
@@ -2656,7 +2656,7 @@ FR-FCM-Z74D_hc:
       Memory differentiation is assessed within the selected cytotoxic-T fraction. Naive and EMRA both denote CD45RA-expressing categories but have different differentiation meanings; CCR7 distinguishes their homing phenotype. These differentiation labels do not by themselves establish an activation state or a fixed expression threshold.
   3:
     definition: |
-      tot_Treg: regulatory T cells. non_Treg: conventional non-regulatory helper T cells.
+      tot_Treg: Foxp3⁺CD127-low regulatory T cells. non_Treg: Foxp3⁻ conventional non-regulatory helper T cells.
     rule:
       x_marker: Foxp3
       y_marker: CD127
@@ -2667,7 +2667,7 @@ FR-FCM-Z74D_hc:
       The parent is helper T cells. The Foxp3/CD127 phenotype separates the regulatory-T target from a named conventional-helper-T pool that feeds later differentiation and polarization branches. The named non_Treg category is an explicit conventional-helper-T pool, not merely uncertainty between regulatory identities.
   4:
     definition: |
-      Naive_CD4: naive helper T cells. CM_CD4: central memory helper T cells. EM_CD4: effector memory helper T cells. EMRA_CD4: CD45RA-reexpressing effector memory helper T cells.
+      Naive_CD4: CCR7⁺CD45RA⁺ naive helper T cells. CM_CD4: CCR7⁺CD45RA⁻ central memory helper T cells. EM_CD4: CCR7⁻CD45RA⁻ effector memory helper T cells. EMRA_CD4: CCR7⁻CD45RA⁺ CD45RA-reexpressing effector memory helper T cells.
     rule:
       x_marker: CCR7
       y_marker: CD45RA
@@ -2678,7 +2678,7 @@ FR-FCM-Z74D_hc:
       The parent is conventional non-regulatory helper T cells, rather than all CD4 cells. Memory differentiation is assigned before the Tfh/polarization branches, and the subsequent Tfh parent combines CM, EM, and EMRA while excluding the naive category. Activation or follicular-helper status is not determined by this memory label alone.
   5:
     definition: |
-      Tfh: circulating/resting follicular helper T-cell phenotype fraction. Tfh_hi_PD1: the PD-1-high follicular helper T-cell phenotype subset. non_Tfh: this panel's non-Tfh memory helper T-cell fraction, including all CXCR5-negative cells regardless of PD-1 status and the CXCR5-positive, PD-1-low fraction. CXCR5 positivity alone is therefore insufficient for assignment to Tfh or Tfh_hi_PD1.
+      Tfh: CXCR5⁺PD-1⁺ follicular helper T cells. Tfh_hi_PD1: CXCR5⁺PD-1-high Tfh. non_Tfh: CXCR5⁻ cells and CXCR5⁺PD-1-low cells.
     rule:
       x_marker: CXCR5
       y_marker: PD-1
@@ -2690,7 +2690,7 @@ FR-FCM-Z74D_hc:
       The parent combines non-naive, non-regulatory helper-T differentiation categories. In this panel, non_Tfh includes both CXCR5-negative events and the CXCR5-positive, PD-1-low fraction; CXCR5 positivity alone is not sufficient for Tfh assignment. Tfh_hi_PD1 is a separate high-PD-1 phenotype label within the follicular-helper-like compartment, not a proof of germinal-center residence.
   6:
     definition: |
-      Th1: this panel's combined type-1/Th1-17 helper T-cell phenotype fraction, including both CXCR3-positive/CCR6-negative Th1 cells and CXCR3-positive/CCR6-positive Th1/17 cells. The Th1 label therefore includes CXCR3-positive cells regardless of CCR6 status. Th17_22: the combined type-17/type-22 helper T-cell phenotype fraction. non_17_22_1: the remaining helper T-cell phenotype fraction.
+      Th1: this panel's combined type-1/Th1-17 helper T-cell phenotype fraction, including both CXCR3-positive/CCR6-negative Th1 cells and CXCR3-positive/CCR6-positive Th1/17 cells. The Th1 label therefore includes CXCR3-positive cells regardless of CCR6 status. Th17_22: the CXCR3-negative/CCR6-positive combined type-17/type-22 helper T-cell phenotype fraction. non_17_22_1: the remaining CXCR3-negative/CCR6-negative helper T-cell phenotype fraction.
     rule:
       x_marker: CXCR3
       y_marker: CCR6
@@ -2701,7 +2701,7 @@ FR-FCM-Z74D_hc:
       The parent is the non-Tfh memory-helper-T compartment. This panel uses Th1 as a combined label for CXCR3-expressing Th1 and Th1/17-associated fractions, including both CCR6-negative and CCR6-positive phenotypes. Th17_22 remains a combined type-17/type-22 candidate category for later separation. Do not apply a narrower CCR6-negative-only definition of Th1 to this panel.
   7:
     definition: |
-      Th17: type-17 helper T-cell phenotype fraction. Th22: type-22 helper T-cell phenotype fraction.
+      Th17: CCR10⁻CCR4⁺ type-17 helper T-cell phenotype fraction. Th22: CCR10⁺ type-22 helper T-cell phenotype fraction.
     rule:
       x_marker: CCR10
       y_marker: CCR4
@@ -2712,7 +2712,7 @@ FR-FCM-Z74D_hc:
       The parent is the combined Th17_22 compartment, not all memory helper T cells. CCR10/CCR4 distinguishes the named Th17- and Th22-associated phenotypes within that selected parent. Double-negative residuals are not a third named target, and an inherited type-17/type-22 association is not by itself a final subtype assignment.
   8:
     definition: |
-      Th2: type-2 helper T-cell phenotype fraction.
+      Th2: CCR4⁺CD8⁻ type-2 helper T cells.
     rule:
       x_marker: CCR4
       y_marker: CD8
@@ -2734,7 +2734,7 @@ FR-FCM-Z74D_hc:
       The parent Th1 label in this panel includes both CCR6-negative Th1 and CCR6-positive Th1/17-associated cells. CD127/PD-1 adds an expression-state annotation within that combined parent; it does not reselect a narrower Th1 lineage. Positive/negative combinations are marker-defined labels and do not independently prove a particular chronicity or functional state.
   10:
     definition: |
-      Treg_Heliosp: the Helios-expressing regulatory T-cell fraction. Treg_Heliosn: the Helios-negative regulatory T-cell fraction. These names do not establish thymic or peripheral origin.
+      Treg_Heliosp: the Helios⁺Foxp3⁺ regulatory T-cell fraction. Treg_Heliosn: the Helios⁻Foxp3⁺ regulatory T-cell fraction. These names do not establish thymic or peripheral origin.
     rule:
       x_marker: Helios
       y_marker: Foxp3
@@ -2745,7 +2745,7 @@ FR-FCM-Z74D_hc:
       The parent is already the regulatory-T fraction selected through Foxp3/CD127. Helios expression subdivides that parent, while Foxp3 carries inherited regulatory-lineage context. Helios-positive/negative labels alone should not be treated as definitive proof of thymic versus peripheral origin.
   11:
     definition: |
-      Naive_Treg: naive regulatory T cells. Memory_Treg: memory/effector regulatory T cells.
+      Naive_Treg: CCR7⁺CD45RA⁺ naive regulatory T cells. Memory_Treg: non-naive memory/effector regulatory T cells, i.e. every CCR7/CD45RA phenotype other than CCR7⁺CD45RA⁺.
     rule:
       x_marker: CCR7
       y_marker: CD45RA
@@ -2768,7 +2768,7 @@ FR-FCM-Z74D_hc:
 FR-FCM-Z74D_tissue:
   1:
     definition: |
-      CD4: helper T cells. CD8: cytotoxic T cells. CD4p_CD8p: double-positive T cells. CD4n_CD8n: double-negative T cells.
+      CD4: CD4⁺CD8⁻ helper T cells. CD8: CD4⁻CD8⁺ cytotoxic T cells. CD4p_CD8p: CD4⁺CD8⁺ double-positive T cells. CD4n_CD8n: CD4⁻CD8⁻ double-negative T cells.
     rule:
       x_marker: CD4
       y_marker: CD8
@@ -2779,7 +2779,7 @@ FR-FCM-Z74D_tissue:
       This is the entry CD4/CD8 split for the available T-cell input. Double-positive and double-negative T cells are explicit named targets, not events to force into the helper or cytotoxic label. The gating plan does not specify earlier sample cleanup, so this step should not invent additional upstream selection assumptions.
   2:
     definition: |
-      Naive_CD8: naive cytotoxic T cells. CM_CD8: central memory cytotoxic T cells. EM_CD8: effector memory cytotoxic T cells. EMRA_CD8: CD45RA-reexpressing effector memory cytotoxic T cells.
+      Naive_CD8: CCR7⁺CD45RA⁺ naive cytotoxic T cells. CM_CD8: CCR7⁺CD45RA⁻ central memory cytotoxic T cells. EM_CD8: CCR7⁻CD45RA⁻ effector memory cytotoxic T cells. EMRA_CD8: CCR7⁻CD45RA⁺ CD45RA-reexpressing effector memory cytotoxic T cells.
     rule:
       x_marker: CCR7
       y_marker: CD45RA
@@ -2790,7 +2790,7 @@ FR-FCM-Z74D_tissue:
       Memory differentiation is assessed within the selected cytotoxic-T fraction. Naive and EMRA both denote CD45RA-expressing categories but have different differentiation meanings; CCR7 distinguishes their homing phenotype. These differentiation labels do not by themselves establish an activation state or a fixed expression threshold.
   3:
     definition: |
-      tot_Treg: regulatory T cells. non_Treg: conventional non-regulatory helper T cells.
+      tot_Treg: Foxp3⁺CD127-low regulatory T cells. non_Treg: Foxp3⁻ conventional non-regulatory helper T cells.
     rule:
       x_marker: Foxp3
       y_marker: CD127
@@ -2801,7 +2801,7 @@ FR-FCM-Z74D_tissue:
       The parent is helper T cells. The Foxp3/CD127 phenotype separates the regulatory-T target from a named conventional-helper-T pool that feeds later differentiation and polarization branches. The named non_Treg category is an explicit conventional-helper-T pool, not merely uncertainty between regulatory identities.
   4:
     definition: |
-      Naive_CD4: naive helper T cells. CM_CD4: central memory helper T cells. EM_CD4: effector memory helper T cells. EMRA_CD4: CD45RA-reexpressing effector memory helper T cells.
+      Naive_CD4: CCR7⁺CD45RA⁺ naive helper T cells. CM_CD4: CCR7⁺CD45RA⁻ central memory helper T cells. EM_CD4: CCR7⁻CD45RA⁻ effector memory helper T cells. EMRA_CD4: CCR7⁻CD45RA⁺ CD45RA-reexpressing effector memory helper T cells.
     rule:
       x_marker: CCR7
       y_marker: CD45RA
@@ -2812,7 +2812,7 @@ FR-FCM-Z74D_tissue:
       The parent is conventional non-regulatory helper T cells, rather than all CD4 cells. Memory differentiation is assigned before the Tfh/polarization branches, and the subsequent Tfh parent combines CM, EM, and EMRA while excluding the naive category. Activation or follicular-helper status is not determined by this memory label alone.
   5:
     definition: |
-      Tfh: circulating/resting follicular helper T-cell phenotype fraction. Tfh_hi_PD1: the PD-1-high follicular helper T-cell phenotype subset. non_Tfh: this panel's non-Tfh memory helper T-cell fraction, including all CXCR5-negative cells regardless of PD-1 status and the CXCR5-positive, PD-1-low fraction. CXCR5 positivity alone is therefore insufficient for assignment to Tfh or Tfh_hi_PD1.
+      Tfh: CXCR5⁺PD-1⁺ follicular helper T cells. Tfh_hi_PD1: CXCR5⁺PD-1-high Tfh. non_Tfh: CXCR5⁻ cells and CXCR5⁺PD-1-low cells.
     rule:
       x_marker: CXCR5
       y_marker: PD-1
@@ -2824,7 +2824,7 @@ FR-FCM-Z74D_tissue:
       The parent combines non-naive, non-regulatory helper-T differentiation categories. In this panel, non_Tfh includes both CXCR5-negative events and the CXCR5-positive, PD-1-low fraction; CXCR5 positivity alone is not sufficient for Tfh assignment. Tfh_hi_PD1 is a separate high-PD-1 phenotype label within the follicular-helper-like compartment, not a proof of germinal-center residence.
   6:
     definition: |
-      Th1: this panel's combined type-1/Th1-17 helper T-cell phenotype fraction, including both CXCR3-positive/CCR6-negative Th1 cells and CXCR3-positive/CCR6-positive Th1/17 cells. The Th1 label therefore includes CXCR3-positive cells regardless of CCR6 status. Th17_22: the combined type-17/type-22 helper T-cell phenotype fraction. non_17_22_1: the remaining helper T-cell phenotype fraction.
+      Th1: this panel's combined type-1/Th1-17 helper T-cell phenotype fraction, including both CXCR3-positive/CCR6-negative Th1 cells and CXCR3-positive/CCR6-positive Th1/17 cells. The Th1 label therefore includes CXCR3-positive cells regardless of CCR6 status. Th17_22: the CXCR3-negative/CCR6-positive combined type-17/type-22 helper T-cell phenotype fraction. non_17_22_1: the remaining CXCR3-negative/CCR6-negative helper T-cell phenotype fraction.
     rule:
       x_marker: CXCR3
       y_marker: CCR6
@@ -2835,7 +2835,7 @@ FR-FCM-Z74D_tissue:
       The parent is the non-Tfh memory-helper-T compartment. This panel uses Th1 as a combined label for CXCR3-expressing Th1 and Th1/17-associated fractions, including both CCR6-negative and CCR6-positive phenotypes. Th17_22 remains a combined type-17/type-22 candidate category for later separation. Do not apply a narrower CCR6-negative-only definition of Th1 to this panel.
   7:
     definition: |
-      Th17: type-17 helper T-cell phenotype fraction. Th22: type-22 helper T-cell phenotype fraction.
+      Th17: CCR10⁻CCR4⁺ type-17 helper T-cell phenotype fraction. Th22: CCR10⁺ type-22 helper T-cell phenotype fraction.
     rule:
       x_marker: CCR10
       y_marker: CCR4
@@ -2846,7 +2846,7 @@ FR-FCM-Z74D_tissue:
       The parent is the combined Th17_22 compartment, not all memory helper T cells. CCR10/CCR4 distinguishes the named Th17- and Th22-associated phenotypes within that selected parent. Double-negative residuals are not a third named target, and an inherited type-17/type-22 association is not by itself a final subtype assignment.
   8:
     definition: |
-      Th2: type-2 helper T-cell phenotype fraction.
+      Th2: CCR4⁺CD8⁻ type-2 helper T cells.
     rule:
       x_marker: CCR4
       y_marker: CD8
@@ -2868,7 +2868,7 @@ FR-FCM-Z74D_tissue:
       The parent Th1 label in this panel includes CCR6-negative Th1 and CCR6-positive Th1/17-associated cells. CD127/CD69 subdivides that combined parent. Interpret CD69 in the specimen context: a residency-associated phenotype in tissue must not automatically be called tissue residence in a blood specimen, where activation is an alternative interpretation. The marker-defined labels do not independently prove residence, and no specimen-specific abundance assumption is provided.
   10:
     definition: |
-      Treg_Heliosp: the Helios-expressing regulatory T-cell fraction. Treg_Heliosn: the Helios-negative regulatory T-cell fraction. These names do not establish thymic or peripheral origin.
+      Treg_Heliosp: the Helios⁺Foxp3⁺ regulatory T-cell fraction. Treg_Heliosn: the Helios⁻Foxp3⁺ regulatory T-cell fraction. These names do not establish thymic or peripheral origin.
     rule:
       x_marker: Helios
       y_marker: Foxp3
@@ -2879,7 +2879,7 @@ FR-FCM-Z74D_tissue:
       The parent is already the regulatory-T fraction selected through Foxp3/CD127. Helios expression subdivides that parent, while Foxp3 carries inherited regulatory-lineage context. Helios-positive/negative labels alone should not be treated as definitive proof of thymic versus peripheral origin.
   11:
     definition: |
-      Naive_Treg: naive regulatory T cells. Memory_Treg: memory/effector regulatory T cells.
+      Naive_Treg: CCR7⁺CD45RA⁺ naive regulatory T cells. Memory_Treg: non-naive memory/effector regulatory T cells, i.e. every CCR7/CD45RA phenotype other than CCR7⁺CD45RA⁺.
     rule:
       x_marker: CCR7
       y_marker: CD45RA
