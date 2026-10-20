@@ -1,0 +1,9 @@
+# GPT-6 Luna (OpenAI API) — LLM-Gate config.
+# Use with run_openai_gate.sh (NOT run_vllm_gate.sh).
+# Requires OPENAI_API_KEY in the environment.
+model:
+  openai_id: gpt-6-luna              # → run_openai --model gpt-6-luna
+
+generation:
+  max_tokens: 32768                  # same budget as gpt_5_4.yaml
+  temperature: 1.0                   # gpt-6-luna rejects any other value (incl. 0.0)
