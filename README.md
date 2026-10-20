@@ -576,6 +576,30 @@ bash run_hard_openai.sh --config src/llm_gate/configs/models/gpt_5_4.yaml --mode
 **6 — Flat vs. hierarchical annotation** — see [`README_flat.md`](README_flat.md)
 (FlowSOM K = 16 / 38 / 83 per plan depth, GPT-5.4 backbone).
 
+## Rule-based baseline: flowDensity + notes.yaml rules (no LLM)
+
+`src/baselines/flowdensity_rule/` gates every step with no language model:
+
+1. `flowDensity::deGate` finds density valleys on each axis of the step's
+   parent population.
+2. The step's `rule.regions` table in `benchmark/notes.yaml` maps the
+   resulting grid cells to labels.
+
+Ground-truth labels are used only for scoring. The baseline adds its own
+valley selection, because `notes.yaml` gives none:
+
+- **More cuts than needed:** keep the deepest ones.
+- **One cut where two are needed:** re-run `deGate` on each side of it. If
+  neither side yields a valid valley, drop the middle label.
+- **`unsupported` QC steps:** every parent cell gets the step's single target
+  category.
+- **`deGate` errors:** scored as all-wrong steps.
+
+On the test split (11 cohorts, 386 samples, 11,671 steps), step-weighted
+macro-F1 is **0.524**, weighted-F1 0.698 and balanced accuracy 0.642. See
+[`src/baselines/flowdensity_rule/README.md`](src/baselines/flowdensity_rule/README.md)
+for the full procedure, commands and per-cohort results.
+
 ## Quick start
 
 ```bash
@@ -721,6 +745,7 @@ Method-specific details live in their directories:
 - **`src/agent_gate/README.md`** — Agent-Gate pipeline (text + image + iterative `render_gate_overlay` tool loop)
 - **`src/baselines/README.md`** — flowDensity (C2S density-grid backend), FlowSOM reference, cyMAE trained baseline
 - **`src/baselines/UNITO.md`** — UNITO trained baseline recipe (per-cohort U-Net)
+- **`src/baselines/flowdensity_rule/README.md`** — rule-based baseline: flowDensity valleys + `notes.yaml` region rules, no LLM
 - **`README_flat.md`** — flat vs. hierarchical annotation pilot (`src/llm_gate_flat`, `src/flowsom_c2s`)
 
 ### LLM gating methods at a glance
@@ -782,6 +807,7 @@ src/
   agent_gate/                      # Agent-Gate pipeline   — see src/agent_gate/README.md
                                    #   text + image + iterative render_gate_overlay tool loop
   baselines/                       # flowDensity / FlowSOM / cyMAE — see src/baselines/README.md
+    flowdensity_rule/              #   flowDensity valleys + notes.yaml rules (no LLM) — see its README.md
 
 scripts/                           # seed-sweep launchers + aggregation
 data_pipeline/lyoplate/            # rebuild the Lyoplate cohorts from ImmPort GatingSetLists
