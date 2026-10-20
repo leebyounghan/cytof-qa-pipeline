@@ -54,8 +54,14 @@ def rule_for(ti: TaskInput) -> dict:
             'n_y_valleys': len(regions) - 1}
 
 
-def write_step(ti: TaskInput, out_dir: Path) -> bool:
+def needs_multi_valley(rule: dict) -> bool:
+    return rule['supported'] and max(rule['n_x_valleys'], rule['n_y_valleys']) >= 2
+
+
+def write_step(ti: TaskInput, out_dir: Path, only_multi_valley: bool = False) -> bool | None:
     rule = rule_for(ti)
+    if only_multi_valley and not needs_multi_valley(rule):
+        return None
     out_dir.mkdir(parents=True, exist_ok=True)
     meta = {
         'task_id': ti.task_id,
@@ -76,6 +82,8 @@ def write_step(ti: TaskInput, out_dir: Path) -> bool:
 def main():
     parser = argparse.ArgumentParser(description='flowDensity rule pipeline — Stage 1: prepare inputs')
     parser.add_argument('--output-dir', type=Path, default=Path('results/flowdensity_rule/'))
+    parser.add_argument('--only-multi-valley', action='store_true',
+                        help='Write only steps whose rule needs >=2 valleys on an axis.')
     BenchmarkLoader.add_cli_args(parser)
     args = parser.parse_args()
 
@@ -83,7 +91,10 @@ def main():
     n_sup = n_unsup = 0
     for ti in loader.iter_tasks_from_cli(args):
         out_dir = args.output_dir / ti.dataset / ti.sample / ti.step_dir_name
-        if write_step(ti, out_dir):
+        written = write_step(ti, out_dir, args.only_multi_valley)
+        if written is None:
+            continue
+        if written:
             n_sup += 1
         else:
             n_unsup += 1
