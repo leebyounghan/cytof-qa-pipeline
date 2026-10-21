@@ -509,8 +509,15 @@ def evaluate_predictions(
     perturbation: Perturbation | None = None,
     perturbation_name: str | None = None,
     sample_filter: set[str] | None = None,
+    gt_labels_dir: Path | None = None,
 ) -> dict:
     """Evaluate all prediction.json files for a single dataset.
+
+    If ``gt_labels_dir`` is given, the reference labels for each task are read
+    from ``gt_labels_dir/{dataset}/{sample}/step_NN/prediction.json``
+    (``predicted_labels``) instead of the parquet annotation — e.g. the
+    rect-1 oracle's rectangle-shaped ground truth. A missing or mismatched
+    file is an error.
 
     Scans only ``predictions_dir/{dataset}/`` so per-sample parquet caches
     live for one dataset at a time — the caller loops across datasets and
@@ -583,6 +590,12 @@ def evaluate_predictions(
             sample_cache[cache_key] = (df_prepared, ch_map)
         df_prepared, ch_map = sample_cache[cache_key]
         gt_labels, gt_xy = _extract_labels_xy(df_prepared, task, ch_map)
+        if gt_labels_dir is not None:
+            ref_path = gt_labels_dir / dataset / sample / step_str / "prediction.json"
+            ref = json.loads(ref_path.read_text())["predicted_labels"]
+            if len(ref) != len(gt_labels):
+                raise ValueError(f"{ref_path}: {len(ref)} reference labels != {len(gt_labels)} parent cells")
+            gt_labels = np.array(ref, dtype=object)
         pred_labels = np.array(pred["predicted_labels"], dtype=object)
 
         if len(gt_labels) != len(pred_labels):
@@ -669,6 +682,12 @@ def main():
         help="If >0, generate plots for at most N samples per cohort (sorted by sample name). "
              "Default 0 = plot every sample.",
     )
+    parser.add_argument(
+        "--gt-labels", type=Path, default=None,
+        help="Score against reference labels from <dir>/{dataset}/{sample}/step_NN/prediction.json "
+             "(e.g. results/rect1_oracle) instead of the annotation. Summary is written to "
+             "eval_summary__gt_<dir name>.json.",
+    )
     BenchmarkLoader.add_cli_args(parser)
     args = parser.parse_args()
 
@@ -725,6 +744,7 @@ def main():
             perturbation=perturbation,
             perturbation_name=perturbation_name,
             sample_filter=sample_filter,
+            gt_labels_dir=args.gt_labels,
         )
         if not summary:
             continue
@@ -739,7 +759,11 @@ def main():
             if "iou_hull_macro_mean" in overall:
                 print(f"  Hull IoU:      {overall['iou_hull_macro_mean']:.4f} ± {overall['iou_hull_macro_std']:.4f} (n={overall['iou_hull_macro_n']})")
 
-        output_path = args.predictions / dataset / "eval_summary.json"
+        summary_name = (f"eval_summary__gt_{args.gt_labels.name}.json" if args.gt_labels
+                        else "eval_summary.json")
+        if args.gt_labels:
+            summary["gt_labels"] = str(args.gt_labels)
+        output_path = args.predictions / dataset / summary_name
         output_path.parent.mkdir(parents=True, exist_ok=True)
         with open(output_path, "w") as f:
             json.dump(summary, f, indent=2, ensure_ascii=False)
