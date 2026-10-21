@@ -151,6 +151,11 @@ async def run_online(
     )
     print(f'Wrote {n_steps:,} steps / {n_gates:,} gates → {output_path}')
 
+    n_failed = sum(isinstance(o, Exception) for o in outputs)
+    if n_failed:
+        raise SystemExit(f'ERROR: {n_failed}/{len(groups)} requests failed (see [WARN] lines); '
+                         f'their steps were written with empty responses in {output_path}')
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(
