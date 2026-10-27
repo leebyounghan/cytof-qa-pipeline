@@ -2,12 +2,12 @@
 
 ``benchmark/notes.yaml`` holds, per cohort and step, a structured entry with
 ``definition`` (category meanings), ``rule`` (region mapping for rule-based
-systems) and ``details`` (curated context). Every prompt builder reads its
+systems) and ``oracle`` (legacy expert guidance). Every prompt builder reads its
 note from here; task.json / gating_plan.json carry no note text.
 
 Note modes:
   definition          — ``definition`` only
-  definition_details  — ``definition`` followed by ``details``
+  definition_oracle  — ``definition`` followed by ``oracle``
 
 A missing cohort, step or field is an error.
 """
@@ -20,7 +20,7 @@ import yaml
 
 NOTES_PATH = Path(__file__).resolve().parents[1] / 'benchmark' / 'notes.yaml'
 
-NOTE_MODES = ('definition', 'definition_details')
+NOTE_MODES = ('definition', 'definition_oracle')
 DEFAULT_NOTE_MODE = 'definition'
 
 
@@ -56,11 +56,11 @@ def get_note(
     entry = (notes[cohort] or {}).get(step_int)
     where = f'{path}: ({cohort}, step {step_int})'
     if not isinstance(entry, dict):
-        raise KeyError(f'{where}: expected a definition/rule/details mapping, '
+        raise KeyError(f'{where}: expected a definition/rule/oracle mapping, '
                        f'got {type(entry).__name__}')
     parts = [_field(entry, 'definition', where)]
-    if mode == 'definition_details':
-        parts.append(_field(entry, 'details', where))
+    if mode == 'definition_oracle':
+        parts.append(_field(entry, 'oracle', where))
     return '\n'.join(parts)
 
 

@@ -90,7 +90,7 @@ Key fields:
 - **`x_marker` / `y_marker`**: the two markers to examine (channel names resolved via `meta.json`).
 - **`annotation categories`**: possible labels at this step (excluding `Unassigned`).
 
-Step prompts carry no note text from `gating_plan.json`. The `[Description]` note always comes from `benchmark/notes.yaml` (`src/notes.py`): each `(cohort, step)` entry has `definition` (category meanings), `rule` (region mapping for rule-based systems) and `details` (curated context). Prompt builders take `--note-mode {definition,definition_details}` (default `definition`); a missing entry is an error.
+Step prompts carry no note text from `gating_plan.json`. The `[Description]` note always comes from `benchmark/notes.yaml` (`src/notes.py`): each `(cohort, step)` entry has `definition` (category meanings), `rule` (region mapping for rule-based systems) and `oracle` (legacy expert guidance). Prompt builders take `--note-mode {definition,definition_oracle}` (default `definition`); a missing entry is an error. The oracle mode includes legacy notes about observed clusters and gate geometry, so it is for oracle comparisons rather than fair evaluation.
 
 ## Benchmark Structure
 
