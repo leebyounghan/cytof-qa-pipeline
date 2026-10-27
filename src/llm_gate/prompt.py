@@ -29,47 +29,10 @@ import json
 import sys
 from pathlib import Path
 
-import yaml
-
 from src.bench import parse_perturbations
+from src.notes import DEFAULT_NOTE_MODE, add_note_mode_arg, get_note
 from src.llm_gate.utils.axis_distribution import render_axis_summary
 from src.llm_gate.utils.joint_distribution import render_joint_summary
-
-
-# ── Note YAML override ──────────────────────────────────────────────────────
-
-_NOTES_PATH = Path(__file__).resolve().parents[2] / 'benchmark' / 'notes.yaml'
-
-
-def _load_notes() -> dict:
-    """Load per-(cohort, step) note overrides from benchmark/notes.yaml.
-
-    The YAML's per-step note replaces ``data['note']`` in
-    :func:`format_prompt`. Returns an empty dict if the file is missing
-    or empty.
-    """
-    if not _NOTES_PATH.exists():
-        return {}
-    with open(_NOTES_PATH) as f:
-        return yaml.safe_load(f) or {}
-
-
-_NOTES = _load_notes()
-
-
-def lookup_note_override(cohort: str | None, step: int | str | None) -> str | None:
-    """Return the YAML-defined note for ``(cohort, step)`` or None."""
-    if not cohort or step is None:
-        return None
-    cohort_notes = _NOTES.get(cohort) or {}
-    try:
-        step_int = int(step)
-    except (TypeError, ValueError):
-        return None
-    val = cohort_notes.get(step_int)
-    if isinstance(val, str) and val.strip():
-        return val.strip()
-    return None
 
 
 # ── Ablation config ─────────────────────────────────────────────────────────
@@ -95,7 +58,7 @@ def ablation_dir(
 
 # ── Helpers ─────────────────────────────────────────────────────────────────
 
-def _build_anon_map(data: dict) -> dict[str, str]:
+def _build_anon_map(data: dict, note: str) -> dict[str, str]:
     """Build a replacement map for anonymizing marker names only.
 
     Category names are kept as-is — only axis markers and markers
@@ -129,7 +92,6 @@ def _build_anon_map(data: dict) -> dict[str, str]:
 
     # Scan note text for isotope_marker patterns (e.g. "140Ce_Bead",
     # "172Yb_CD66b") and map the full string to the marker's anon name.
-    note = (data.get('note') or '')
     for marker, anon_name in list(rmap.items()):
         # Match patterns like "140Ce_Bead" — digits + element + _ + marker
         for full_ch in re.findall(r'\d+[A-Za-z]+_' + re.escape(marker), note):
@@ -294,20 +256,26 @@ def format_prompt(
     data: dict,
     use_note: bool = True,
     use_joint_2d: bool = False,
-    use_notes_yaml: bool = True,
     ablation: str = 'full',
+    note_mode: str = DEFAULT_NOTE_MODE,
 ) -> str:
     x_marker = data['x_marker']
     y_marker = data['y_marker']
     parent = data.get('parent', 'ALL')
     categories = data['options']
 
+    # [Description] note comes only from benchmark/notes.yaml.
+    note = ''
+    if use_note and ablation != 'no_desc':
+        note = get_note(data.get('cohort') or data.get('_cohort'),
+                        data.get('step'), note_mode)
+
     # --- For anon: build marker map and apply to marker names,
     # breadcrumb, description text — but NOT category names ---
     anon_map: dict[str, str] = {}
     cat_anon_map: dict[str, str] = {}  # original → A, B, C, ...
     if ablation == 'anon':
-        anon_map = _build_anon_map(data)
+        anon_map = _build_anon_map(data, note)
         # Build category anonymization map: A, B, C, ...
         named_cats = [c for c in categories if c != 'Unassigned']
         for i, c in enumerate(named_cats):
@@ -345,22 +313,15 @@ def format_prompt(
     desc_section = ''
     if ablation != 'no_desc':
         desc_lines: list[str] = []
-        if use_note:
-            # YAML override (benchmark/notes.yaml) takes precedence
-            override = None
-            if use_notes_yaml:
-                cohort = data.get('cohort') or data.get('_cohort')
-                override = lookup_note_override(cohort, data.get('step'))
-            note = override if override is not None else (data.get('note') or '').strip()
-            if note:
-                if anon_map or cat_anon_map:
-                    import re as _re
-                    for orig, repl in anon_map.items():
-                        if _re.match(r'\d+[A-Za-z]+_', orig):
-                            note = note.replace(orig, repl)
-                    note = _anon_cat(note)
-                    note = _anon(note)
-                desc_lines.append(note)
+        if note:
+            if anon_map or cat_anon_map:
+                import re as _re
+                for orig, repl in anon_map.items():
+                    if _re.match(r'\d+[A-Za-z]+_', orig):
+                        note = note.replace(orig, repl)
+                note = _anon_cat(note)
+                note = _anon(note)
+            desc_lines.append(note)
         if 'Unassigned' in categories:
             desc_lines.append(
                 "Unassigned: cells whose (x, y) position falls outside every "
@@ -427,14 +388,14 @@ def _write_prompt(
     perturbation_name: str | None = None,
     use_note: bool = True,
     use_joint_2d: bool = False,
-    use_notes_yaml: bool = True,
     ablation_mode: str = 'full',
+    note_mode: str = DEFAULT_NOTE_MODE,
 ) -> None:
     slug = ablation_slug(ablation_mode)
     out_dir = ablation_dir(json_path, slug, perturbation_name=perturbation_name)
     prompt = format_prompt(
         data, use_note=use_note, use_joint_2d=use_joint_2d,
-        use_notes_yaml=use_notes_yaml, ablation=ablation_mode,
+        ablation=ablation_mode, note_mode=note_mode,
     )
     if save_md:
         out_dir.mkdir(parents=True, exist_ok=True)
@@ -454,8 +415,8 @@ def process_json(
     perturbation_name: str | None = None,
     use_note: bool = True,
     use_joint_2d: bool = False,
-    use_notes_yaml: bool = True,
     ablation_mode: str = 'full',
+    note_mode: str = DEFAULT_NOTE_MODE,
 ) -> None:
     json_path = Path(json_path)
     if not json_path.exists():
@@ -466,7 +427,7 @@ def process_json(
         data = json.load(f)
 
     # Inject cohort from path layout benchmark/{cohort}/{sample}/step_NN/gate_task.json
-    # so notes.yaml override lookup works (task.json doesn't carry cohort itself).
+    # so the notes.yaml lookup works (task.json doesn't carry cohort itself).
     if '_cohort' not in data and 'cohort' not in data:
         try:
             data['_cohort'] = json_path.parents[2].name
@@ -478,8 +439,8 @@ def process_json(
                   perturbation_name=effective_pname,
                   use_note=use_note,
                   use_joint_2d=use_joint_2d,
-                  use_notes_yaml=use_notes_yaml,
-                  ablation_mode=ablation_mode)
+                  ablation_mode=ablation_mode,
+                  note_mode=note_mode)
 
 
 def process_batch(
@@ -488,8 +449,8 @@ def process_batch(
     perturbation_name: str | None = None,
     use_note: bool = True,
     use_joint_2d: bool = False,
-    use_notes_yaml: bool = True,
     ablation_mode: str = 'full',
+    note_mode: str = DEFAULT_NOTE_MODE,
 ) -> None:
     sample_dir = Path(sample_dir)
     pattern = (f'step_*/gate_task__{perturbation_name}.json'
@@ -505,8 +466,8 @@ def process_batch(
             perturbation_name=perturbation_name,
             use_note=use_note,
             use_joint_2d=use_joint_2d,
-            use_notes_yaml=use_notes_yaml,
             ablation_mode=ablation_mode,
+            note_mode=note_mode,
         )
 
 
@@ -525,13 +486,9 @@ def main() -> None:
                         help='Save prompts to disk (default: print to stdout)')
     parser.add_argument('--without-note', dest='use_note',
                         action='store_false', default=True,
-                        help='Exclude the task.json `note` field from the '
+                        help='Exclude the benchmark/notes.yaml note from the '
                              '[Description] section. Default: include note.')
-    parser.add_argument('--without-notes-yaml', dest='use_notes_yaml',
-                        action='store_false', default=True,
-                        help='Disable the (cohort, step) override from '
-                             'benchmark/notes.yaml. Default: yaml '
-                             'overrides task.json note when present.')
+    add_note_mode_arg(parser)
     parser.add_argument('--with-joint-2d', dest='use_joint_2d',
                         action='store_true', default=False,
                         help='Append the 2-D joint-distribution heatmap '
@@ -578,8 +535,8 @@ def main() -> None:
         perturbation_name=perturbation_name,
         use_note=args.use_note,
         use_joint_2d=args.use_joint_2d,
-        use_notes_yaml=args.use_notes_yaml,
         ablation_mode=args.ablation,
+        note_mode=args.note_mode,
     )
 
     if args.batch:

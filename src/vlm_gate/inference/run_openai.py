@@ -46,6 +46,7 @@ from src.vlm_gate.inference.data_loader import load_gate_tasks
 from src.vlm_gate.inference.output_schema import assemble_eval_output
 from src.vlm_gate.inference.system_prompts import get_system_prompt
 from src.vlm_gate.utils.scatter_render import render_input_scatter
+from src.visual_variants import describe_plot, load_visual_groups
 
 try:
     from openai import AsyncOpenAI
@@ -65,6 +66,7 @@ async def _call_one(
     top_p: float | None,
     presence_penalty: float | None,
     frequency_penalty: float | None,
+    api_reasoning_effort: str | None = None,
 ) -> str:
     """One (sample, step) → final JSON text. Builds the multimodal user
     message inline so each step's scatter is its own ``image_url``.
@@ -81,7 +83,7 @@ async def _call_one(
             scatter_extent=group['scatter_extent'],
             x_marker=group.get('x_marker', 'x'),
             y_marker=group.get('y_marker', 'y'),
-            step_label=f'{group["sample"]} step_{group["step"]:02d}',
+            step_label=f'step_{group["step"]:02d}',
         )
         kwargs = dict(
             model=model,
@@ -102,6 +104,8 @@ async def _call_one(
             kwargs['presence_penalty'] = presence_penalty
         if frequency_penalty is not None:
             kwargs['frequency_penalty'] = frequency_penalty
+        if api_reasoning_effort is not None:
+            kwargs['reasoning_effort'] = api_reasoning_effort
         resp = await client.chat.completions.create(**kwargs)
         return resp.choices[0].message.content or ''
 
@@ -114,6 +118,7 @@ async def run_online(
     top_p: float | None = None,
     presence_penalty: float | None = None,
     frequency_penalty: float | None = None,
+    api_reasoning_effort: str | None = None,
     save_raw: bool = False,
 ) -> None:
     client = AsyncOpenAI()
@@ -130,18 +135,22 @@ async def run_online(
                     temperature=temperature,
                     top_p=top_p,
                     presence_penalty=presence_penalty,
-                    frequency_penalty=frequency_penalty)
+                    frequency_penalty=frequency_penalty,
+                    api_reasoning_effort=api_reasoning_effort)
           for g in groups],
         return_exceptions=True,
     )
 
+    failures = [(g['sample'], g['step'], o) for g, o in zip(groups, outputs)
+                if isinstance(o, Exception)]
+    if failures:
+        sample, step, error = failures[0]
+        raise RuntimeError(f'{len(failures)} multimodal requests failed; '
+                           f'first: {sample} step {step}: {error}') from error
+
     raw_texts: list[str] = []
     for group, output in zip(groups, outputs):
-        if isinstance(output, Exception):
-            print(f'  [WARN] {group["sample"]} step{group["step"]}: {output}')
-            raw_texts.append('')
-        else:
-            raw_texts.append(output)
+        raw_texts.append(output)
 
     eval_data = assemble_eval_output(
         groups, raw_texts,
@@ -178,6 +187,12 @@ def main() -> None:
                         help='Results JSON path')
     parser.add_argument('--ablation_slug', default='full',
                         help='Prompt directory slug. Default: full')
+    parser.add_argument('--input-root', default=None,
+                        help='Prepared visual inputs root under results/.')
+    parser.add_argument('--plot-style', choices=['scatter', 'contour', 'density'],
+                        default='scatter')
+    parser.add_argument('--api-reasoning-effort', default=None,
+                        choices=['none', 'low', 'medium', 'high', 'xhigh'])
     parser.add_argument('--sample', nargs='+', default=None,
                         help='Sample names to include')
     parser.add_argument('--max_samples', type=int, default=0,
@@ -237,12 +252,18 @@ def main() -> None:
         )
 
     sample_filter = set(args.sample) if args.sample else None
-    groups = load_gate_tasks(
-        args.dataset_path,
-        ablation_slug=args.ablation_slug,
-        sample_filter=sample_filter,
-        perturbation_name=perturbation_name,
-    )
+    if args.input_root:
+        groups = load_visual_groups(args.dataset_path, args.input_root,
+                                    args.plot_style, sample_filter)
+        system_prompt = describe_plot(get_system_prompt(), args.plot_style)
+    else:
+        groups = load_gate_tasks(
+            args.dataset_path,
+            ablation_slug=args.ablation_slug,
+            sample_filter=sample_filter,
+            perturbation_name=perturbation_name,
+        )
+        system_prompt = get_system_prompt()
     if not groups:
         print('No groups found. Exiting.')
         return
@@ -266,12 +287,13 @@ def main() -> None:
         output_path=args.output_path,
         concurrency=args.concurrency,
         max_tokens=args.max_tokens,
-        system_prompt=get_system_prompt(),
+        system_prompt=system_prompt,
         perturbation=perturbation_name,
         temperature=args.temperature,
         top_p=args.top_p,
         presence_penalty=args.presence_penalty,
         frequency_penalty=args.frequency_penalty,
+        api_reasoning_effort=args.api_reasoning_effort,
         save_raw=args.save_raw,
     ))
 

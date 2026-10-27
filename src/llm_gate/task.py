@@ -140,8 +140,6 @@ def generate_gate_task(
         x_marker=xm_disp,
         y_marker=ym_disp,
         parent=step.get('parent', 'ALL'),
-        note=step.get('note', ''),
-        tips=step.get('tips', ''),
         options=options,
         n_parent_cells=n_parent,
         modality=modality,
@@ -171,13 +169,11 @@ _CYTOF_COHORTS = frozenset({'Acute2020', 'Acute2021', 'Bjornson', 'Vaccine'})
 def _detect_modality(cohort: str, task: dict) -> str:
     """Cohort-based modality auto-detection.
 
-    Hard-coded CyTOF cohorts win first; otherwise the task note's
-    ``CyTOF`` mention triggers cytof; everything else is flow.
+    Hard-coded CyTOF cohorts are cytof; everything else is flow.
     """
     if cohort in _CYTOF_COHORTS:
         return 'cytof'
-    note = (task.get('note') or '') if isinstance(task, dict) else ''
-    return 'cytof' if 'CyTOF' in note else 'flow'
+    return 'flow'
 
 
 @dataclass(frozen=True)
@@ -272,8 +268,7 @@ def main() -> None:
                         default='auto',
                         help='Recorded in gate_task.json. Default "auto" '
                              'detects from cohort: CyTOF for Acute2020/2021/'
-                             'Bjornson/Vaccine and any cohort whose task note '
-                             'mentions "CyTOF"; everything else is Flow.')
+                             'Bjornson/Vaccine; everything else is Flow.')
     parser.add_argument('--n-workers', type=int, default=4,
                         help='Parallel worker processes. Default: 4')
     parser.add_argument('--skip-existing', action='store_true',

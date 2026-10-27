@@ -22,7 +22,7 @@ SYSTEM_PROMPT = """You are an expert in single-cell CyTOF and Flow Cytometry gat
 For every named category at this step, output an axis-aligned rectangular gate on the (x, y) plane as `{x_min, x_max, y_min, y_max}`. Coordinates are in the **same numeric units** as the axis distribution shown in the prompt — do not invent a new scale.
 
 ## Step 1 — Estimate expected proportion from biology (before looking at the histogram)
-For every category in `[Categories]`, estimate its **expected proportion within this step's parent population** based on the description, the gating tips, and your prior knowledge of immunology / flow cytometry literature. Use rough percentages (e.g., 5%, 30%, ~70%) — you don't need exact numbers. Note when a category is rare (<10%), common (10–50%), or dominant (>50%).
+For every category in `[Categories]`, estimate its **expected proportion within this step's parent population** based on the description and your prior knowledge of immunology / flow cytometry literature. Use rough percentages (e.g., 5%, 30%, ~70%) — you don't need exact numbers. Note when a category is rare (<10%), common (10–50%), or dominant (>50%).
 
 This step is critical: many gating decisions depend on whether the population you're looking for is the bulk of the parent or a small minority. The histogram alone cannot tell you which category corresponds to which mode — your biology prior must constrain that mapping. After estimating, use the proportions as a sanity check against the area each gate carves out of the histogram: a category you expect to be rare should not end up covering the dominant mode, and vice versa.
 

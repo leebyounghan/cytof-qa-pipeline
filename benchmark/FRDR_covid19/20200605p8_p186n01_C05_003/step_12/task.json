@@ -11,8 +11,6 @@
     "IM_CD86p",
     "Unassigned"
   ],
-  "note": "IM_CD86p: activated intermediate monocytes — sparse cluster at high CD86; this gate captures the CD86+ tail of the parent intermediate-monocyte population (a rare compartment, so the GT often shows essentially the entire parent labeled).",
-  "tips": "Activation readout for intermediate monocytes. IM_CD86p: CD86+. In-panel co-marker prior: HLA-DR (Comp-BV510-A) is characteristically highest on intermediate monocytes among the three subsets at baseline and tends to co-move with CD86 on inflammatory activation; HLA-DR-low with CD86-normal has been reported in severe COVID-19 — useful as an in-panel cross-check for monocyte dysregulation.",
   "gating_context": "Root -> Step10_CD16|CD14(Intermediate_monocytes)",
   "gt_summary": {
     "n_parent_cells": 375,

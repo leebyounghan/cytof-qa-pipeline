@@ -11,8 +11,6 @@
     "pDC_CD86p",
     "Unassigned"
   ],
-  "note": "pDC_CD86p: activated / co-stimulatory-licensed plasmacytoid DCs — right cluster (CD86+); the CD86-low cluster on the left is excluded.",
-  "tips": "Activation readout for pDCs. pDC_CD86p: CD86+. pDCs are major type-I IFN producers in antiviral responses. In-panel co-marker prior: HLA-DR (Comp-BV510-A) is constitutively high on pDCs (already enforced by Step 14 parent) and is further up-regulated on maturation — complementary licensing readout.",
   "gating_context": "Root -> Step16_CD303|CD123(pDC)",
   "gt_summary": {
     "n_parent_cells": 5,

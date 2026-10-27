@@ -14,8 +14,6 @@
     "Treg_CCR4n_CD69n",
     "Unassigned"
   ],
-  "note": "Strategy on CCR4 × CD69 — anchor on the two dense CD69- clusters: (1) In the lower (CD69-) band, two dense clusters separate along CCR4 — the left dense cluster (CCR4-) is Treg_CCR4n_CD69n (resting non-skin-homing Treg); the right dense cluster (CCR4+) is Treg_CCR4p_CD69n (skin-homing Treg, not activated). (2) Above these dense clusters the CD69+ region is sparse and scattered; apply the same CCR4 boundary: left of the boundary = Treg_CCR4n_CD69p (activated Treg without skin-homing bias); right of the boundary = Treg_CCR4p_CD69p (activated skin-homing Treg).",
-  "tips": "Treg tissue-residency / homing quadrants. CCR4 marks skin/mucosa-homing capacity; CD69 in non-lymphoid tissues is associated with Trm-like residency. Treg_CCR4p_CD69p: CCR4+ CD69+. Treg_CCR4p_CD69n: CCR4+ CD69-. Treg_CCR4n_CD69p: CCR4- CD69+. Treg_CCR4n_CD69n: CCR4- CD69-. CD103 IS in panel — CCR4+ CD69+ CD103+ closely matches the core skin/mucosa-homing Trm-Treg phenotype, though CD103-negative tissue-resident populations also exist. In blood samples CD69+ reads as early activation, not residency (mirrors Step 9).",
   "gating_context": "Root -> Step03_Foxp3|CD127(tot_Treg)",
   "gt_summary": {
     "n_parent_cells": 1754,

@@ -14,8 +14,6 @@
     "CD16neg_CD56neg",
     "Unassigned"
   ],
-  "note": "Four-quadrant split on CD16 × CD56 within Lin- CD14- compartment. CD16neg_CD56pos: CD56+ NK cells — upper-left quadrant (CD16-, CD56+). CD16pos_CD56pos: CD16+ CD56+ NK / NKT cells — upper-right quadrant. CD16pos_CD56neg: CD16+ CD56- (mostly cytotoxic NK or contamination) — lower-right quadrant. CD16neg_CD56neg: CD16- CD56- residual (contains DC candidates) — lower-left quadrant; feeds the DC branch downstream.",
-  "tips": "NK subsetting (by CD16 × CD56) plus DC-precursor routing within the CD14- compartment. CD16neg_CD56pos: CD56+ CD16-. CD16pos_CD56pos: CD56+ CD16+. CD16pos_CD56neg: CD16+ CD56-. CD16neg_CD56neg: CD16- CD56-. Useful co-markers: NKp46 / NKG2A / granzyme B would strengthen NK identity but are not in this panel.",
   "gating_context": "Root -> Step01_CD14|Lineage(Lin_neg_CD14neg)",
   "gt_summary": {
     "n_parent_cells": 32417,

@@ -2,6 +2,8 @@
 
 Benchmark for cross-panel hierarchical cell gating in cytometry.
 
+Test split experiment tables: [docs/experiment_results.md](docs/experiment_results.md).
+
 ## Overview
 
 CytoGate-Bench formalizes **cross-panel hierarchical gating** as a benchmark task. Unlike flat cell type annotation, this benchmark requires sequential gating decisions on biaxial plots — mirroring the reasoning of expert immunologists.
@@ -72,16 +74,14 @@ Defines the hierarchical gating tree — step sequence, marker pairs, parent con
       "x_marker": "CD4",
       "y_marker": "CD8",
       "annotation column name": "Step01_CD4|CD8",
-      "annotation categories": ["CD4", "CD8", "CD4p_CD8p", "CD4n_CD8n"],
-      "note": "CD4: helper T cells — lower-right (CD4+, CD8-). CD8: ..."
+      "annotation categories": ["CD4", "CD8", "CD4p_CD8p", "CD4n_CD8n"]
     },
     {
       "step": 2,
       "parent": "Step01_CD4|CD8 == CD8",
       "x_marker": "CCR7", "y_marker": "CD45RA",
       "annotation column name": "Step02_CCR7|CD45RA_CD8",
-      "annotation categories": ["Naive_CD8", "CM_CD8", "EM_CD8", "EMRA_CD8"],
-      "note": "..."
+      "annotation categories": ["Naive_CD8", "CM_CD8", "EM_CD8", "EMRA_CD8"]
     }
   ]
 }
@@ -91,8 +91,8 @@ Key fields:
 - **`parent`**: which cells enter this step. `"ALL"` = all cells. Supports `==`, `!=`, `in`. Combine with `&` (e.g. `"Step01 == CD8 & Step02 != Unassigned"`).
 - **`x_marker` / `y_marker`**: the two markers to examine (channel names resolved via `meta.json`).
 - **`annotation categories`**: possible labels at this step (excluding `Unassigned`).
-- **`note`**: describes the **spatial shape of each population** in the GT biaxial plot — where each cluster sits, what the gate boundaries follow (valley between bimodal peaks, unimodal peak position, density-anchored cluster edges), and any strategy needed to identify each population. Calibrated against `biaxial_plot_gt.png` density structure across multiple samples — use this style when authoring or improving notes.
-- **`tips`**: optional. Marker-level / domain hints surfaced only when the prompt is rendered with tips enabled.
+
+Step prompts carry no note text from `gating_plan.json`. The `[Description]` note always comes from `benchmark/notes.yaml` (`src/notes.py`): each `(cohort, step)` entry has `definition` (category meanings), `rule` (region mapping for rule-based systems) and `oracle` (legacy expert guidance). Prompt builders take `--note-mode {definition,definition_oracle}` (default `definition`); a missing entry is an error. The oracle mode includes legacy notes about observed clusters and gate geometry, so it is for oracle comparisons rather than fair evaluation.
 
 ## Benchmark Structure
 
@@ -393,6 +393,27 @@ Spatial (real cell types only, `Unassigned` excluded):
 
 Plots are `--plot` opt-in (~1 min/sample). Per step: 4-panel figure — Input density · GT categories · Predicted categories · GT (solid+fill) vs Pred (dashed+fill) hulls overlaid on a scatter, macro Hull IoU in the title. Hull polygons match the IoU in `eval_summary.json` exactly (same trim, same cell basis).
 
+### Aggregating test results across cohorts
+
+The headline test scores give **equal weight to each of the 11 cohorts** in
+`benchmark/splits.json`. For each method and metric, `src.eval` first averages
+task scores within each cohort (`eval_summary.json` → `overall`). The reported
+score is then the arithmetic mean of those 11 cohort means:
+
+```text
+overall metric = (cohort_1_mean + ... + cohort_11_mean) / 11
+```
+
+For Hull IoU, a cohort mean uses only tasks with a valid GT hull; the 11
+cohort-level Hull IoU means then receive equal weight. Sample and task counts
+are coverage totals, not weights in the cross-cohort average. The archived
+`YoungOld` output is outside this 11-cohort test comparison. Thus the earlier
+GPT-5.4 output averages to F1 0.676, balanced accuracy 0.768, and Hull IoU
+0.608 under the paper's aggregation. See
+[`docs/experiment_results.md`](docs/experiment_results.md) for all method
+tables and [`results/summarize_vs_gt_rect1.py`](results/summarize_vs_gt_rect1.py)
+for the calculation.
+
 ### In-panel split
 
 Per-cohort `train / val / test` at 25 / 25 / 50. Allocated within cohort-specific strata (1:1:2 within stratum, then concatenated) so every meaningful stratum is well-represented in `test`; small strata drift by ±1–2 samples. Stratum definitions are authoritative in `splits.json`; preprocess only reads the sample lists.
@@ -578,6 +599,30 @@ bash run_hard_openai.sh --config src/llm_gate/configs/models/gpt_5_4.yaml --mode
 **6 — Flat vs. hierarchical annotation** — see [`README_flat.md`](README_flat.md)
 (FlowSOM K = 16 / 38 / 83 per plan depth, GPT-5.4 backbone).
 
+## Rule-based baseline: flowDensity + notes.yaml rules (no LLM)
+
+`src/baselines/flowdensity_rule/` gates every step with no language model:
+
+1. `flowDensity::deGate` finds density valleys on each axis of the step's
+   parent population.
+2. The step's `rule.regions` table in `benchmark/notes.yaml` maps the
+   resulting grid cells to labels.
+
+Ground-truth labels are used only for scoring. The baseline adds its own
+valley selection, because `notes.yaml` gives none:
+
+- **More cuts than needed:** keep the deepest ones.
+- **One cut where two are needed:** re-run `deGate` on each side of it. If
+  neither side yields a valid valley, drop the middle label.
+- **`unsupported` QC steps:** every parent cell gets the step's single target
+  category.
+- **`deGate` errors:** scored as all-wrong steps.
+
+On the test split (11 cohorts, 386 samples, 11,671 steps), equal-cohort-mean
+macro-F1 is **0.578**, weighted-F1 0.751 and balanced accuracy 0.679. See
+[`src/baselines/flowdensity_rule/README.md`](src/baselines/flowdensity_rule/README.md)
+for the full procedure, commands and per-cohort results.
+
 ## Quick start
 
 ```bash
@@ -723,6 +768,7 @@ Method-specific details live in their directories:
 - **`src/agent_gate/README.md`** — Agent-Gate pipeline (text + image + iterative `render_gate_overlay` tool loop)
 - **`src/baselines/README.md`** — flowDensity (C2S density-grid backend), FlowSOM reference, cyMAE trained baseline
 - **`src/baselines/UNITO.md`** — UNITO trained baseline recipe (per-cohort U-Net)
+- **`src/baselines/flowdensity_rule/README.md`** — rule-based baseline: flowDensity valleys + `notes.yaml` region rules, no LLM
 - **`README_flat.md`** — flat vs. hierarchical annotation pilot (`src/llm_gate_flat`, `src/flowsom_c2s`)
 
 ### LLM gating methods at a glance
@@ -784,6 +830,7 @@ src/
   agent_gate/                      # Agent-Gate pipeline   — see src/agent_gate/README.md
                                    #   text + image + iterative render_gate_overlay tool loop
   baselines/                       # flowDensity / FlowSOM / cyMAE — see src/baselines/README.md
+    flowdensity_rule/              #   flowDensity valleys + notes.yaml rules (no LLM) — see its README.md
 
 scripts/                           # seed-sweep launchers + aggregation
 data_pipeline/lyoplate/            # rebuild the Lyoplate cohorts from ImmPort GatingSetLists
