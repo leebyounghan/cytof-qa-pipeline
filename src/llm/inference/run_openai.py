@@ -148,6 +148,11 @@ async def run_online(
     print('Compute anchor metrics with: '
           f'python -m src.llm.postprocess.anchor_metric --eval_path {output_path}')
 
+    n_failed = sum(isinstance(o, Exception) for o in outputs)
+    if n_failed:
+        raise SystemExit(f'ERROR: {n_failed}/{len(groups)} requests failed (see [WARN] lines); '
+                         f'their steps were written with empty responses in {output_path}')
+
 
 # ── CLI ─────────────────────────────────────────────────────────────────────
 

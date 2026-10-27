@@ -133,7 +133,7 @@ R packages: `flowCore`, `flowDensity`, `jsonlite`, `data.table`.
 
 386 test samples, 11 cohorts, 11,671 steps. Each step is scored on its
 ground-truth parent population. Means are over steps within a cohort; the
-last row weights cohorts by step count.
+last row averages the 11 cohort means with equal weight. Counts remain totals.
 
 | Cohort | Test samples | Steps | `ok` | Middle dropped | Unsupported → target | deGate error | F1 macro | F1 weighted | Balanced acc | Pop. prop. err |
 |---|---|---|---|---|---|---|---|---|---|---|
@@ -148,7 +148,7 @@ last row weights cohorts by step count.
 | Lyoplate_bcell | 24 | 120 | 120 | 0 | 0 | 0 | 0.612 | 0.755 | 0.715 | 0.169 |
 | Lyoplate_tcell | 24 | 144 | 144 | 0 | 0 | 0 | 0.619 | 0.787 | 0.782 | 0.074 |
 | Lyoplate_treg | 24 | 120 | 119 | 0 | 0 | 1 | 0.535 | 0.690 | 0.629 | 0.159 |
-| **All (step-weighted)** | **386** | **11671** | **10106** | **174** | **964** | **427** | **0.524** | **0.698** | **0.642** | **0.198** |
+| **All (equal-cohort mean)** | **386** | **11671** | **10106** | **174** | **964** | **427** | **0.578** | **0.751** | **0.679** | **0.148** |
 
 The 427 `deGate` errors (304 on x, 123 on y) are raised inside flowDensity:
 "no finite cut", `wrong sign in 'by' argument`, `argument "sd.threshold" is

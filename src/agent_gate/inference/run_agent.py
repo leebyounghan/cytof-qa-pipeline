@@ -60,6 +60,7 @@ from src.agent_gate.tools.registry import (
 from src.agent_gate.tools.render_overlay import (
     render_bare_scatter, render_gate_trajectory,
 )
+from src.visual_variants import load_visual_groups
 
 try:
     from openai import AsyncOpenAI
@@ -145,6 +146,7 @@ async def _run_agent_step(
     top_p: float | None,
     presence_penalty: float | None,
     frequency_penalty: float | None,
+    api_reasoning_effort: str | None,
     semaphore: asyncio.Semaphore,
     dump_dir: Path | None = None,
 ) -> tuple[str, dict]:
@@ -159,7 +161,7 @@ async def _run_agent_step(
         'x_marker':        group.get('x_marker', 'x'),
         'y_marker':        group.get('y_marker', 'y'),
         'options':         group.get('options', []),
-        'step_label':      f'{group["sample"]} step_{group["step"]:02d}',
+        'step_label':      f'step_{group["step"]:02d}',
     }
     # Render the decorated initial scatter (axes + ticks + grid). The
     # raw scatter_bg.png is decoration-free — anything the LLM SEES has
@@ -210,6 +212,8 @@ async def _run_agent_step(
                 kwargs['presence_penalty'] = presence_penalty
             if frequency_penalty is not None:
                 kwargs['frequency_penalty'] = frequency_penalty
+            if api_reasoning_effort is not None:
+                kwargs['reasoning_effort'] = api_reasoning_effort
 
             resp = await client.chat.completions.create(**kwargs)
             choice = resp.choices[0]
@@ -325,6 +329,7 @@ async def run_online(
     top_p: float | None = None,
     presence_penalty: float | None = None,
     frequency_penalty: float | None = None,
+    api_reasoning_effort: str | None = None,
     save_raw: bool = False,
     dump_dir: Path | None = None,
 ) -> None:
@@ -350,11 +355,19 @@ async def run_online(
             top_p=top_p,
             presence_penalty=presence_penalty,
             frequency_penalty=frequency_penalty,
+            api_reasoning_effort=api_reasoning_effort,
             semaphore=semaphore,
             dump_dir=dump_dir,
           ) for g in groups],
         return_exceptions=True,
     )
+
+    failures = [(g['sample'], g['step'], o) for g, o in zip(groups, outputs)
+                if isinstance(o, Exception)]
+    if failures:
+        sample, step, error = failures[0]
+        raise RuntimeError(f'{len(failures)} agent steps failed; '
+                           f'first: {sample} step {step}: {error}') from error
 
     raw_texts: list[str] = []
     traces: list[dict] = []
@@ -423,6 +436,12 @@ def main() -> None:
                         help='Results JSON path')
     parser.add_argument('--ablation_slug', default='full',
                         help='Prompt directory slug. Default: full')
+    parser.add_argument('--input-root', default=None,
+                        help='Prepared visual inputs root under results/.')
+    parser.add_argument('--plot-style', choices=['scatter', 'contour', 'density'],
+                        default='scatter')
+    parser.add_argument('--api-reasoning-effort', default=None,
+                        choices=['none', 'low', 'medium', 'high', 'xhigh'])
     parser.add_argument('--sample', nargs='+', default=None,
                         help='Sample names to include')
     parser.add_argument('--max_samples', type=int, default=0,
@@ -502,12 +521,16 @@ def main() -> None:
         )
 
     sample_filter = set(args.sample) if args.sample else None
-    groups = load_gate_tasks(
-        args.dataset_path,
-        ablation_slug=args.ablation_slug,
-        sample_filter=sample_filter,
-        perturbation_name=perturbation_name,
-    )
+    if args.input_root:
+        groups = load_visual_groups(args.dataset_path, args.input_root,
+                                    args.plot_style, sample_filter)
+    else:
+        groups = load_gate_tasks(
+            args.dataset_path,
+            ablation_slug=args.ablation_slug,
+            sample_filter=sample_filter,
+            perturbation_name=perturbation_name,
+        )
     if not groups:
         print('No groups found. Exiting.')
         return
@@ -538,6 +561,7 @@ def main() -> None:
         top_p=args.top_p,
         presence_penalty=args.presence_penalty,
         frequency_penalty=args.frequency_penalty,
+        api_reasoning_effort=args.api_reasoning_effort,
         save_raw=args.save_raw,
         dump_dir=args.dump_overlays,
     ))

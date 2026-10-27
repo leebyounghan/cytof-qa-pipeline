@@ -67,7 +67,7 @@ python -m src.llm_gate.prompt \
 Flags:
 - `--save_md` — write to file. Off → stdout.
 - `--without-note` — exclude the `benchmark/notes.yaml` note from `[Description]`.
-- `--note-mode {definition,definition_details}` — which `notes.yaml` fields form the note (default `definition`).
+- `--note-mode {definition,definition_oracle}` — which `notes.yaml` fields form the note (default `definition`; oracle includes legacy cluster and gate hints).
 - `--with-joint-2d` — append the 2-D joint heatmap block after the 1-D bin lists.
 - `--perturbation` / `--hard-depletion` / `--hard-shift` — match the spec used in Step 1; reads `gate_task__{slug}.json`, writes to `gate_{ablation}__{slug}/`.
 
@@ -464,4 +464,3 @@ Differences from `run_vllm_gate.sh`:
 The two runners share `_config_to_shell.py` for YAML loading. Passing
 an `openai_id` config to `run_vllm_gate.sh` (or vice versa) errors out
 early with a clear message rather than silently misbehaving.
-

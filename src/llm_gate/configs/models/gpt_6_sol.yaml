@@ -1,0 +1,8 @@
+# GPT-6 Sol (OpenAI API) — LLM-Gate config.
+# Use with the OpenAI runners (NOT run_vllm_gate.sh). Requires OPENAI_API_KEY.
+model:
+  openai_id: gpt-6-sol               # → run_openai --model gpt-6-sol
+
+generation:
+  max_tokens: 32768                  # same budget as gpt_5_4.yaml
+  temperature: 1.0                   # gpt-6-sol rejects any other value (incl. 0.0)

@@ -2,6 +2,8 @@
 
 Benchmark for cross-panel hierarchical cell gating in cytometry.
 
+Test split experiment tables: [docs/experiment_results.md](docs/experiment_results.md).
+
 ## Overview
 
 CytoGate-Bench formalizes **cross-panel hierarchical gating** as a benchmark task. Unlike flat cell type annotation, this benchmark requires sequential gating decisions on biaxial plots — mirroring the reasoning of expert immunologists.
@@ -391,6 +393,27 @@ Spatial (real cell types only, `Unassigned` excluded):
 
 Plots are `--plot` opt-in (~1 min/sample). Per step: 4-panel figure — Input density · GT categories · Predicted categories · GT (solid+fill) vs Pred (dashed+fill) hulls overlaid on a scatter, macro Hull IoU in the title. Hull polygons match the IoU in `eval_summary.json` exactly (same trim, same cell basis).
 
+### Aggregating test results across cohorts
+
+The headline test scores give **equal weight to each of the 11 cohorts** in
+`benchmark/splits.json`. For each method and metric, `src.eval` first averages
+task scores within each cohort (`eval_summary.json` → `overall`). The reported
+score is then the arithmetic mean of those 11 cohort means:
+
+```text
+overall metric = (cohort_1_mean + ... + cohort_11_mean) / 11
+```
+
+For Hull IoU, a cohort mean uses only tasks with a valid GT hull; the 11
+cohort-level Hull IoU means then receive equal weight. Sample and task counts
+are coverage totals, not weights in the cross-cohort average. The archived
+`YoungOld` output is outside this 11-cohort test comparison. Thus the earlier
+GPT-5.4 output averages to F1 0.676, balanced accuracy 0.768, and Hull IoU
+0.608 under the paper's aggregation. See
+[`docs/experiment_results.md`](docs/experiment_results.md) for all method
+tables and [`results/summarize_vs_gt_rect1.py`](results/summarize_vs_gt_rect1.py)
+for the calculation.
+
 ### In-panel split
 
 Per-cohort `train / val / test` at 25 / 25 / 50. Allocated within cohort-specific strata (1:1:2 within stratum, then concatenated) so every meaningful stratum is well-represented in `test`; small strata drift by ±1–2 samples. Stratum definitions are authoritative in `splits.json`; preprocess only reads the sample lists.
@@ -595,8 +618,8 @@ valley selection, because `notes.yaml` gives none:
   category.
 - **`deGate` errors:** scored as all-wrong steps.
 
-On the test split (11 cohorts, 386 samples, 11,671 steps), step-weighted
-macro-F1 is **0.524**, weighted-F1 0.698 and balanced accuracy 0.642. See
+On the test split (11 cohorts, 386 samples, 11,671 steps), equal-cohort-mean
+macro-F1 is **0.578**, weighted-F1 0.751 and balanced accuracy 0.679. See
 [`src/baselines/flowdensity_rule/README.md`](src/baselines/flowdensity_rule/README.md)
 for the full procedure, commands and per-cohort results.
 
