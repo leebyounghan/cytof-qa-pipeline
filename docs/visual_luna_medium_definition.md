@@ -56,3 +56,27 @@ result. The restarted full inference is LSF array `49892404`, with 6 long
 condition jobs and at most 4 running simultaneously, each allowing 10 API
 requests. Outputs go to `full_concurrency40/`. Dependent full evaluation is
 `49892620`; it must not be reported as completed until LSF marks it DONE.
+
+## Matched LLM-Gate pilot comparison
+
+The saved LLM-Gate `gpt-6-luna` medium test gates use an identical
+`notes.yaml.used` definition snapshot. LSF job `49893506` selected exactly the
+same 11 pilot samples and 260 steps from those gates, then propagated and
+reevaluated them with the same `smallest` tie break and GT evaluator. Each
+cohort contributes equally to the table. The comparison is saved in
+`pilot_concurrency40/llm_gate_matched/comparison.md` and `comparison.json`.
+
+| Method | Macro F1 | Delta F1 vs LLM | Balanced accuracy | Hull IoU |
+|---|---:|---:|---:|---:|
+| LLM-Gate | 0.673 | +0.000 | 0.762 | 0.631 |
+| VLM scatter | 0.654 | -0.019 | 0.768 | 0.592 |
+| VLM contour | 0.605 | -0.068 | 0.710 | 0.532 |
+| VLM density | 0.646 | -0.027 | 0.760 | 0.580 |
+| Agent scatter | 0.619 | -0.054 | 0.748 | 0.546 |
+| Agent contour | 0.599 | -0.074 | 0.708 | 0.522 |
+| Agent density | 0.635 | -0.038 | 0.759 | 0.559 |
+
+This is a one-sample-per-cohort pilot and is not a full test result. The
+LLM-Gate predictions came from a previous full run; visual gates were generated
+in the new pilot. The prompt and interaction setup differ by method, so the
+differences cannot be attributed to image style alone.
