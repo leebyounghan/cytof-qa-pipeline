@@ -52,10 +52,11 @@ summary `49892837` completed.
 | Agent density | 0.635 | 0.759 | 0.559 |
 
 The pilot checks throughput and end-to-end validity; it is not the full test
-result. The restarted full inference is LSF array `49892404`, with 6 long
+result. The restarted full inference was LSF array `49892404`, with 6 long
 condition jobs and at most 4 running simultaneously, each allowing 10 API
-requests. Outputs go to `full_concurrency40/`. Dependent full evaluation is
-`49892620`; it must not be reported as completed until LSF marks it DONE.
+requests. Outputs went to `full_concurrency40/`. Its dependent evaluation
+`49892620` was canceled after Agent inference failures; the replacement jobs
+are described below.
 
 ## Matched LLM-Gate pilot comparison
 
@@ -120,7 +121,32 @@ The final VLM comparison, including density, is in
 | VLM density | 0.646 | 0.756 | 0.591 |
 
 Agent density encountered an `invalid_prompt` API rejection in one Acute2021
-step after 1,499 successes had been checkpointed. LSF retry `49966270` is
-resuming with the same prompt and 65,536-token cap. The retry passed that step
-and completed Acute2021. The original Agent evaluation dependency was canceled
-because its Agent inference array contained an exited element.
+step after 1,499 successes had been checkpointed. LSF retry `49966270` resumed
+with the same prompt and 65,536-token cap, passed that step, and completed.
+The original Agent evaluation dependency was canceled because its Agent
+inference array contained an exited element.
+
+## Completed full-test comparison
+
+All 33 Agent cohort-condition predictions were written. Replacement Agent
+evaluation `49968233` and seven-method summary `49968265` completed
+successfully, with empty stderr logs. Every row below has 11,671 test steps
+and is an equal mean of 11 cohort scores. The full per-cohort table and
+machine-readable summary are in `full_concurrency40/visual_full_comparison.md`
+and `visual_full_comparison.json`.
+
+| Method | Macro F1 | Balanced accuracy | Hull IoU |
+|---|---:|---:|---:|
+| LLM-Gate | 0.651 | 0.747 | 0.602 |
+| VLM scatter | 0.655 | 0.763 | 0.603 |
+| VLM contour | 0.625 | 0.725 | 0.554 |
+| VLM density | 0.646 | 0.756 | 0.591 |
+| Agent scatter | 0.650 | 0.763 | 0.586 |
+| Agent contour | 0.611 | 0.711 | 0.531 |
+| Agent density | 0.637 | 0.750 | 0.575 |
+
+The Agent runner's token ceiling was raised after some cohorts had already
+completed at 32,768 tokens. Those successful outputs were retained, and the
+remaining Agent requests used 65,536 tokens. The ceiling therefore differs
+within the full Agent results. The different prompts and interaction setup
+also limit attribution of between-method differences to image style alone.
