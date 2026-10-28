@@ -21,10 +21,12 @@ if (( zero < 3 )); then
   mode=vlm; style="${styles[$zero]}"
   module=src.vlm_gate.inference.run_openai
   extra=(--save-raw)
+  max_tokens=32768
 else
   mode=agent; style="${styles[$((zero - 3))]}"
   module=src.agent_gate.inference.run_agent_responses
-  extra=()
+  extra=(--batch-size 100)
+  max_tokens=65536
 fi
 
 input_root=results/visual_luna_medium_definition/inputs
@@ -44,7 +46,7 @@ for dataset in "${datasets[@]}"; do
     --dataset_path "benchmark/$dataset" --input-root "$input_root" \
     --plot-style "$style" --model gpt-6-luna \
     --api-reasoning-effort medium --temperature 1.0 \
-    --max_tokens 32768 --concurrency 10 "${extra[@]}" \
+    --max_tokens "$max_tokens" --concurrency 10 "${extra[@]}" \
     --output_path "$out"
   echo "[done] $mode $style $dataset"
 done

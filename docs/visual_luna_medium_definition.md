@@ -80,3 +80,19 @@ This is a one-sample-per-cohort pilot and is not a full test result. The
 LLM-Gate predictions came from a previous full run; visual gates were generated
 in the new pilot. The prompt and interaction setup differ by method, so the
 differences cannot be attributed to image style alone.
+
+## Full-run recovery and VLM-first evaluation
+
+All three VLM conditions in `49892404` wrote 11 cohort predictions each. The
+three Agent conditions exited after a few individual Responses API calls
+returned `incomplete` with reason `max_output_tokens` at the 32,768-token cap.
+Those cohort outputs were not written by the original runner, so their API
+requests need to be repeated. The runner now checkpoints each successful batch
+of 100 steps and resumes only missing steps. The Agent cap is 65,536 tokens;
+the VLM cap remains 32,768. The Agent-only resume is LSF array `49963397`.
+The old evaluation dependency could never become true and was canceled.
+
+VLM evaluation runs independently in `49964049`, with the equal-cohort summary
+job `49964056` dependent on its completion. The Agent-only evaluation is
+`49964050`, dependent on successful completion of `49963397`. Final Agent
+evaluation and the six-condition full summary remain pending.

@@ -121,34 +121,75 @@ async def run(args):
     if args.max_samples:
         random.seed(args.seed)
         groups = random.sample(groups, min(args.max_samples, len(groups)))
+    output_path = Path(args.output_path)
+    checkpoint_path = output_path.with_name(output_path.stem + '.checkpoint.json')
+    checkpoint_meta = {'model': args.model, 'dataset_path': args.dataset_path,
+                       'input_root': args.input_root, 'plot_style': args.plot_style,
+                       'effort': args.api_reasoning_effort,
+                       'temperature': args.temperature, 'max_turns': args.max_turns}
+    key = lambda group: f'{group["sample"]}\t{group["step"]}'
+    expected_keys = {key(group) for group in groups}
+    if len(expected_keys) != len(groups):
+        raise ValueError('Duplicate sample/step in prepared inputs')
+    if checkpoint_path.exists():
+        checkpoint = json.loads(checkpoint_path.read_text())
+        if checkpoint['meta'] != checkpoint_meta:
+            raise ValueError(f'Checkpoint configuration mismatch: {checkpoint_path}')
+        records = checkpoint['records']
+        if set(records) - expected_keys:
+            raise ValueError(f'Checkpoint contains unexpected steps: {checkpoint_path}')
+    else:
+        records = {}
+    remaining = [group for group in groups if key(group) not in records]
+    print(f'{len(groups)} total steps; {len(records)} checkpointed; '
+          f'{len(remaining)} to request', flush=True)
+
     client = AsyncOpenAI()
     semaphore = asyncio.Semaphore(args.concurrency)
-    outputs = await asyncio.gather(*[
-        _one(client, group, semaphore, model=args.model,
-             effort=args.api_reasoning_effort, max_tokens=args.max_tokens,
-             max_turns=args.max_turns, temperature=args.temperature,
-             tools=_response_tools(args.plot_style),
-             system_prompt=describe_plot(get_system_prompt(), args.plot_style),
-             style=args.plot_style)
-        for group in groups
-    ], return_exceptions=True)
-    failures = [(g['sample'], g['step'], o) for g, o in zip(groups, outputs)
-                if isinstance(o, Exception)]
-    if failures:
-        sample, step, error = failures[0]
-        raise RuntimeError(f'{len(failures)} agent steps failed; '
-                           f'first: {sample} step {step}: {error}') from error
-    raw_texts = [x[0] for x in outputs]
-    traces = [x[1] for x in outputs]
+    tools = _response_tools(args.plot_style)
+    system_prompt = describe_plot(get_system_prompt(), args.plot_style)
+    for start in range(0, len(remaining), args.batch_size):
+        batch = remaining[start:start + args.batch_size]
+        outputs = await asyncio.gather(*[
+            _one(client, group, semaphore, model=args.model,
+                 effort=args.api_reasoning_effort, max_tokens=args.max_tokens,
+                 max_turns=args.max_turns, temperature=args.temperature,
+                 tools=tools, system_prompt=system_prompt,
+                 style=args.plot_style)
+            for group in batch
+        ], return_exceptions=True)
+        failures = []
+        for group, outcome in zip(batch, outputs):
+            if isinstance(outcome, Exception):
+                failures.append((group['sample'], group['step'], outcome))
+            else:
+                records[key(group)] = {'raw_text': outcome[0], 'trace': outcome[1]}
+        checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
+        tmp_path = checkpoint_path.with_name(checkpoint_path.name + '.tmp')
+        tmp_path.write_text(json.dumps({'meta': checkpoint_meta, 'records': records},
+                                       ensure_ascii=False))
+        tmp_path.replace(checkpoint_path)
+        print(f'Checkpointed {len(records)}/{len(groups)} steps', flush=True)
+        if failures:
+            sample, step, error = failures[0]
+            raise RuntimeError(f'{len(failures)} agent steps failed; '
+                               f'first: {sample} step {step}: {error}') from error
+
+    if set(records) != expected_keys:
+        raise RuntimeError('Checkpoint is missing expected steps')
+    raw_texts = [records[key(group)]['raw_text'] for group in groups]
+    traces = [records[key(group)]['trace'] for group in groups]
     result = assemble_eval_output(
         groups, raw_texts, model=args.model, ablation='full',
         dataset_path=args.dataset_path, save_raw=True,
     )
     for record, trace in zip(iter_step_records(result), traces):
         result['samples'][record['sample']]['steps'][str(record['step'])]['agent_trace'] = trace
-    output_path = Path(args.output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(json.dumps(result, ensure_ascii=False, indent=2))
+    tmp_output = output_path.with_name(output_path.name + '.tmp')
+    tmp_output.write_text(json.dumps(result, ensure_ascii=False, indent=2))
+    tmp_output.replace(output_path)
+    checkpoint_path.unlink()
     print(f'Wrote {len(groups)} steps, {sum(t["n_tool_calls"] for t in traces)} '
           f'tool calls → {output_path}')
 
@@ -165,6 +206,7 @@ def main():
     parser.add_argument('--max_tokens', type=int, default=32768)
     parser.add_argument('--max-turns', type=int, default=4)
     parser.add_argument('--concurrency', type=int, default=4)
+    parser.add_argument('--batch-size', type=int, default=100)
     parser.add_argument('--sample', nargs='+', default=None)
     parser.add_argument('--max_samples', type=int, default=0)
     parser.add_argument('--seed', type=int, default=42)
@@ -172,6 +214,8 @@ def main():
     args = parser.parse_args()
     if args.max_turns < 2:
         parser.error('--max-turns must be >= 2')
+    if args.batch_size < 1:
+        parser.error('--batch-size must be >= 1')
     load_dotenv()
     asyncio.run(run(args))
 
