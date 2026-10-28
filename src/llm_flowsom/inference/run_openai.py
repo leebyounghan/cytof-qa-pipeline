@@ -56,6 +56,7 @@ async def _call_one(
     presence_penalty: float | None = None,
     frequency_penalty: float | None = None,
     seed: int | None = None,
+    api_reasoning_effort: str | None = None,
 ) -> tuple[str, str]:
     """Return (content, reasoning_content). reasoning_content is empty
     when the server / model does not expose a separate thinking trace."""
@@ -71,6 +72,8 @@ async def _call_one(
         )
         if seed is not None:
             kwargs['seed'] = seed
+        if api_reasoning_effort is not None:
+            kwargs['reasoning_effort'] = api_reasoning_effort
         if top_p is not None:
             kwargs['top_p'] = top_p
         if presence_penalty is not None:
@@ -98,6 +101,7 @@ async def run_online(
     save_raw: bool = False,
     strip_think: bool = False,
     seed: int | None = None,
+    api_reasoning_effort: str | None = None,
 ) -> None:
     client = AsyncOpenAI(timeout=1800)
     semaphore = asyncio.Semaphore(concurrency)
@@ -105,6 +109,8 @@ async def run_online(
     print(f'Sending {len(groups)} requests (concurrency={concurrency}) ...')
     if extra_body:
         print(f'  extra_body = {extra_body}')
+    if api_reasoning_effort is not None:
+        print(f'  reasoning_effort = {api_reasoning_effort}')
     outputs = await asyncio.gather(
         *[_call_one(client, g['prompt_text'], model, semaphore, max_tokens,
                     system_prompt, extra_body=extra_body,
@@ -112,7 +118,8 @@ async def run_online(
                     top_p=top_p,
                     presence_penalty=presence_penalty,
                     frequency_penalty=frequency_penalty,
-                    seed=seed)
+                    seed=seed,
+                    api_reasoning_effort=api_reasoning_effort)
           for g in groups],
         return_exceptions=True,
     )
@@ -221,6 +228,10 @@ def main() -> None:
     parser.add_argument(
         '--reasoning-effort', choices=['high', 'max', ''], default='',
         help='DeepSeek-V4 only. Empty = unset (None).',
+    )
+    parser.add_argument(
+        '--api-reasoning-effort', choices=['none', 'low', 'medium', 'high', 'xhigh'], default=None,
+        help='OpenAI API reasoning_effort request parameter. Unset = model default.',
     )
     parser.add_argument(
         '--thinking-token-budget', type=int, default=None,
@@ -338,6 +349,7 @@ def main() -> None:
         save_raw=args.save_raw,
         strip_think=args.strip_think,
         seed=args.seed,
+        api_reasoning_effort=args.api_reasoning_effort,
     ))
 
 
