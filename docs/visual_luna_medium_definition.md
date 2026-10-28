@@ -92,7 +92,35 @@ of 100 steps and resumes only missing steps. The Agent cap is 65,536 tokens;
 the VLM cap remains 32,768. The Agent-only resume is LSF array `49963397`.
 The old evaluation dependency could never become true and was canceled.
 
-VLM evaluation runs independently in `49964049`, with the equal-cohort summary
-job `49964056` dependent on its completion. The Agent-only evaluation is
-`49964050`, dependent on successful completion of `49963397`. Final Agent
-evaluation and the six-condition full summary remain pending.
+VLM evaluation completed in `49964049` and the equal-cohort summary in
+`49964056`. The original Agent-only evaluation `49964050` was canceled after
+Agent density exited. Replacement Agent evaluation `49968233` depends on the
+successful scatter and contour array elements plus the density retry. Final
+seven-method summary `49968265` depends on that evaluation.
+
+The full VLM scatter and contour evaluations completed in LSF `49964049[1-2]`.
+The same 11,671 test steps were evaluated in each method; an equal-cohort
+comparison with the saved LLM-Gate Luna-medium run is in
+`full_concurrency40/vlm_scatter_contour_partial.md`.
+
+| Full-test method | Macro F1 | Balanced accuracy | Hull IoU |
+|---|---:|---:|---:|
+| LLM-Gate | 0.651 | 0.747 | 0.602 |
+| VLM scatter | 0.655 | 0.763 | 0.603 |
+| VLM contour | 0.625 | 0.725 | 0.554 |
+
+The final VLM comparison, including density, is in
+`full_concurrency40/vlm_full_comparison.md` and `vlm_full_comparison.json`:
+
+| Full-test method | Macro F1 | Balanced accuracy | Hull IoU |
+|---|---:|---:|---:|
+| LLM-Gate | 0.651 | 0.747 | 0.602 |
+| VLM scatter | 0.655 | 0.763 | 0.603 |
+| VLM contour | 0.625 | 0.725 | 0.554 |
+| VLM density | 0.646 | 0.756 | 0.591 |
+
+Agent density encountered an `invalid_prompt` API rejection in one Acute2021
+step after 1,499 successes had been checkpointed. LSF retry `49966270` is
+resuming with the same prompt and 65,536-token cap. The retry passed that step
+and completed Acute2021. The original Agent evaluation dependency was canceled
+because its Agent inference array contained an exited element.

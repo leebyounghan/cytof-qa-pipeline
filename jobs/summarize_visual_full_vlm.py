@@ -12,17 +12,21 @@ DATASETS = (
 )
 ROOT = Path('results/visual_luna_medium_definition/full_concurrency40')
 BASELINE = Path('results/gate_gpt-6-luna-medium_full')
-CONDITIONS = ('llm_gate', 'vlm_scatter', 'vlm_contour', 'vlm_density')
+VLM_CONDITIONS = ('llm_gate', 'vlm_scatter', 'vlm_contour', 'vlm_density')
+CONDITIONS = VLM_CONDITIONS + ('agent_scatter', 'agent_contour', 'agent_density')
 METRICS = ('f1_macro_mean', 'balanced_accuracy_mean', 'iou_hull_macro_mean')
 
 
-def main() -> None:
+def main(conditions: tuple[str, ...] = VLM_CONDITIONS,
+         output_prefix: str = 'vlm_full_comparison') -> None:
+    if not conditions or conditions[0] != 'llm_gate':
+        raise ValueError('The first condition must be llm_gate')
     if (BASELINE / 'notes.yaml.used').read_bytes() != (
         Path('results/visual_luna_medium_definition/notes.yaml.used').read_bytes()
     ):
         raise ValueError('Definition snapshots differ between LLM and visual runs')
     rows = []
-    for condition in CONDITIONS:
+    for condition in conditions:
         base = BASELINE if condition == 'llm_gate' else ROOT / condition
         cohorts = []
         for dataset in DATASETS:
@@ -46,11 +50,11 @@ def main() -> None:
                 raise ValueError(f'Task mismatch: {row["condition"]}, {cohort["dataset"]}')
         for metric in METRICS:
             row[f'delta_{metric}'] = row[metric] - baseline[metric]
-    out = ROOT / 'vlm_full_comparison.json'
+    out = ROOT / f'{output_prefix}.json'
     out.write_text(json.dumps({'aggregation': 'equal-cohort mean; full test split',
                                'rows': rows}, ensure_ascii=False, indent=2) + '\n')
 
-    lines = ['# Full test: VLM variants versus LLM-Gate', '',
+    lines = ['# Full test: Gate variants versus LLM-Gate', '',
              'All rows use GPT-6 Luna medium, the same definition snapshot,',
              'the test split, and an equal mean of 11 cohort scores.', '',
              '| Method | Steps | Macro F1 | Δ F1 vs LLM | Balanced accuracy | Hull IoU |',
@@ -62,8 +66,8 @@ def main() -> None:
                      f'{row["balanced_accuracy_mean"]:.3f} | '
                      f'{row["iou_hull_macro_mean"]:.3f} |')
     lines += ['', '## F1 by cohort', '',
-              '| Cohort | Steps | LLM | VLM scatter | VLM contour | VLM density |',
-              '|---|---:|---:|---:|---:|---:|']
+              '| Cohort | Steps | ' + ' | '.join(conditions) + ' |',
+              '|---|---:|' + '---:|' * len(conditions)]
     for idx, dataset in enumerate(DATASETS):
         lines.append(f'| {dataset} | {baseline["cohorts"][idx]["n_tasks"]} | '
                      f'{baseline["cohorts"][idx]["f1_macro_mean"]:.3f} | '
@@ -71,10 +75,16 @@ def main() -> None:
                                   for row in rows[1:]) + ' |')
     lines += ['', 'The visual methods use different prompts from LLM-Gate;',
               'method differences cannot be attributed solely to image style.']
-    markdown = ROOT / 'vlm_full_comparison.md'
+    markdown = ROOT / f'{output_prefix}.md'
     markdown.write_text('\n'.join(lines) + '\n')
     print(markdown.read_text(), flush=True)
 
 
 if __name__ == '__main__':
-    main()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--conditions', nargs='+', choices=CONDITIONS,
+                        default=list(VLM_CONDITIONS))
+    parser.add_argument('--output-prefix', default='vlm_full_comparison')
+    args = parser.parse_args()
+    main(tuple(args.conditions), args.output_prefix)
