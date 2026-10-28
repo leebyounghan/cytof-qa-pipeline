@@ -1,0 +1,904 @@
+{
+  "c2s_flowdensity_gpt-5.4": {
+    "changed": [
+      [
+        "Acute2020",
+        5,
+        12
+      ],
+      [
+        "Acute2020",
+        61,
+        12
+      ],
+      [
+        "Acute2021",
+        5,
+        33
+      ],
+      [
+        "Acute2021",
+        61,
+        33
+      ],
+      [
+        "Vaccine",
+        5,
+        85
+      ],
+      [
+        "Vaccine",
+        61,
+        85
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        5,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        6,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        7,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        11,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        5,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        6,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        7,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        11,
+        15
+      ]
+    ],
+    "tasks_by_cohort": {
+      "Acute2020": 24,
+      "Acute2021": 66,
+      "Vaccine": 170,
+      "FR-FCM-Z74D_hc": 8,
+      "FR-FCM-Z74D_tissue": 60
+    },
+    "total_tasks": 328
+  },
+  "c2s_flowdensity_gpt-6-luna": {
+    "changed": [
+      [
+        "Acute2020",
+        5,
+        12
+      ],
+      [
+        "Acute2020",
+        61,
+        12
+      ],
+      [
+        "Acute2021",
+        5,
+        33
+      ],
+      [
+        "Acute2021",
+        61,
+        33
+      ],
+      [
+        "Vaccine",
+        5,
+        85
+      ],
+      [
+        "Vaccine",
+        61,
+        85
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        5,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        6,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        7,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        11,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        5,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        6,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        7,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        11,
+        15
+      ]
+    ],
+    "tasks_by_cohort": {
+      "Acute2020": 24,
+      "Acute2021": 66,
+      "Vaccine": 170,
+      "FR-FCM-Z74D_hc": 8,
+      "FR-FCM-Z74D_tissue": 60
+    },
+    "total_tasks": 328
+  },
+  "c2s_flowsom_gpt-5.4": {
+    "changed": [
+      [
+        "Acute2020",
+        5,
+        12
+      ],
+      [
+        "Acute2020",
+        61,
+        12
+      ],
+      [
+        "Acute2021",
+        5,
+        33
+      ],
+      [
+        "Acute2021",
+        61,
+        33
+      ],
+      [
+        "Vaccine",
+        5,
+        85
+      ],
+      [
+        "Vaccine",
+        61,
+        85
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        5,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        6,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        7,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        11,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        5,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        6,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        7,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        11,
+        15
+      ]
+    ],
+    "tasks_by_cohort": {
+      "Acute2020": 24,
+      "Acute2021": 66,
+      "Vaccine": 170,
+      "FR-FCM-Z74D_hc": 8,
+      "FR-FCM-Z74D_tissue": 60
+    },
+    "total_tasks": 328
+  },
+  "c2s_flowsom_gpt-6-luna": {
+    "changed": [
+      [
+        "Acute2020",
+        5,
+        12
+      ],
+      [
+        "Acute2020",
+        61,
+        12
+      ],
+      [
+        "Acute2021",
+        5,
+        33
+      ],
+      [
+        "Acute2021",
+        61,
+        33
+      ],
+      [
+        "Vaccine",
+        5,
+        85
+      ],
+      [
+        "Vaccine",
+        61,
+        85
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        5,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        6,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        7,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        11,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        5,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        6,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        7,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        11,
+        15
+      ]
+    ],
+    "tasks_by_cohort": {
+      "Acute2020": 24,
+      "Acute2021": 66,
+      "Vaccine": 170,
+      "FR-FCM-Z74D_hc": 8,
+      "FR-FCM-Z74D_tissue": 60
+    },
+    "total_tasks": 328
+  },
+  "gate_gpt-5.4_full": {
+    "changed": [
+      [
+        "Acute2020",
+        5,
+        12
+      ],
+      [
+        "Acute2020",
+        61,
+        12
+      ],
+      [
+        "Acute2021",
+        5,
+        33
+      ],
+      [
+        "Acute2021",
+        61,
+        33
+      ],
+      [
+        "Vaccine",
+        5,
+        85
+      ],
+      [
+        "Vaccine",
+        61,
+        85
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        5,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        6,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        7,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        11,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        5,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        6,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        7,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        11,
+        15
+      ]
+    ],
+    "tasks_by_cohort": {
+      "Acute2020": 24,
+      "Acute2021": 66,
+      "Vaccine": 170,
+      "FR-FCM-Z74D_hc": 8,
+      "FR-FCM-Z74D_tissue": 60
+    },
+    "total_tasks": 328
+  },
+  "gate_gpt-6-luna-high_full": {
+    "changed": [
+      [
+        "Acute2020",
+        5,
+        12
+      ],
+      [
+        "Acute2020",
+        61,
+        12
+      ],
+      [
+        "Acute2021",
+        5,
+        33
+      ],
+      [
+        "Acute2021",
+        61,
+        33
+      ],
+      [
+        "Vaccine",
+        5,
+        85
+      ],
+      [
+        "Vaccine",
+        61,
+        85
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        5,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        6,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        7,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        11,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        5,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        6,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        7,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        11,
+        15
+      ]
+    ],
+    "tasks_by_cohort": {
+      "Acute2020": 24,
+      "Acute2021": 66,
+      "Vaccine": 170,
+      "FR-FCM-Z74D_hc": 8,
+      "FR-FCM-Z74D_tissue": 60
+    },
+    "total_tasks": 328
+  },
+  "gate_gpt-6-luna-low_full": {
+    "changed": [
+      [
+        "Acute2020",
+        5,
+        12
+      ],
+      [
+        "Acute2020",
+        61,
+        12
+      ],
+      [
+        "Acute2021",
+        5,
+        33
+      ],
+      [
+        "Acute2021",
+        61,
+        33
+      ],
+      [
+        "Vaccine",
+        5,
+        85
+      ],
+      [
+        "Vaccine",
+        61,
+        85
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        5,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        6,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        7,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        11,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        5,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        6,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        7,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        11,
+        15
+      ]
+    ],
+    "tasks_by_cohort": {
+      "Acute2020": 24,
+      "Acute2021": 66,
+      "Vaccine": 170,
+      "FR-FCM-Z74D_hc": 8,
+      "FR-FCM-Z74D_tissue": 60
+    },
+    "total_tasks": 328
+  },
+  "gate_gpt-6-luna-medium_full": {
+    "changed": [
+      [
+        "Acute2020",
+        5,
+        12
+      ],
+      [
+        "Acute2020",
+        61,
+        12
+      ],
+      [
+        "Acute2021",
+        5,
+        33
+      ],
+      [
+        "Acute2021",
+        61,
+        33
+      ],
+      [
+        "Vaccine",
+        5,
+        85
+      ],
+      [
+        "Vaccine",
+        61,
+        85
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        5,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        6,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        7,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        11,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        5,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        6,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        7,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        11,
+        15
+      ]
+    ],
+    "tasks_by_cohort": {
+      "Acute2020": 24,
+      "Acute2021": 66,
+      "Vaccine": 170,
+      "FR-FCM-Z74D_hc": 8,
+      "FR-FCM-Z74D_tissue": 60
+    },
+    "total_tasks": 328
+  },
+  "gate_gpt-6-luna-none_full": {
+    "changed": [
+      [
+        "Acute2020",
+        5,
+        12
+      ],
+      [
+        "Acute2020",
+        61,
+        12
+      ],
+      [
+        "Acute2021",
+        5,
+        33
+      ],
+      [
+        "Acute2021",
+        61,
+        33
+      ],
+      [
+        "Vaccine",
+        5,
+        85
+      ],
+      [
+        "Vaccine",
+        61,
+        85
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        5,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        6,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        7,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        11,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        5,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        6,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        7,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        11,
+        15
+      ]
+    ],
+    "tasks_by_cohort": {
+      "Acute2020": 24,
+      "Acute2021": 66,
+      "Vaccine": 170,
+      "FR-FCM-Z74D_hc": 8,
+      "FR-FCM-Z74D_tissue": 60
+    },
+    "total_tasks": 328
+  },
+  "gate_gpt-6-luna_full": {
+    "changed": [
+      [
+        "Acute2020",
+        5,
+        12
+      ],
+      [
+        "Acute2020",
+        61,
+        12
+      ],
+      [
+        "Acute2021",
+        5,
+        33
+      ],
+      [
+        "Acute2021",
+        61,
+        33
+      ],
+      [
+        "Vaccine",
+        5,
+        85
+      ],
+      [
+        "Vaccine",
+        61,
+        85
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        5,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        6,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        7,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        11,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        5,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        6,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        7,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        11,
+        15
+      ]
+    ],
+    "tasks_by_cohort": {
+      "Acute2020": 24,
+      "Acute2021": 66,
+      "Vaccine": 170,
+      "FR-FCM-Z74D_hc": 8,
+      "FR-FCM-Z74D_tissue": 60
+    },
+    "total_tasks": 328
+  },
+  "gate_gpt-6-sol-medium_full": {
+    "changed": [
+      [
+        "Acute2020",
+        5,
+        12
+      ],
+      [
+        "Acute2020",
+        61,
+        12
+      ],
+      [
+        "Acute2021",
+        5,
+        33
+      ],
+      [
+        "Acute2021",
+        61,
+        33
+      ],
+      [
+        "Vaccine",
+        5,
+        85
+      ],
+      [
+        "Vaccine",
+        61,
+        85
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        5,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        6,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        7,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_hc",
+        11,
+        2
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        5,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        6,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        7,
+        15
+      ],
+      [
+        "FR-FCM-Z74D_tissue",
+        11,
+        15
+      ]
+    ],
+    "tasks_by_cohort": {
+      "Acute2020": 24,
+      "Acute2021": 66,
+      "Vaccine": 170,
+      "FR-FCM-Z74D_hc": 8,
+      "FR-FCM-Z74D_tissue": 60
+    },
+    "total_tasks": 328
+  }
+}
