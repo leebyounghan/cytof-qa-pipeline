@@ -21,7 +21,20 @@ LSF job `50040911`. The output root is
 `results/visual_sol_medium_definition/full_concurrency40/`.
 
 The definition snapshot is saved as
-`results/visual_sol_medium_definition/notes.yaml.used`. The final comparison
-will be written to `visual_full_comparison.md` and `.json` under the output
-root after evaluation succeeds. These jobs were submitted on 2026-10-28;
-their status and results must be checked before interpreting the experiment.
+`results/visual_sol_medium_definition/notes.yaml.used`.
+
+## Interrupted by API quota (2026-10-28)
+
+The inference array finished with only VLM scatter successful (11 of 11
+cohort files). The other five array elements exited after the API returned
+HTTP 429 `insufficient_quota` / `credit_balance_exhausted`; this is an account
+credit limit, not a model or parsing error. At interruption, 33 of 66
+condition-cohort `pred.json` files existed: VLM contour 10, VLM density 9,
+Agent scatter 3, Agent contour 0, and Agent density 0 in addition to VLM
+scatter 11. The three Agent conditions also have partial cohort checkpoints.
+
+The dependent evaluation array `50040910` and summary `50040911` were canceled
+because complete inference is unavailable. No full six-condition comparison
+has been calculated. After API credit is restored, resubmit the inference
+script; it skips completed cohort files and Agent resumes from checkpoints.
+Then submit evaluation and summary with dependencies on the new job IDs.
