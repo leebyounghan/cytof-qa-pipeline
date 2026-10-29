@@ -2,7 +2,7 @@
 #BSUB -J "eval_visual_full40[1-6]%2"
 #BSUB -q i2c2_normal
 #BSUB -n 2
-#BSUB -R "rusage[mem=8192] span[hosts=1]"
+#BSUB -R "rusage[mem=24576] span[hosts=1]"
 #BSUB -W 24:00
 #BSUB -o jobs/logs/eval_visual_full40.%J.%I.out
 #BSUB -e jobs/logs/eval_visual_full40.%J.%I.err

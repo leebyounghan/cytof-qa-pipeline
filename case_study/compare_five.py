@@ -363,7 +363,9 @@ def load_pred(path: Path | None) -> list[str] | None:
 
 # ------ Per-row renderer ---------------------------------------------------
 def render_row(loader, dataset: str, sample: str, step: int,
-               dpi: int, show_titles: bool = True) -> Image.Image:
+               dpi: int, show_titles: bool = True,
+               model: str = "gpt-5.4", cymae_root: Path | None = None,
+               strict: bool = False) -> Image.Image:
     step_dir = REPO / "benchmark" / dataset / sample / f"step_{step:02d}"
     ti = loader.load_task(step_dir / "task.json")
     if ti is None:
@@ -379,42 +381,78 @@ def render_row(loader, dataset: str, sample: str, step: int,
     unito_pred = load_pred(unito_path)
 
     # cyMAE — user supplied
-    cymae_path, cymae_primary = _resolve_user_pred(
-        "cymae", dataset, sample, step)
+    if cymae_root is None:
+        cymae_path, cymae_primary = _resolve_user_pred(
+            "cymae", dataset, sample, step)
+    else:
+        cymae_primary = (cymae_root / dataset / sample /
+                         f"step_{step:02d}" / "prediction.json")
+        cymae_path = cymae_primary if cymae_primary.exists() else None
     cymae_pred = load_pred(cymae_path)
 
-    # flowsom+gpt-5.4 — from results/c2s_gpt-5.4_hvp10
-    fs_gpt_path = (REPO / "results" / "c2s_gpt-5.4_hvp10" / dataset /
+    if model == "gpt-6-sol-medium":
+        fs_root = REPO / "results" / "c2s_flowsom_gpt-6-sol-medium" / "predictions"
+        fd_root = REPO / "results" / "c2s_flowdensity_gpt-6-sol-medium" / "predictions"
+        gate_root = REPO / "results" / "gate_gpt-6-sol-medium_full" / "predictions"
+        gate_pred_full = (REPO / "results" / "gate_gpt-6-sol-medium_full" /
+                          f"{dataset}_gpt-6-sol-medium_full__test.json")
+        fd_thr_root = REPO / "src" / "llm" / "flowdensity_result"
+    else:
+        fs_root = REPO / "results" / "c2s_gpt-5.4_hvp10"
+        fd_root = None
+        gate_root = REPO / "results" / "gate_gpt-5.4_full"
+        gate_pred_full = REPO / "results" / "gate_gpt-5.4_full" / dataset / "pred.json"
+        fd_thr_root = REPO / "results" / "flowdensity_result"
+
+    fs_gpt_path = (fs_root / dataset /
                    sample / f"step_{step:02d}" / "prediction.json")
     fs_gpt_pred = load_pred(fs_gpt_path)
 
-    # flowdensity+gpt-5.4 — user supplied (predicted labels)
-    fd_gpt_path, fd_gpt_primary = _resolve_user_pred(
-        "flowdensity-gpt5.4", dataset, sample, step)
+    if fd_root is None:
+        fd_gpt_path, fd_gpt_primary = _resolve_user_pred(
+            "flowdensity-gpt5.4", dataset, sample, step)
+    else:
+        fd_gpt_primary = (fd_root / dataset / sample /
+                          f"step_{step:02d}" / "prediction.json")
+        fd_gpt_path = fd_gpt_primary if fd_gpt_primary.exists() else None
     fd_gpt_pred = load_pred(fd_gpt_path)
 
-    # flowdensity thresholds (geometry for drawing) — from results/flowdensity_result
-    fd_thr_path = (REPO / "results" / "flowdensity_result" / dataset /
+    fd_thr_path = (fd_thr_root / dataset /
                    sample / f"step_{step:02d}" / "thresholds.json")
 
-    # gate gpt-5.4 — from results/gate_gpt-5.4_full
-    gate_path = (REPO / "results" / "gate_gpt-5.4_full" / dataset / sample /
+    gate_path = (gate_root / dataset / sample /
                  f"step_{step:02d}" / "prediction.json")
     gate_pred = load_pred(gate_path)
-    gate_pred_full = REPO / "results" / "gate_gpt-5.4_full" / dataset / "pred.json"
     gates = {}
     if gate_pred_full.exists():
         gf = json.loads(gate_pred_full.read_text())
         gates = (gf.get("samples", {}).get(sample, {})
                   .get("steps", {}).get(str(step), {}).get("gates", {})) or {}
 
+    if strict:
+        required = {
+            "UNITO": unito_path,
+            "cyMAE": cymae_primary,
+            "LLM-C2S clustering": fs_gpt_path,
+            "LLM-C2S density-grid": fd_gpt_primary,
+            "density-grid thresholds": fd_thr_path,
+            "LLM-Gate prediction": gate_path,
+            "LLM-Gate gates": gate_pred_full,
+        }
+        missing = [f"{name}: {path}" for name, path in required.items()
+                   if not path.exists()]
+        if missing or not gates:
+            raise FileNotFoundError(
+                f"[{expected_id}] missing figure inputs:\n" +
+                "\n".join(missing + ([] if gates else ["LLM-Gate gates: no gates for step"])))
+
     # Validate lengths for whatever we did load
     n = len(ti.expression)
     for name, pred in [("UNITO", unito_pred),
                        ("cyMAE", cymae_pred),
-                       ("flowsom+gpt-5.4", fs_gpt_pred),
-                       ("flowdensity+gpt-5.4", fd_gpt_pred),
-                       ("LLM-Gate gpt-5.4", gate_pred)]:
+                       (f"flowsom+{model}", fs_gpt_pred),
+                       (f"flowdensity+{model}", fd_gpt_pred),
+                       (f"LLM-Gate {model}", gate_pred)]:
         if pred is not None and len(pred) != n:
             raise SystemExit(
                 f"[{expected_id}] length mismatch: {name}={len(pred)} vs n={n}")
@@ -451,24 +489,34 @@ def render_row(loader, dataset: str, sample: str, step: int,
         sources.append(np.array(list(gates.keys()), dtype=object))
     color_map = build_color_map(sources)
 
+    if model == "gpt-6-sol-medium":
+        gate_title = "LLM-Gate\nGPT-6 sol (medium)"
+        cluster_title = "clustering\nGPT-6 sol (medium)"
+        density_title = "density-grid\nGPT-6 sol (medium)"
+    else:
+        gate_title = f"LLM-Gate {model}"
+        cluster_title = f"clustering + {model}"
+        density_title = f"density-grid + {model}"
+
     fig, axes = plt.subplots(1, 6, figsize=(21.6, 2.6),
                              sharex=True, sharey=True)
     # Methods reversed (LLM-side first, trained baselines next); GT
     # at the rightmost position as the reference column.
     if gate_pred is not None and gates:
-        plot_gates(axes[0], ti, gates, gate_pred, color_map)
+        plot_gates(axes[0], ti, gates, gate_pred, color_map,
+                   title=gate_title)
     else:
-        plot_missing(axes[0], "LLM-Gate gpt-5.4", gate_path)
+        plot_missing(axes[0], gate_title, gate_path)
     if fs_gpt_pred is not None and cluster_ids is not None:
         plot_flowsom_clusters(axes[1], ti, cluster_ids, fs_gpt_pred,
-                              "clustering + gpt-5.4", color_map, color_by="pred")
+                              cluster_title, color_map, color_by="pred")
     else:
-        plot_missing(axes[1], "clustering + gpt-5.4", fs_gpt_path)
+        plot_missing(axes[1], cluster_title, fs_gpt_path)
     if fd_gpt_pred is not None:
         plot_flowdensity_gpt(axes[2], ti, fd_thr_path, fd_gpt_pred,
-                             "density-grid + gpt-5.4", color_map)
+                             density_title, color_map)
     else:
-        plot_missing(axes[2], "density-grid + gpt-5.4", fd_gpt_primary)
+        plot_missing(axes[2], density_title, fd_gpt_primary)
     if cymae_pred is not None:
         plot_predicted(axes[3], ti, cymae_pred, "cyMAE", color_map)
     else:
@@ -545,6 +593,12 @@ def main():
     p.add_argument("--out", type=Path,
                    default=PAPER_FIGURES / "fig_method_compare_5way.png")
     p.add_argument("--dpi", type=int, default=130)
+    p.add_argument("--model", choices=["gpt-5.4", "gpt-6-sol-medium"],
+                   default="gpt-5.4")
+    p.add_argument("--cymae-root", type=Path,
+                   help="Directory containing cyMAE DATASET/SAMPLE/step_NN/prediction.json")
+    p.add_argument("--strict", action="store_true",
+                   help="Fail if any figure input is missing")
     p.add_argument("--cols", type=int, default=1,
                    help="Number of step-block columns in the composite grid "
                         "(default 1 -> vstack; e.g. 4 rows x 6 panels each).")
@@ -568,7 +622,8 @@ def main():
         data_dir=REPO / "data",
     )
     images = [render_row(loader, ds, sa, st, args.dpi,
-                          show_titles=(i == 0))
+                          show_titles=(i == 0), model=args.model,
+                          cymae_root=args.cymae_root, strict=args.strict)
               for i, (ds, sa, st) in enumerate(rows)]
     if len(images) == 1:
         out_image = images[0]
