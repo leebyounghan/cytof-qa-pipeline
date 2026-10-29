@@ -18,16 +18,18 @@ METRICS = ('f1_macro_mean', 'balanced_accuracy_mean', 'iou_hull_macro_mean')
 
 
 def main(conditions: tuple[str, ...] = VLM_CONDITIONS,
-         output_prefix: str = 'vlm_full_comparison') -> None:
+         output_prefix: str = 'vlm_full_comparison',
+         root: Path = ROOT, baseline_root: Path = BASELINE,
+         model_label: str = 'GPT-6 Luna medium') -> None:
     if not conditions or conditions[0] != 'llm_gate':
         raise ValueError('The first condition must be llm_gate')
-    if (BASELINE / 'notes.yaml.used').read_bytes() != (
-        Path('results/visual_luna_medium_definition/notes.yaml.used').read_bytes()
+    if (baseline_root / 'notes.yaml.used').read_bytes() != (
+        root.parent / 'notes.yaml.used').read_bytes()
     ):
         raise ValueError('Definition snapshots differ between LLM and visual runs')
     rows = []
     for condition in conditions:
-        base = BASELINE if condition == 'llm_gate' else ROOT / condition
+        base = baseline_root if condition == 'llm_gate' else root / condition
         cohorts = []
         for dataset in DATASETS:
             path = base / 'predictions' / dataset / 'eval_summary.json'
@@ -50,12 +52,12 @@ def main(conditions: tuple[str, ...] = VLM_CONDITIONS,
                 raise ValueError(f'Task mismatch: {row["condition"]}, {cohort["dataset"]}')
         for metric in METRICS:
             row[f'delta_{metric}'] = row[metric] - baseline[metric]
-    out = ROOT / f'{output_prefix}.json'
+    out = root / f'{output_prefix}.json'
     out.write_text(json.dumps({'aggregation': 'equal-cohort mean; full test split',
                                'rows': rows}, ensure_ascii=False, indent=2) + '\n')
 
     lines = ['# Full test: Gate variants versus LLM-Gate', '',
-             'All rows use GPT-6 Luna medium, the same definition snapshot,',
+             f'All rows use {model_label}, the same definition snapshot,',
              'the test split, and an equal mean of 11 cohort scores.', '',
              '| Method | Steps | Macro F1 | Δ F1 vs LLM | Balanced accuracy | Hull IoU |',
              '|---|---:|---:|---:|---:|---:|']
@@ -75,7 +77,7 @@ def main(conditions: tuple[str, ...] = VLM_CONDITIONS,
                                   for row in rows[1:]) + ' |')
     lines += ['', 'The visual methods use different prompts from LLM-Gate;',
               'method differences cannot be attributed solely to image style.']
-    markdown = ROOT / f'{output_prefix}.md'
+    markdown = root / f'{output_prefix}.md'
     markdown.write_text('\n'.join(lines) + '\n')
     print(markdown.read_text(), flush=True)
 
@@ -86,5 +88,9 @@ if __name__ == '__main__':
     parser.add_argument('--conditions', nargs='+', choices=CONDITIONS,
                         default=list(VLM_CONDITIONS))
     parser.add_argument('--output-prefix', default='vlm_full_comparison')
+    parser.add_argument('--root', type=Path, default=ROOT)
+    parser.add_argument('--baseline-root', type=Path, default=BASELINE)
+    parser.add_argument('--model-label', default='GPT-6 Luna medium')
     args = parser.parse_args()
-    main(tuple(args.conditions), args.output_prefix)
+    main(tuple(args.conditions), args.output_prefix,
+         args.root, args.baseline_root, args.model_label)
