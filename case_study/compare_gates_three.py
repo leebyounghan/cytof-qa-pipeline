@@ -97,6 +97,11 @@ METHODS: list[tuple[str, str, str]] = [
     ("Agent-Gate", "agent_gpt-5.4_full", "agent"),
 ]
 LUNA_RESULTS = REPO / 'results/visual_luna_medium_definition/full_concurrency40'
+SOL_RESULTS = REPO / 'results/visual_sol_medium_definition/full_concurrency40'
+VISUAL_PROFILES = {
+    'luna_definition': ('gpt-6-luna', LUNA_RESULTS),
+    'sol_definition': ('gpt-6-sol', SOL_RESULTS),
+}
 LUNA_METHODS: list[tuple[str, str, str]] = [
     ('LLM-Gate', 'llm_gate', 'llm'),
     ('VLM-Gate', 'vlm_scatter', 'vlm'),
@@ -107,12 +112,13 @@ LUNA_METHODS: list[tuple[str, str, str]] = [
 def _load_gates(results_dir: str, dataset: str, sample: str,
                 step: int, profile: str = 'legacy') -> tuple[dict, Path]:
     """Return (gates_dict, pred.json path).  gates_dict empty if unavailable."""
-    if profile == 'luna_definition':
+    if profile in VISUAL_PROFILES:
+        model, result_root = VISUAL_PROFILES[profile]
         pred_full = (
-            REPO / 'results/gate_gpt-6-luna-medium_full' /
-            f'{dataset}_gpt-6-luna-medium_full__test.json'
+            REPO / f'results/gate_{model}-medium_full' /
+            f'{dataset}_{model}-medium_full__test.json'
             if results_dir == 'llm_gate' else
-            LUNA_RESULTS / results_dir / dataset / 'pred.json'
+            result_root / results_dir / dataset / 'pred.json'
         )
         if not pred_full.is_file():
             raise FileNotFoundError(pred_full)
@@ -217,12 +223,13 @@ def render_row(loader, dataset: str, sample: str, step: int,
     # Per-method gates + per-cell predictions (same propagated prediction.json
     # layout across all three methods).
     method_state: list[tuple[str, dict, list | None, Path]] = []
-    methods = LUNA_METHODS if profile == 'luna_definition' else METHODS
+    methods = LUNA_METHODS if profile in VISUAL_PROFILES else METHODS
     for title_prefix, rdir, _tag in methods:
         gates, pred_full = _load_gates(rdir, dataset, sample, step, profile)
-        if profile == 'luna_definition':
-            pred_root = (REPO / 'results/gate_gpt-6-luna-medium_full'
-                         if rdir == 'llm_gate' else LUNA_RESULTS / rdir)
+        if profile in VISUAL_PROFILES:
+            model, result_root = VISUAL_PROFILES[profile]
+            pred_root = (REPO / f'results/gate_{model}-medium_full'
+                         if rdir == 'llm_gate' else result_root / rdir)
             ppath = (pred_root / 'predictions' / dataset / sample /
                      f'step_{step:02d}' / 'prediction.json')
         else:
@@ -231,13 +238,13 @@ def render_row(loader, dataset: str, sample: str, step: int,
         pred = load_pred(ppath)
         n = len(ti.expression)
         if pred is not None and len(pred) != n:
-            if profile == 'luna_definition':
+            if profile in VISUAL_PROFILES:
                 raise ValueError(f'Prediction length mismatch: {ppath}: '
                                  f'{len(pred)} != {n}')
             print(f"  [WARN] {title_prefix}: prediction length "
                   f"{len(pred)} != n={n} — dropping")
             pred = None
-        if profile == 'luna_definition' and pred is None:
+        if profile in VISUAL_PROFILES and pred is None:
             raise FileNotFoundError(f'Missing propagated prediction: {ppath}')
         area = _gate_total_area(gates)
         title = title_prefix
@@ -303,7 +310,8 @@ def main():
     p.add_argument("--dpi", type=int, default=130)
     p.add_argument("--cols", type=int, default=1,
                    help="Number of step-block columns (default 1 = vstack).")
-    p.add_argument('--profile', choices=('legacy', 'luna_definition'),
+    p.add_argument('--profile', choices=('legacy', 'luna_definition',
+                                          'sol_definition'),
                    default='legacy',
                    help='Choose the saved gate experiment for all three panels.')
     args = p.parse_args()

@@ -38,3 +38,48 @@ because complete inference is unavailable. No full six-condition comparison
 has been calculated. After API credit is restored, resubmit the inference
 script; it skips completed cohort files and Agent resumes from checkpoints.
 Then submit evaluation and summary with dependencies on the new job IDs.
+
+## Credit restored and resumed (2026-10-28)
+
+LSF probe `50041562` successfully completed one GPT-6 Sol medium request
+through Chat Completions and one through Responses. Full inference was
+resubmitted as array `50041564`, reusing completed cohort files and Agent
+checkpoints. Evaluation `50041565` depends on successful inference, and
+equal-cohort summary `50041566` depends on successful evaluation. These jobs
+are pending or running; the probe confirms API access but does not establish
+that the remaining credit covers the whole experiment.
+
+## Scatter-only scope (2026-10-28)
+
+The user narrowed the GPT-6 Sol comparison to scatter input for both
+VLM-Gate and Agent-Gate. VLM contour and density had already completed
+inference; they will not be evaluated or included in the comparison. Agent
+contour and density array elements `50041564[5-6]` were canceled while
+inference was still running. The original six-condition evaluation `50041565`
+and summary `50041566` were canceled. Agent scatter `50041564[4]` continues.
+
+The replacement scatter-only evaluation is `50041586` (VLM scatter and Agent
+scatter, depending on successful Agent scatter inference). The summary job is
+`50041587`, comparing those two conditions with the saved GPT-6 Sol medium
+LLM-Gate baseline. Its planned outputs are
+`full_concurrency40/visual_scatter_comparison.md` and `.json`.
+
+## Completed scatter-only comparison
+
+Agent scatter inference `50041564[4]` finished all 11 cohorts. The two
+scatter evaluations `50041586[1-2]` both completed with empty stderr logs.
+The first summary `50041587` exited because of an unmatched parenthesis in
+`jobs/summarize_visual_full_vlm.py`; after correcting that syntax error, job
+`50041624` completed and wrote `full_concurrency40/visual_scatter_comparison.md`
+and `.json`. Each row covers 11,671 test steps and weights 11 cohorts equally.
+
+| Method | Macro F1 | Balanced accuracy | Hull IoU |
+|---|---:|---:|---:|
+| LLM-Gate | 0.671 | 0.747 | 0.617 |
+| VLM-Gate scatter | 0.691 | 0.790 | 0.650 |
+| Agent-Gate scatter | 0.691 | 0.793 | 0.646 |
+
+The two visual methods use their respective prompts, so differences from
+LLM-Gate cannot be attributed to the image alone. Agent scatter did not
+improve F1 over VLM scatter at three-decimal precision and had a slightly
+lower Hull IoU, despite a slightly higher balanced accuracy.

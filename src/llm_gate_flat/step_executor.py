@@ -192,6 +192,7 @@ def execute_step(
     info["x_channel"] = x_ch
     info["y_channel"] = y_ch
     info["raw_response_chars"] = len(raw_text)
+    info["inference"] = getattr(llm_call, "last_call_info", None)
 
     full_col = np.array(["Unassigned"] * state.n, dtype=object)
     full_col[parent_idx] = pred_subset

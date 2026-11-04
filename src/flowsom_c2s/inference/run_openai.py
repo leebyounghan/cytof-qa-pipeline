@@ -81,17 +81,22 @@ async def _call_one(
     model: str,
     semaphore: asyncio.Semaphore,
     max_tokens: int,
+    temperature: float,
+    reasoning_effort: str | None,
 ) -> str:
     async with semaphore:
-        resp = await client.chat.completions.create(
+        kwargs = dict(
             model=model,
             messages=[
                 {"role": "system", "content": get_system_prompt()},
                 {"role": "user", "content": user_prompt},
             ],
             max_completion_tokens=max_tokens,
-            temperature=0.0,
+            temperature=temperature,
         )
+        if reasoning_effort is not None:
+            kwargs["reasoning_effort"] = reasoning_effort
+        resp = await client.chat.completions.create(**kwargs)
         return resp.choices[0].message.content or ""
 
 
@@ -100,10 +105,13 @@ async def run(
     model: str,
     concurrency: int,
     max_tokens: int,
+    temperature: float,
+    reasoning_effort: str | None,
 ) -> list[str]:
     client = AsyncOpenAI()
     semaphore = asyncio.Semaphore(concurrency)
-    tasks = [_call_one(client, s["prompt_text"], model, semaphore, max_tokens) for s in samples]
+    tasks = [_call_one(client, s["prompt_text"], model, semaphore, max_tokens,
+                       temperature, reasoning_effort) for s in samples]
     print(f"Sending {len(tasks)} requests (concurrency={concurrency}) ...")
     return await asyncio.gather(*tasks)
 
@@ -122,6 +130,8 @@ def main() -> None:
     parser.add_argument("--sample", nargs="*", help="restrict to these sample IDs")
     parser.add_argument("--concurrency", type=int, default=8)
     parser.add_argument("--max-tokens", type=int, default=4096)
+    parser.add_argument("--temperature", type=float, default=0.0)
+    parser.add_argument("--api-reasoning-effort", choices=("none", "low", "medium", "high", "xhigh"))
     parser.add_argument("--output_path", type=Path, required=True)
     parser.add_argument("--perturbation", type=str, default=None)
     args = parser.parse_args()
@@ -141,7 +151,9 @@ def main() -> None:
         sys.exit(1)
     print(f"Loaded {len(samples)} samples from {args.benchmark}")
 
-    raw_texts = asyncio.run(run(samples, args.model, args.concurrency, args.max_tokens))
+    raw_texts = asyncio.run(run(samples, args.model, args.concurrency,
+                                args.max_tokens, args.temperature,
+                                args.api_reasoning_effort))
 
     per_sample: dict = {}
     for s, text in zip(samples, raw_texts):

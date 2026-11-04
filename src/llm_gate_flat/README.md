@@ -19,6 +19,7 @@ Here, every sample is its own sequential cascade.
   step_02/
     ...
   cascade_meta.json           # aborted, abort_step, n_steps_completed, model, ...
+  inference_calls.jsonl       # API attempts, token usage, elapsed time, estimated cost
   cascade_summary.png         # all-steps grid for the sample
   predicted_steps.parquet     # full-N table of all predicted Step columns
   eval_flat.json              # (after eval) flat-label metrics + per-class
@@ -34,8 +35,10 @@ flat per-cell terminal label derived from `predicted_steps.parquet`.
 
 ## Behavior
 
-- **Empty predicted parent at step *k***: abort the cascade for that
-  sample. `cascade_meta.json` records `abort_step` and reason.
+- **Empty predicted parent at step *k***: skip that step, write an
+  all-`Unassigned` Step column, and continue. No `step_NN/` output is
+  written for the skipped step. `cascade_meta.json` records it in
+  `skipped_steps`; a hard executor error sets `aborted` and `abort_step`.
 - **Sample order**: sequential.
 - **Step order within a sample**: sequential (must be — that's the cascade).
 - **Reused machinery**: `BenchmarkLoader._parent_mask`, `generate_gate_task`,
@@ -67,6 +70,13 @@ to the rest of the pipeline.
 
 Disable plotting with `--no-plot`; disable the per-sample full-N parquet
 with `--no-save-cascade-parquet`.
+
+The runner records every API attempt in `inference_calls.jsonl`, embeds the
+successful call record in each `prediction.json`, and aggregates API time,
+token usage, and estimated USD cost in `cascade_meta.json`. Each model must
+have rates in `pricing.json`; `--api-reasoning-effort`, `--temperature`, and
+`--max-tokens` control the request. An existing inference log at the same
+sample path is an error, so use a fresh output directory for a new run.
 
 ## Evaluation (leaf-set ∪ Discard, multi-label)
 
@@ -122,14 +132,14 @@ the discovered leaf set):
 - per-leaf precision / recall / F1 / support
 
 **Primary-leaf** (single-label view for intuition + heatmap): the
-deepest leaf in each cell's path, or `Unassigned` when no leaf was hit.
+deepest leaf in each cell's path, or `Discard` when no leaf was hit.
 Reports `accuracy`, `balanced_accuracy`, `f1_macro`, `f1_weighted`, and
 the standard NxN confusion matrix.
 
 ### Per-sample artifacts
 
 - `eval_flat.json` — full multi-label + primary-leaf metrics, cell
-  counts (`n_cells_no_gt_leaf`, `n_cells_no_pred_leaf`,
+  counts (`n_cells_gt_discard`, `n_cells_pred_discard`,
   `n_cells_multi_gt`, `n_cells_multi_pred`), per-leaf stats, raw CM.
 - `confusion_matrix.png` — row-normalised heatmap of the primary-leaf
   view, cell text shows raw counts.

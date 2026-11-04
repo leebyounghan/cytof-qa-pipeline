@@ -6,12 +6,16 @@
 
 | 방법 | GT F1 | GT BalAcc | GT Hull IoU | rect GT F1 | rect GT BalAcc | rect GT Hull IoU |
 |---|---:|---:|---:|---:|---:|---:|
-| rect-1 oracle (상한 참고) | 0.908 | 0.974 | 0.950 | 1.000 | 1.000 | 1.000 |
+| rect-1 GT-informed reference | 0.908 | 0.974 | 0.950 | 1.000 | 1.000 | 1.000 |
 | flowDensity + rule (LLM 없음) | 0.578 | 0.679 | 0.516 | 0.574 | 0.675 | 0.509 |
 | C2S grid · GPT-5.4 | 0.589 | 0.689 | 0.531 | 0.585 | 0.680 | 0.525 |
 | C2S grid · GPT-6 luna | 0.626 | 0.722 | 0.572 | 0.621 | 0.715 | 0.566 |
+| C2S grid · GPT-6 luna medium | 0.626 | 0.722 | 0.572 | 0.622 | 0.714 | 0.565 |
+| C2S grid · GPT-6 sol medium | 0.641 | 0.735 | 0.591 | 0.636 | 0.725 | 0.584 |
 | C2S FlowSOM · GPT-5.4 | 0.530 | 0.644 | 0.451 | 0.525 | 0.633 | 0.444 |
 | C2S FlowSOM · GPT-6 luna | 0.604 | 0.707 | 0.543 | 0.599 | 0.696 | 0.533 |
+| C2S FlowSOM · GPT-6 luna medium | 0.601 | 0.704 | 0.539 | 0.596 | 0.693 | 0.531 |
+| C2S FlowSOM · GPT-6 sol medium | 0.640 | 0.737 | 0.584 | 0.634 | 0.725 | 0.575 |
 | LLM Gate · GPT-5.4 (논문 실행) | **0.676** | **0.768** | 0.608 | — | — | — |
 | LLM Gate · GPT-5.4 (논문 게이트 재적용) | 0.676 | 0.768 | 0.608 | 0.675 | 0.762 | 0.604 |
 | LLM Gate · GPT-5.4 (현재 정의) | 0.634 | 0.740 | 0.559 | 0.633 | 0.736 | 0.554 |
@@ -22,7 +26,22 @@
 | LLM Gate · GPT-6 luna high | 0.656 | 0.746 | 0.607 | 0.656 | 0.739 | 0.604 |
 | LLM Gate · GPT-6 sol medium | 0.671 | 0.747 | 0.617 | 0.670 | 0.739 | 0.614 |
 
-`GT`는 원래 세포 주석이고, `rect GT`는 rect-1 oracle의 직사각형 라벨이다. Oracle 행은 모델 성능이 아닌 직사각형 표현의 참고 상한이다. flowDensity 행은 저장된 baseline 예측을 rect-1 oracle과 [직접 평가](../jobs/eval_flowdensity_rule_rect1.sh)하고, GT/rect GT 모두 [11개 코호트 동일 비중으로 집계](../results/flowdensity_rule/rect_gt_summary.json)했다. 논문 GPT-5.4 원본 실행에는 rect GT 평가 결과가 없어 빈칸으로 두었다. **논문 게이트 재적용** 행은 이전 GPT-5.4 실행에 저장된 게이트 좌표를 현재 benchmark의 세포 집합에 다시 적용해 GT와 rect GT를 함께 평가한 결과다. 현재 정의 모델 행은 [11개 방법의 동일 split 집계](../results/vs_gt_rect1_summary.md)에서 가져왔다.
+`GT`는 원래 세포 주석이고, 이 표의 `rect GT`는 rect-1의 직사각형 라벨이다. rect-1 행은 모델 성능이나 수학적으로 증명된 상한이 아니라 GT를 사용해 탐색한 최선 발견 해다. 탐색은 전역 최적성을 보장하지 않고, 실제 LLM-Gate는 범주별 여러 직사각형을 허용한다. flowDensity 행은 저장된 baseline 예측을 rect-1과 [직접 평가](../jobs/eval_flowdensity_rule_rect1.sh)하고, GT/rect GT 모두 [11개 코호트 동일 비중으로 집계](../results/flowdensity_rule/rect_gt_summary.json)했다. 논문 GPT-5.4 원본 실행에는 rect GT 평가 결과가 없어 빈칸으로 두었다. **논문 게이트 재적용** 행은 이전 GPT-5.4 실행에 저장된 게이트 좌표를 현재 benchmark의 세포 집합에 다시 적용해 GT와 rect GT를 함께 평가한 결과다. 현재 정의 모델 행은 [11개 방법의 동일 split 집계](../results/vs_gt_rect1_summary.md)에서 가져왔다. 새 C2S medium 네 행은 [별도 전체 test 집계](../results/c2s_medium_full_summary.md)에서 가져왔으며, 기존 GPT-6 luna 기본 설정 행과 구분한다.
+
+## Rect-2 GT-informed screen (2026-10-27)
+
+저장된 rect-1 게이트에서 출발해 각 범주에 겹치지 않는 두 번째 직사각형을 최대 1개 추가했다. 64-bin 후보를 탐색하고, step macro-F1이 최소 0.01 개선되며 추가 직사각형이 해당 범주 GT 세포의 최소 5%이자 최소 10개를 회수할 때만 채택했다. **11,671개 중 104개 step**에 두 번째 직사각형이 추가됐다. 여기서 “필요한 step”은 이 기준을 통과한 *기존 rect-1 기준의 예비 후보*를 뜻하며, 수학적 필요성이나 전역 최적해를 증명한 결과는 아니다. 기존 rect-1 탐색은 전체 macro-F1을 점수로 사용했지만, 초기값을 label 순서대로 만들고 한 번에 한 변만 움직여 국소해에 머물 수 있었다. 이 때문에 104개를 진정한 rect-2 필요 사례로 해석해서는 안 된다. 세포 1개만 추가해 점수가 크게 오르는 극소 부모 집합 사례는 10세포 기준으로 제외했다.
+
+| GT-informed reference | GT F1 | GT BalAcc | GT Hull IoU |
+|---|---:|---:|---:|
+| rect-1 | 0.9079 | 0.9744 | 0.9499 |
+| rect-2 screen (최소 10세포) | 0.9095 | 0.9750 | 0.9535 |
+
+점수는 동일 test split의 11개 코호트 동일 비중 평균이다. 가장 큰 반복 사례는 Bjornson `step_08`의 DCs로, GT 세포가 2D 공간의 좌상단과 우하단에 나뉘어 있어 두 번째 직사각형이 큰 개선을 준다. 전체 104개 step의 표본명, step, 대상 범주, 전후 F1, 추가 게이트 좌표는 [후보 목록](../results/rect2_gt_min10/changed_steps.csv)에 있다. [코호트별 요약](../results/rect2_gt_min10/summary.md), [F1·BA·Hull IoU 비교](../results/rect2_gt_min10/eval_comparison.md), [상위 사례 시각화](../results/rect2_gt_min10/top_six_gate_review.png)도 저장했다. 새 세포별 rect-GT는 `results/rect2_gt_min10/{cohort}/{sample}/{step}/prediction.json`에 있으며, 변경되지 않은 step은 rect-1 결과를 참조한다. 변경된 104개 step은 게이트 좌표로 재생성한 라벨과 저장 라벨 및 F1의 일치를 확인했다. 이 rect-2 reference는 기존 표의 rect-1 기준 모델 평가를 자동으로 대체하지 않는다.
+
+2026-10-27 사용자 검토: **Bjornson `step_08`은 rect-2로 승인**. [후보 게이트 감사](../results/rect2_gt_min10/true_second_audit.md)에서 104개 모두 해당 범주의 rect-1 게이트가 이미 존재해, 실제 두 번째 직사각형을 추가한 경우임을 확인했다. 다른 코호트의 후보 step은 아직 승인되지 않았다.
+
+기존 rect-2 후보 104개를 [공동 rect-1 탐색](../src/baselines/rect_oracle/fit_rect1_joint.py)으로 재평가했다. 이 탐색은 한두 label의 직사각형 전체를 비겹침 제약 아래 재배치하고, 모든 범주와 Unassigned의 step macro-F1을 기준으로 선택한다. 기존 rect-1 해도 시작 후보로 보존하므로 F1이 낮아진 해는 채택하지 않는다. 단, 이 역시 전역 최적성의 증명은 아니다. [104개 후보 재평가 요약](../results/rect1_joint_candidates/summary.md)에 따르면 **57개에서 rect-1 F1이 개선됐고, 36개는 기존 rect-2와의 F1 차이가 0.01 미만으로 줄었다**. 나머지 68개는 기존 rect-2가 최소 0.01 앞선다. 이는 *기존 rect-2 해와의 비교*이며, 공동 rect-1 해에서 rect-2를 다시 최적화한 결과는 아니다. [전체 test step 재적합](../results/rect1_joint_full/summary.md)도 11,671개 모두 완료됐다. **1,017개 step에서 F1이 개선됐고, 11개 코호트 동일 가중 step macro-F1은 기존 rect-1의 0.9079에서 공동 rect-1의 0.9109로 상승했다.** 위쪽 전체 결과 표는 아직 원래 rect-1과 그에 대한 모델 평가값을 표시한다.
 
 ## 코호트별 F1 (rect GT 기준)
 

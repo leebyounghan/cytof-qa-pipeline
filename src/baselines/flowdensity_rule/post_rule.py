@@ -54,11 +54,11 @@ def middle_dropped(valleys: dict, axis: str) -> bool:
     return valleys.get(f'{axis}_method') == 'middle_dropped'
 
 
-def failure_reason(meta: dict, valleys: dict) -> str | None:
+def failure_reason(meta: dict, valleys: dict, error_prefix: str = 'degate') -> str | None:
     rule = meta['rule']
     for axis in ('x', 'y'):
         if f'{axis}_error' in valleys:
-            return f'degate_error_{axis}'
+            return f'{error_prefix}_error_{axis}'
         want = rule[f'n_{axis}_valleys']
         if middle_dropped(valleys, axis):
             want -= 1
@@ -76,12 +76,13 @@ def axis_bins(values: np.ndarray, valleys: dict, axis: str, n_bins: int) -> np.n
     return b
 
 
-def postprocess_step(step_dir: Path) -> str:
+def postprocess_step(step_dir: Path, method: str = METHOD,
+                     error_prefix: str = 'degate') -> str:
     meta = json.loads((step_dir / 'meta.json').read_text())
     n = meta['n_parent']
     rule = meta['rule']
     csv_path = step_dir / 'input.csv'
-    pred = {'task_id': meta['task_id'], 'method': METHOD}
+    pred = {'task_id': meta['task_id'], 'method': method}
 
     if n == 0:
         pred.update(predicted_labels=[], info={'n_parent': 0})
@@ -97,7 +98,7 @@ def postprocess_step(step_dir: Path) -> str:
         return 'unsupported_all_target'
 
     valleys = json.loads((step_dir / 'valleys.json').read_text())
-    reason = failure_reason(meta, valleys)
+    reason = failure_reason(meta, valleys, error_prefix)
     info = {'n_parent': n, 'valleys': valleys}
 
     if reason is not None:
@@ -134,6 +135,8 @@ def existing_status(step_dir: Path) -> str:
 def main():
     parser = argparse.ArgumentParser(description='flowDensity rule pipeline — Stage 3: assign regions')
     parser.add_argument('--results-dir', type=Path, required=True)
+    parser.add_argument('--method', default=METHOD)
+    parser.add_argument('--error-prefix', default='degate')
     parser.add_argument('--reuse-existing', action='store_true',
                         help='Re-write only steps with input.csv (or no prediction.json); '
                              'read other statuses from their existing prediction.json.')
@@ -145,7 +148,8 @@ def main():
     for d in step_dirs:
         reuse = (args.reuse_existing and not (d / 'input.csv').exists()
                  and (d / 'prediction.json').exists())
-        s = existing_status(d) if reuse else postprocess_step(d)
+        s = (existing_status(d) if reuse else
+             postprocess_step(d, method=args.method, error_prefix=args.error_prefix))
         statuses[s] += 1
         if not (s.startswith('ok') or s in ('empty_parent', 'unsupported_all_target')):
             failed.append({'step_dir': str(d.relative_to(args.results_dir)), 'reason': s})

@@ -596,8 +596,10 @@ bash run_hard_openai.sh --config src/llm_gate/configs/models/gpt_5_4.yaml --mode
 # (UNITO recipe: src/baselines/UNITO.md)
 ```
 
-**6 — Flat vs. hierarchical annotation** — see [`README_flat.md`](README_flat.md)
-(FlowSOM K = 16 / 38 / 83 per plan depth, GPT-5.4 backbone).
+**6 — Flat vs. hierarchical annotation** — see [`README_flat.md`](README_flat.md).
+The latest [GPT-6 Luna medium comparison](results/flat_luna_medium_summary_20261102.md)
+uses FlowSOM K = 16 / 38 / 83 for L1 / L2 / L3 and scores every C2S leaf
+directly.
 
 ## Rule-based baseline: flowDensity + notes.yaml rules (no LLM)
 
@@ -769,7 +771,7 @@ Method-specific details live in their directories:
 - **`src/baselines/README.md`** — flowDensity (C2S density-grid backend), FlowSOM reference, cyMAE trained baseline
 - **`src/baselines/UNITO.md`** — UNITO trained baseline recipe (per-cohort U-Net)
 - **`src/baselines/flowdensity_rule/README.md`** — rule-based baseline: flowDensity valleys + `notes.yaml` region rules, no LLM
-- **`README_flat.md`** — flat vs. hierarchical annotation pilot (`src/llm_gate_flat`, `src/flowsom_c2s`)
+- **`README_flat.md`** — flat vs. hierarchical annotation (`src/llm_gate_flat`, `src/flowsom_c2s`)
 
 ### LLM gating methods at a glance
 
@@ -792,8 +794,8 @@ So if you've already run `agent_gate.task` for a sample, `vlm_gate` re-uses thos
 
 For the **flat-annotation experiment setup** — `src/llm_gate_flat/`
 (sequential cascading) and `src/flowsom_c2s/` (whole-cell FlowSom + LLM),
-both scored by the shared `src/flat_eval.py`, with L1 / L2 / L3 plan
-depths and `predicted_steps.parquet` as the common eval input — see
+both scored against the same GT leaf sets with L1 / L2 / L3 plan
+depths; Cascade uses `src.flat_eval` and C2S uses `src.flowsom_c2s.eval` — see
 **[`README_flat.md`](README_flat.md)**.
 
 ## Project Structure

@@ -35,7 +35,9 @@ Usage::
 from __future__ import annotations
 
 import argparse
+from datetime import datetime, timezone
 import json
+import os
 import sys
 import time
 from pathlib import Path
@@ -62,30 +64,138 @@ load_dotenv()
 
 
 class _OpenAICall:
-    """Sync OpenAI chat call with simple retry."""
+    """Sync OpenAI chat call with per-attempt inference accounting."""
 
-    def __init__(self, model: str, max_tokens: int, max_retries: int = 3):
+    def __init__(self, model: str, max_tokens: int, temperature: float = 0.0,
+                 reasoning_effort: str | None = None, max_retries: int = 3):
         self._client = OpenAI()
         self.model = model
         self.max_tokens = max_tokens
+        self.temperature = temperature
+        self.reasoning_effort = reasoning_effort
         self.max_retries = max_retries
+        pricing_path = Path(__file__).with_name("pricing.json")
+        with pricing_path.open() as handle:
+            pricing = json.load(handle)
+        if model not in pricing:
+            raise ValueError(f"No inference cost rates for model {model!r} in {pricing_path}")
+        self.pricing = pricing[model]
+        self._log_path: Path | None = None
+        self._dataset: str | None = None
+        self._sample: str | None = None
+        self._step: int | None = None
+        self._records: list[dict] = []
+        self.last_call_info: dict | None = None
+
+    def begin_sample(self, dataset: str, sample: str, sample_out: Path) -> None:
+        self._dataset = dataset
+        self._sample = sample
+        self._step = None
+        self._records = []
+        self.last_call_info = None
+        self._log_path = sample_out / "inference_calls.jsonl"
+        if self._log_path.exists():
+            raise FileExistsError(f"Inference log already exists: {self._log_path}")
+
+    def set_step(self, step: int) -> None:
+        self._step = step
+        self.last_call_info = None
+
+    def _record(self, record: dict) -> None:
+        if self._log_path is None or self._dataset is None or self._sample is None or self._step is None:
+            raise RuntimeError("Inference log context was not initialized")
+        record.update({
+            "schema_version": 1,
+            "dataset": self._dataset,
+            "sample": self._sample,
+            "step": self._step,
+            "model": self.model,
+            "reasoning_effort": self.reasoning_effort,
+        })
+        self._log_path.parent.mkdir(parents=True, exist_ok=True)
+        with self._log_path.open("a") as handle:
+            handle.write(json.dumps(record, ensure_ascii=False) + "\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        self._records.append(record)
+        if record["status"] == "success":
+            self.last_call_info = record
+
+    def summary(self) -> dict:
+        success = [row for row in self._records if row["status"] == "success"]
+        return {
+            "n_api_attempts": len(self._records),
+            "n_successful_calls": len(success),
+            "n_failed_attempts": len(self._records) - len(success),
+            "api_elapsed_seconds": sum(row["elapsed_seconds"] for row in self._records),
+            "prompt_tokens": sum(row["usage"]["prompt_tokens"] for row in success),
+            "cached_prompt_tokens": sum(row["usage"]["cached_prompt_tokens"] for row in success),
+            "completion_tokens": sum(row["usage"]["completion_tokens"] for row in success),
+            "reasoning_tokens": sum(row["usage"]["reasoning_tokens"] for row in success),
+            "estimated_cost_usd": sum(row["estimated_cost_usd"] for row in success),
+            "pricing_usd_per_million_tokens": self.pricing,
+        }
 
     def __call__(self, system_prompt: str, user_prompt: str) -> str:
         last_err: Exception | None = None
         for attempt in range(self.max_retries):
+            started_at = datetime.now(timezone.utc).isoformat()
+            started = time.perf_counter()
             try:
-                resp = self._client.chat.completions.create(
+                kwargs = dict(
                     model=self.model,
                     messages=[
                         {"role": "system", "content": system_prompt},
                         {"role": "user", "content": user_prompt},
                     ],
                     max_completion_tokens=self.max_tokens,
-                    temperature=0.0,
+                    temperature=self.temperature,
                 )
+                if self.reasoning_effort is not None:
+                    kwargs["reasoning_effort"] = self.reasoning_effort
+                resp = self._client.chat.completions.create(**kwargs)
+                usage = resp.usage
+                if usage is None:
+                    raise RuntimeError(f"OpenAI response {resp.id} omitted usage; cannot account for cost")
+                prompt_tokens = usage.prompt_tokens
+                completion_tokens = usage.completion_tokens
+                if prompt_tokens is None or completion_tokens is None:
+                    raise RuntimeError(f"OpenAI response {resp.id} omitted token counts")
+                prompt_details = usage.prompt_tokens_details
+                completion_details = usage.completion_tokens_details
+                cached_tokens = (prompt_details.cached_tokens or 0) if prompt_details else 0
+                reasoning_tokens = (completion_details.reasoning_tokens or 0) if completion_details else 0
+                if not 0 <= cached_tokens <= prompt_tokens:
+                    raise ValueError(f"Invalid cached token count in OpenAI response {resp.id}")
+                cost = (
+                    (prompt_tokens - cached_tokens) * self.pricing["input"]
+                    + cached_tokens * self.pricing["cached_input"]
+                    + completion_tokens * self.pricing["output"]
+                ) / 1_000_000
+                self._record({
+                    "attempt": attempt + 1,
+                    "status": "success",
+                    "started_at_utc": started_at,
+                    "elapsed_seconds": time.perf_counter() - started,
+                    "response_id": resp.id,
+                    "usage": {
+                        "prompt_tokens": prompt_tokens,
+                        "cached_prompt_tokens": cached_tokens,
+                        "completion_tokens": completion_tokens,
+                        "reasoning_tokens": reasoning_tokens,
+                    },
+                    "estimated_cost_usd": cost,
+                })
                 return resp.choices[0].message.content or ""
             except Exception as e:
                 last_err = e
+                self._record({
+                    "attempt": attempt + 1,
+                    "status": "error",
+                    "started_at_utc": started_at,
+                    "elapsed_seconds": time.perf_counter() - started,
+                    "error_type": type(e).__name__,
+                })
                 if attempt + 1 < self.max_retries:
                     time.sleep(2 ** attempt)
         raise RuntimeError(f"OpenAI call failed after {self.max_retries} retries: {last_err}")
@@ -170,6 +280,7 @@ def run_sample(
     state = CascadeState(df, dataset, sample)
     sample_out = output_dir / dataset / sample
     sample_out.mkdir(parents=True, exist_ok=True)
+    llm_call.begin_sample(dataset, sample, sample_out)
 
     aborted = False
     abort_step: int | None = None
@@ -183,6 +294,7 @@ def run_sample(
 
     for step in steps:
         step_num = int(step["step"])
+        llm_call.set_step(step_num)
         try:
             result = execute_step(
                 state, step,
@@ -271,6 +383,7 @@ def run_sample(
         "abort_step": abort_step,
         "abort_reason": abort_reason,
         "gating_plan_steps": [int(s["step"]) for s in steps],
+        "inference": llm_call.summary(),
     }
     with open(sample_out / "cascade_meta.json", "w") as f:
         json.dump(meta, f, indent=2)
@@ -303,6 +416,8 @@ def main() -> None:
     )
     parser.add_argument("--model", default="gpt-5.4")
     parser.add_argument("--max-tokens", type=int, default=8192)
+    parser.add_argument("--temperature", type=float, default=0.0)
+    parser.add_argument("--api-reasoning-effort", choices=("none", "low", "medium", "high", "xhigh"))
     parser.add_argument("--tiebreak", default="smallest", choices=("smallest", "priority"))
     parser.add_argument("--method-name", default="llm_gate_flat",
                         help="Method identifier embedded in prediction.json (default llm_gate_flat).")
@@ -347,7 +462,9 @@ def main() -> None:
         f"model={args.model}, tiebreak={args.tiebreak}",
     )
 
-    llm_call = _OpenAICall(model=args.model, max_tokens=args.max_tokens)
+    llm_call = _OpenAICall(model=args.model, max_tokens=args.max_tokens,
+                           temperature=args.temperature,
+                           reasoning_effort=args.api_reasoning_effort)
     system_prompt = get_system_prompt()
 
     summaries: list[dict] = []

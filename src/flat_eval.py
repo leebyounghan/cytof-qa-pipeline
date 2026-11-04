@@ -469,6 +469,8 @@ def main() -> None:
                         help="Cascade output dir (contains {dataset}/{sample}/predicted_steps.parquet).")
     parser.add_argument("--gating-plan", type=Path, required=True,
                         help="Same gating_plan.json that was used for the cascade.")
+    parser.add_argument("--summary-path", type=Path, default=None,
+                        help="Path for aggregate JSON (default: <output-dir>/eval_summary.json).")
     parser.add_argument("--data-dir", type=Path, default=Path("data/"))
     parser.add_argument("--benchmark", type=Path, default=Path("benchmark/"))
     parser.add_argument("--datasets", nargs="*", default=None)
@@ -546,7 +548,9 @@ def main() -> None:
                 for s in summaries
             ],
         }
-        with open(args.output_dir / "eval_summary.json", "w") as f:
+        summary_path = args.summary_path or args.output_dir / "eval_summary.json"
+        summary_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(summary_path, "w") as f:
             json.dump(agg, f, indent=2)
         print(
             f"\nAggregate ({len(summaries)} sample(s)):"

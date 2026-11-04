@@ -5,13 +5,11 @@ Emits ONE task.json per sample. Schema:
   - ``leaf_categories``  — sorted list from ``src.flat_eval.derive_leaf_set``
                            (terminal categories not used as a parent in any
                            later step). SHARED with src/llm_gate_flat/.
-  - ``leaf_to_step_col`` — {leaf_name -> annotation_column} for postprocess.
   - ``steps``            — full ordered list copied from gating_plan.json.
   - ``gating_plan_path`` — provenance of the leaf vocabulary.
 
-The same ``--gating-plan`` must be passed to ``src.flat_eval`` so both
-sides of the comparison induce the same leaf set (L1 / L2 / L3 plan
-variants are supported transparently).
+The same gating plan must be passed to the C2S evaluator so the prediction
+vocabulary and GT leaf set match (L1 / L2 / L3 variants are supported).
 
 Usage:
     python -m src.flowsom_c2s.preprocess \\
@@ -30,7 +28,6 @@ import pandas as pd
 
 from src.preprocess import load_config, load_sample
 from src.flat_eval import derive_leaf_set, gating_plan_slug
-from src.flowsom_c2s.utils import build_leaf_to_step_col
 
 
 def build_task_json(
@@ -45,7 +42,6 @@ def build_task_json(
     """Assemble the per-sample task.json payload."""
     steps = gating_plan["steps"]
     leaf_set = derive_leaf_set(gating_plan)
-    leaf_to_step_col = build_leaf_to_step_col(steps, leaf_set)
 
     serialized_steps = []
     for s in steps:
@@ -70,7 +66,6 @@ def build_task_json(
         "plan_slug": gating_plan_slug(gating_plan_path),
         "steps": serialized_steps,
         "leaf_categories": sorted(leaf_set),
-        "leaf_to_step_col": leaf_to_step_col,
     }
 
 

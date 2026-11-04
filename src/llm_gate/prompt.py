@@ -258,6 +258,7 @@ def format_prompt(
     use_joint_2d: bool = False,
     ablation: str = 'full',
     note_mode: str = DEFAULT_NOTE_MODE,
+    note_path: Path | None = None,
 ) -> str:
     x_marker = data['x_marker']
     y_marker = data['y_marker']
@@ -267,8 +268,9 @@ def format_prompt(
     # [Description] note comes only from benchmark/notes.yaml.
     note = ''
     if use_note and ablation != 'no_desc':
+        kwargs = {'path': note_path} if note_path is not None else {}
         note = get_note(data.get('cohort') or data.get('_cohort'),
-                        data.get('step'), note_mode)
+                        data.get('step'), note_mode, **kwargs)
 
     # --- For anon: build marker map and apply to marker names,
     # breadcrumb, description text — but NOT category names ---
