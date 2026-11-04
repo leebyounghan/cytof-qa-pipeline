@@ -2,8 +2,6 @@
 
 Benchmark for cross-panel hierarchical cell gating in cytometry.
 
-Test split experiment tables: [docs/experiment_results.md](docs/experiment_results.md).
-
 ## Overview
 
 CytoGate-Bench formalizes **cross-panel hierarchical gating** as a benchmark task. Unlike flat cell type annotation, this benchmark requires sequential gating decisions on biaxial plots — mirroring the reasoning of expert immunologists.
@@ -409,10 +407,8 @@ cohort-level Hull IoU means then receive equal weight. Sample and task counts
 are coverage totals, not weights in the cross-cohort average. The archived
 `YoungOld` output is outside this 11-cohort test comparison. Thus the earlier
 GPT-5.4 output averages to F1 0.676, balanced accuracy 0.768, and Hull IoU
-0.608 under the paper's aggregation. See
-[`docs/experiment_results.md`](docs/experiment_results.md) for all method
-tables and [`results/summarize_vs_gt_rect1.py`](results/summarize_vs_gt_rect1.py)
-for the calculation.
+0.608 under the paper's aggregation. The per-step evaluator is
+[`src/eval.py`](src/eval.py).
 
 ### In-panel split
 
@@ -597,7 +593,7 @@ bash run_hard_openai.sh --config src/llm_gate/configs/models/gpt_5_4.yaml --mode
 ```
 
 **6 — Flat vs. hierarchical annotation** — see [`README_flat.md`](README_flat.md).
-The latest [GPT-6 Luna medium comparison](results/flat_luna_medium_summary_20261102.md)
+The GPT-6 Luna medium comparison
 uses FlowSOM K = 16 / 38 / 83 for L1 / L2 / L3 and scores every C2S leaf
 directly.
 

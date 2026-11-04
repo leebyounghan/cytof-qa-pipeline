@@ -6,6 +6,10 @@ outputs/
 logs/
 results/
 
+# Cluster-specific jobs and internal experiment notes stay local
+/jobs/
+/docs/
+
 # Under case_study/: track source code only, skip plots/ and per-method predictions
 case_study/*
 !case_study/*.py

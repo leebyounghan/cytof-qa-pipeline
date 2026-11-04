@@ -245,7 +245,7 @@ To compare LLM-Gate-Flat vs FlowSom+LLM at a fixed depth:
 2. Evaluate Cascade with `src.flat_eval` and C2S with `src.flowsom_c2s.eval`.
 3. Compare `eval_summary_<dataset>.json` aggregates side-by-side.
 
-The [2026-11-02 comparison](results/flat_luna_medium_summary_20261102.md)
+The 2026-11-02 comparison
 covers 646 test sample/plan pairs with GPT-6 Luna medium. For Acute2020,
 Acute2021, and Vaccine it uses K=16/38/83 for L1/L2/L3, respectively.
 The C2S scores retain all leaves from the model response.
