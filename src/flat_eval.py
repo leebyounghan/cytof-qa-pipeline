@@ -65,6 +65,7 @@ from sklearn.metrics import (  # noqa: E402
 from sklearn.preprocessing import MultiLabelBinarizer  # noqa: E402
 
 from src.bench import BenchmarkLoader  # noqa: E402
+from src.prediction_io import has_prediction, read_prediction  # noqa: E402
 
 DISCARD_LABEL = "Discard"
 
@@ -243,7 +244,7 @@ def _render_cascade_plots(
     step_dirs = sorted(
         d for d in sample_out.iterdir()
         if d.is_dir() and d.name.startswith("step_")
-        and (d / "prediction.json").exists()
+        and has_prediction(d)
     )
     if not step_dirs:
         return 0
@@ -264,8 +265,7 @@ def _render_cascade_plots(
         step = steps_by_num.get(step_num)
         if step is None:
             continue
-        with open(step_dir / "prediction.json") as f:
-            pred = json.load(f)
+        pred = read_prediction(step_dir)
         gates = pred.get("gates", {}) or {}
         predicted_labels = pred.get("predicted_labels", []) or []
         info = pred.get("info", {}) or {}
@@ -320,20 +320,23 @@ def evaluate_sample(
     sample: str,
     output_dir: Path,
     gating_plan: dict,
-) -> dict | None:
+) -> dict:
     sample_out = output_dir / dataset / sample
     pred_path = sample_out / "predicted_steps.parquet"
     if not pred_path.exists():
-        print(f"  [skip] no predicted_steps.parquet for {dataset}/{sample}")
-        return None
+        raise FileNotFoundError(pred_path)
     pred_df = pd.read_parquet(pred_path)
     gt_df, _ = loader._load_sample(dataset, sample)  # noqa: SLF001
 
     step_cols = [s["annotation column name"] for s in gating_plan["steps"]]
-    pred_cols = [c for c in step_cols if c in pred_df.columns]
-    if not pred_cols:
-        print(f"  [skip] no overlapping step columns for {dataset}/{sample}")
-        return None
+    missing = [c for c in step_cols if c not in pred_df.columns]
+    if missing:
+        raise ValueError(f"{dataset}/{sample}: missing predicted step columns: {missing}")
+    if len(gt_df) != len(pred_df):
+        raise ValueError(
+            f"{dataset}/{sample}: GT has {len(gt_df)} cells but prediction has {len(pred_df)}"
+        )
+    pred_cols = step_cols
 
     leaf_set = derive_leaf_set(gating_plan)
     classes_sorted = sorted(leaf_set | {DISCARD_LABEL})
@@ -341,11 +344,7 @@ def evaluate_sample(
     gt_multi, gt_primary = _flat_labels_multilabel(gt_df, pred_cols, leaf_set)
     pred_multi, pred_primary = _flat_labels_multilabel(pred_df, pred_cols, leaf_set)
 
-    n = min(len(gt_multi), len(pred_multi))
-    gt_multi = gt_multi[:n]
-    pred_multi = pred_multi[:n]
-    gt_primary = gt_primary[:n]
-    pred_primary = pred_primary[:n]
+    n = len(gt_multi)
 
     # Multi-label encoding (leaves ∪ {Discard})
     mlb = MultiLabelBinarizer(classes=classes_sorted)
@@ -490,15 +489,12 @@ def main() -> None:
 
     pairs = _enumerate_output_samples(args.output_dir, args.datasets, args.samples)
     if not pairs:
-        print("[WARN] no samples matched in output_dir; nothing to evaluate.")
-        return
+        raise ValueError(f"No samples matched in {args.output_dir}")
 
     summaries: list[dict] = []
     for ds, sample in pairs:
         print(f"[eval] {ds}/{sample}")
         m = evaluate_sample(loader, ds, sample, args.output_dir, gating_plan)
-        if m is None:
-            continue
         summaries.append(m)
         ml = m["multi_label"]
         sl = m["primary_leaf"]
