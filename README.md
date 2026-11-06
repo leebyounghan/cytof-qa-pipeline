@@ -15,6 +15,10 @@ This README describes the experiments in `../cytogate-bench-paper/patterns/word/
 
 A missing phenotype definition is an error. The reported prompt does not take `note` or `tips` from a gating-plan JSON. Full prompt examples and output schemas are in the manuscript supplement.
 
+## Installation
+
+For the installation-tested Linux/Python 3.12.3 environments, use the [hash-pinned inference and FCS-conversion profiles](reproducibility/README.md#install-the-validated-environments). These profiles separate incompatible NumPy requirements and include clean-install and smoke-check results.
+
 ## Per-step methods in the paper
 
 | Experiment | Implementation | Reported comparison |
@@ -50,4 +54,6 @@ See [README_flat.md](README_flat.md) for the artifact layout and exact final fla
 
 ## Reproducibility
 
-All computation, including preprocessing, evaluation, plots, and document checks, runs through LSF `bsub` jobs in `jobs/` using this project's `.venv/bin/python`. Run scripts record model identity and generation settings; see the corresponding job script and manifest for each result. `docs/experiment_results.md` and the experiment-specific documents in `docs/` record result provenance. Do not put API credentials in Git or logs.
+The [reproduction reference environment](reproducibility/README.md) provides hash-pinned inference and FCS-conversion environments based on the software captured on 6 November 2026. Both installed successfully in a fresh validation pod and passed dependency and basic runtime checks. The record also gives the GPU configuration and verified serving settings for the revised Qwen visual experiments, preserves the original package inventory, and identifies records that still need verification.
+
+The revised Qwen visual runs were executed in a Kubernetes GPU environment. Preserved run manifests record model identity, generation settings, dates, and execution-code fingerprints. Some retained job templates contain LSF directives; these templates do not by themselves establish where a particular result was generated. Cluster-specific scripts, internal notes, and derived outputs remain local. The reproducibility record distinguishes the preserved execution code from the current public checkout and documents the work needed to assign a final immutable manuscript revision.

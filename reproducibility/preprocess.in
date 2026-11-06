@@ -1,0 +1,7 @@
+numpy==1.26.4
+pandas==3.0.6
+pyarrow==21.0.0
+PyYAML==6.0.3
+fcsparser==0.2.8
+python-dateutil==2.9.0.post0
+six==1.17.0
