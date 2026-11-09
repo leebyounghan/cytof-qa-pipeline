@@ -190,41 +190,7 @@ python -m src.llm.plot.anchor_pred_vs_gt \
     --dataset Acute2020 \
     --benchmark benchmark/ --data-dir data/ \
     --output_dir results/gpt-5.4_hvp10/Acute2020
-
-# Sim-disagreement edge graph per step
-#   Edges = top-3 (x,y)-NN clusters; weights = rep cell raw-protein cosine sim.
-#   Same-label edges gray, cross-label edges orange.
-python -m src.llm.plot.disagreement_graph \
-    --eval_path results/gpt-5.4_hvp10/Acute2020/pred.json \
-    --dataset Acute2020 \
-    --benchmark benchmark/ --data-dir data/ \
-    --output_dir results/gpt-5.4_hvp10
 ```
-
-### Cluster smoothing (`src.llm.postprocess.smooth`)
-
-Optional pre-propagation step. For the clusters the LLM actually saw (`--n-cells` truncates excluded):
-
-1. Edge graph = top-3 (x, y)-NN rep cells.
-2. Edge weight = cosine similarity on **raw** protein expression of each cluster's rep cell (captures orthogonal biological similarity, not the gating-axis structure).
-3. Greedy: while some cluster has `sim_weighted_diff_label_degree / total_degree ≥ 0.5`, pick the worst offender and flip it to the plurality label among its orange neighbors. Safety-capped at `max_iterations=500`.
-
-```bash
-python -m src.llm.postprocess.smooth \
-    --eval_path results/gpt-5.4_hvp10/Acute2020/pred.json \
-    --dataset Acute2020 \
-    --benchmark benchmark/ --data-dir data/
-
-# Before/after visualization
-python -m src.llm.plot.disagreement_graph \
-    --eval_path     results/gpt-5.4_hvp10/Acute2020/pred.json \
-    --smoothed_path results/gpt-5.4_hvp10/Acute2020/pred_smoothed.json \
-    --dataset Acute2020 \
-    --benchmark benchmark/ --data-dir data/ \
-    --output_dir results/gpt-5.4_hvp10
-```
-
-Output: `pred_smoothed.json`. Re-run propagate → `src.eval` with a distinct `--method` to compare with vs without smoothing.
 
 ## Setting 2 (In-Panel Hard)
 
