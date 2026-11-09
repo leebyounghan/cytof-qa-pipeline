@@ -1,0 +1,68 @@
+{
+  "dataset": "Lyoplate_Treg",
+  "instrument": "BD LSR II",
+  "notes": "Lyoplate Treg panel from a multi-site standardization study. The parent of Step 1 is already pre-gated 'Live singlet lymphocytes' — Steps that would normally perform scatter-based lymphocyte gating, singlet discrimination, and viability-based dead-cell exclusion have been applied upstream and are omitted from this plan. `x_marker` / `y_marker` fields use protein marker names directly (parquet columns are marker-named; see `parquet/meta.json`).",
+  "steps": [
+    {
+      "step": 1,
+      "parent": "ALL",
+      "x_marker": "CD3",
+      "y_marker": "SSC-A",
+      "annotation column name": "Step01_CD3|SSC-A",
+      "annotation categories": [
+        "CD3pos"
+      ],
+      "note": "Positive selection of T cells on pre-gated Live singlet lymphocytes. CD3pos: CD3+ (pan-T marker). SSC-A on y serves as a scatter sanity check — CD3+ events should fall in the canonical lymphocyte scatter range."
+    },
+    {
+      "step": 2,
+      "parent": "Step01_CD3|SSC-A == CD3pos",
+      "x_marker": "CD3",
+      "y_marker": "CD4",
+      "annotation column name": "Step02_CD3|CD4",
+      "annotation categories": [
+        "CD4pos"
+      ],
+      "note": "Positive selection of helper T cells within CD3+ T cells. CD4pos: CD4+ (helper T lineage). Axis design caveat: x_marker is CD3, but parent is already CD3+ — CD3 on x is a purity sanity-check axis (events should cluster at CD3-high); the actual call is driven by CD4 on y. CD8+ and DNT/DPT cells are not annotated because this panel's downstream goal is Treg identification, which is CD4-restricted."
+    },
+    {
+      "step": 3,
+      "parent": "Step02_CD3|CD4 == CD4pos",
+      "x_marker": "CD25",
+      "y_marker": "CD127",
+      "annotation column name": "Step03_CD25|CD127",
+      "annotation categories": [
+        "Treg"
+      ],
+      "note": "Canonical Treg identification within CD4+ helper T cells. Treg: CD25hi CD127lo (the classical surface signature — CD25/IL-2Rα is highly expressed on Treg, and CD127/IL-7Rα is down-regulated, together distinguishing Treg from activated conventional CD4 cells which can transiently up-regulate CD25 but retain CD127). Useful co-markers: Foxp3 is the canonical intracellular Treg transcription factor and the gold-standard marker but requires fixation/permeabilization — not included in this surface-only panel. The CD25hiCD127lo surface signature is well-validated as a Foxp3+ Treg proxy."
+    },
+    {
+      "step": 4,
+      "parent": "Step03_CD25|CD127 == Treg",
+      "x_marker": "CCR4",
+      "y_marker": "HLADR",
+      "annotation column name": "Step04_CCR4|HLADR",
+      "annotation categories": [
+        "CCR4neg_HLADRpos",
+        "CCR4pos_HLADRpos",
+        "CCR4pos_HLADRneg",
+        "CCR4neg_HLADRneg"
+      ],
+      "note": "Treg functional / activation quadrants. CCR4 marks skin/mucosa-homing capacity and is associated with tissue-homing effector Treg. HLA-DR is an activation marker on Treg and is enriched on effector Treg with enhanced suppressive capacity (reported e.g. in Miyara et al. 2009 and follow-up work). CCR4pos_HLADRpos: CCR4+ HLA-DR+ (activated tissue-homing Treg; enriched for effector Treg with strong suppressive function). CCR4pos_HLADRneg: CCR4+ HLA-DR- (resting tissue-homing Treg). CCR4neg_HLADRpos: CCR4- HLA-DR+ (activated non-tissue-homing Treg). CCR4neg_HLADRneg: CCR4- HLA-DR- (resting non-skin-homing Treg)."
+    },
+    {
+      "step": 5,
+      "parent": "Step03_CD25|CD127 == Treg",
+      "x_marker": "CCR4",
+      "y_marker": "CD45RO",
+      "annotation column name": "Step05_CCR4|CD45RO",
+      "annotation categories": [
+        "CCR4neg_CD45ROpos",
+        "CCR4pos_CD45ROpos",
+        "CCR4pos_CD45ROneg",
+        "CCR4neg_CD45ROneg"
+      ],
+      "note": "Treg memory / homing quadrants (parallel annotation to Step 4 on the same Treg parent). CD45RO is the classical memory-T-cell marker (inverse of CD45RA) — CD45RO+ marks antigen-experienced Treg. CCR4 again marks tissue-homing capacity. CCR4pos_CD45ROpos: CCR4+ CD45RO+ (memory tissue-homing Treg — the main effector Treg compartment). CCR4pos_CD45ROneg: CCR4+ CD45RO- (naive-like tissue-homing Treg, uncommon). CCR4neg_CD45ROpos: CCR4- CD45RO+ (memory non-tissue-homing Treg). CCR4neg_CD45ROneg: CCR4- CD45RO- (resting naive-like Treg; approximates Miyara Fraction I, though the original Miyara scheme is defined on CD45RA × Foxp3/CD25 rather than CD45RO). Note that CD45RA is not in panel, so the resting/memory split relies on CD45RO alone."
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "dataset": "Lyoplate_DC",
+  "instrument": "BD LSR II",
+  "notes": "Lyoplate DC/Monocyte/NK panel from a multi-site standardization study. The parent of Step 1 is already pre-gated 'Live singlet cells in the monocyte scatter range' — scatter-based monocyte/myeloid gating, singlet discrimination, and viability-based dead-cell exclusion are applied upstream and omitted from this plan. `x_marker` / `y_marker` fields use protein marker names directly (parquet columns are marker-named; see `parquet/meta.json`). `Lineage` is a dump channel (typically CD3/CD19/CD20 pooled into one fluorophore) used to exclude T/B cells from the myeloid/DC/NK compartment.",
+  "steps": [
+    {
+      "step": 1,
+      "parent": "ALL",
+      "x_marker": "CD14",
+      "y_marker": "Lineage",
+      "annotation column name": "Step01_CD14|Lineage",
+      "annotation categories": [
+        "Lin_neg_CD14pos",
+        "Lin_neg_CD14neg"
+      ],
+      "note": "Separate monocytes from the DC/NK candidate pool, while excluding T/B cells via the Lineage dump channel. Lin_neg_CD14pos: Lineage- CD14+ (monocytes; feeds the CD16+ monocyte subset at Step 2). Lin_neg_CD14neg: Lineage- CD14- (DC / NK candidates; feeds Steps 3–5). Lineage+ events (T, B cells that passed the scatter pre-gate) are not annotated because they are not targets of this panel. Useful co-markers: HLA-DR would provide positive confirmation of APC identity and is used downstream at Step 4."
+    },
+    {
+      "step": 2,
+      "parent": "Step01_CD14|Lineage == Lin_neg_CD14pos",
+      "x_marker": "CD11c",
+      "y_marker": "CD16",
+      "annotation column name": "Step02_CD11c|CD16",
+      "annotation categories": [
+        "CD14pos_CD16pos"
+      ],
+      "note": "Identify the CD16+ (non-classical / intermediate) monocyte subset within CD14+ monocytes. CD14pos_CD16pos: CD14+ CD16+ (encompasses both intermediate CD14++CD16+ and non-classical CD14+CD16++ monocytes; this panel does not resolve the three-way monocyte split because CD14 level alone is used at the parent gate — refined 3-subset gating would require a CD14 vs CD16 quadrant that is not performed here). CD16-negative events (classical monocytes CD14++CD16-) are not explicitly labeled in this step. Axis design caveat: x_marker is CD11c, but CD11c is not used as a discriminator here — the CD16+ call is driven by CD16 on y; CD11c is shown as a display / sanity-check axis to confirm monocyte identity (monocytes are typically CD11c+, so events should cluster at CD11c-positive)."
+    },
+    {
+      "step": 3,
+      "parent": "Step01_CD14|Lineage == Lin_neg_CD14neg",
+      "x_marker": "CD16",
+      "y_marker": "CD56",
+      "annotation column name": "Step03_CD16|CD56",
+      "annotation categories": [
+        "CD16neg_CD56pos",
+        "CD16pos_CD56pos",
+        "CD16pos_CD56neg",
+        "CD16neg_CD56neg"
+      ],
+      "note": "NK subsetting (by CD16 × CD56) plus DC-precursor routing within the CD14- compartment. CD16neg_CD56pos: CD56+ CD16- (CD56-bright NK — immature cytokine-producing NK subset; sometimes referred to as 'regulatory' NK in the literature, though this functional label is not universally adopted). CD16pos_CD56pos: CD56+ CD16+ (CD56-dim NK — mature cytotoxic NK, the dominant peripheral NK population). CD16pos_CD56neg: CD16+ CD56- (non-canonical CD16+ cells; may include residual monocyte subsets or atypical NK — uncommon). CD16neg_CD56neg: CD16- CD56- (neither NK nor CD16+ myeloid — feeds the DC branch at Step 4). Useful co-markers: NKp46 / NKG2A / granzyme B would strengthen NK identity but are not in this panel."
+    },
+    {
+      "step": 4,
+      "parent": "Step03_CD16|CD56 == CD16neg_CD56neg",
+      "x_marker": "SSC-A",
+      "y_marker": "HLADR",
+      "annotation column name": "Step04_SSC-A|HLADR",
+      "annotation categories": [
+        "HLADRpos"
+      ],
+      "note": "Enrich HLA-DR+ antigen-presenting cells within the CD14- CD16- CD56- compartment — the entry point to the DC branch. This is a DC-candidate enrichment step, not a DC call: DC identity is confirmed downstream at Step 5 by CD11c × CD123 quadrant. HLADRpos: HLA-DR+ (DCs are typically HLA-DR-high). Axis design caveat: x_marker is SSC-A, but this is a display / sanity-check axis to verify that events fall within the DC scatter range; the HLA-DR+ call is driven by HLA-DR on y."
+    },
+    {
+      "step": 5,
+      "parent": "Step04_SSC-A|HLADR == HLADRpos",
+      "x_marker": "CD11c",
+      "y_marker": "CD123",
+      "annotation column name": "Step05_CD11c|CD123",
+      "annotation categories": [
+        "pDC",
+        "mDC",
+        "CD11cpos_CD123pos",
+        "CD11cneg_CD123neg"
+      ],
+      "note": "DC subsetting on CD11c × CD123 quadrants. pDC: CD11c- CD123+ (plasmacytoid DCs; major type-I IFN producers). mDC: CD11c+ CD123- (myeloid DCs; the conventional DC compartment — this label does not distinguish cDC1 vs cDC2 because the discriminating markers CD141 and CD1c are not in this panel). CD11cpos_CD123pos: CD11c+ CD123+ (atypical double-positive; rare, may represent transitional or activated DC states). CD11cneg_CD123neg: CD11c- CD123- (double-negative; not a classical DC population — may include residual non-APC lineages). Naming caveat: the four categories mix biological names (`pDC`, `mDC`) with explicit marker-signature names (`CD11cpos_CD123pos`, `CD11cneg_CD123neg`) — this is intentional, reflecting that only the two canonical DC subsets have well-defined biological identities at this resolution."
+    }
+  ]
+}

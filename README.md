@@ -2,7 +2,7 @@
 
 CytoGate-Bench evaluates cytometry annotation at the expert-defined gating step. The final manuscript uses 11 flow- and mass-cytometry cohorts, a donor-stratified train/validation/test split (target 1:1:2, seed 42), and 11,671 held-out per-step test instances. Each step supplies its parent cells, two markers, candidate categories, and definition-only phenotype descriptions. A prediction assigns each parent cell to a candidate or `Unassigned`; evaluation compares it with the expert annotation on the same parent population.
 
-This README describes the experiments in `../cytogate-bench-paper/patterns/word/main_revision.docx` and `../cytogate-bench-paper/patterns/word/supplemental_revision.docx`. The repository also retains implementation and run artifacts for development, but those are not part of the final protocol below.
+This README describes the experiments in the CytoGate-Bench manuscript and its supplement. The repository also retains implementation and run artifacts for development, but those are not part of the final protocol below.
 
 ## Data and task contract
 
@@ -14,6 +14,14 @@ This README describes the experiments in `../cytogate-bench-paper/patterns/word/
 - `benchmark/notes.yaml`: phenotype text. The reported LLM and VLM runs use the `definition` field only. GT-informed spatial `oracle` notes are excluded from these runs and appear only in the separate oracle-instruction reference comparison.
 
 A missing phenotype definition is an error. The reported prompt does not take `note` or `tips` from a gating-plan JSON. Full prompt examples and output schemas are in the manuscript supplement.
+
+## Data availability
+
+The harmonized arcsinh cell-by-marker matrices and per-event annotations for seven cohorts (Acute2020, Acute2021, Vaccine, FRDR COVID-19, FR-FCM-Z74D HC, FR-FCM-Z74D Tissue, and Bjornson) are deposited in Harvard Dataverse: [doi:10.7910/DVN/RDW4UL](https://doi.org/10.7910/DVN/RDW4UL). The dataset terms are segmented per cohort; see the Terms tab on the record before redistributing any subset. The code in this repository is MIT-licensed (see `LICENSE`); the data license is governed by the Dataverse terms. After downloading, place each cohort under `data/<cohort>/parquet/`.
+
+The four HIPC Lyoplate cohorts (`Lyoplate_tcell`, `Lyoplate_treg`, `Lyoplate_bcell`, `Lyoplate_DC`) are not in the deposit. They are distributed through ImmPort/ImmuneSpace under the NIAID-DAIT Data Use Agreement. Obtain the GatingSetList exports there and rebuild the per-step parquet with [`data_pipeline/lyoplate/`](data_pipeline/lyoplate/README.md).
+
+Gating plans (`gating_plan.json`), per-step task records (`task.json`, including per-category expert counts), and the frozen evaluation splits (`splits.json`) for all 11 cohorts are in `benchmark/`.
 
 ## Installation
 

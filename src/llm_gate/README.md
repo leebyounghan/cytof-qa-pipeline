@@ -23,7 +23,7 @@ For every (sample, step) under `--datasets` / `--samples`, loads the parent popu
 
 - `step`, `parent`, `x_marker`, `y_marker`, `options`, `n_parent_cells`, `modality`, `cofactor`
 - `x_summary`, `y_summary` — per-axis min/max + q05/25/50/75/95
-- `axis_distribution` — per-axis 1-D 30-bin histogram
+- `axis_distribution` — per-axis 1-D 48-bin histogram
 - `joint_distribution` — 2-D peak/valley info on the joint heatmap
 - `density_clouds` — watershed-segmented density clouds
 - `gt_category_counts` — diagnostic only (never rendered to the LLM)
@@ -95,11 +95,11 @@ Unassigned: cells whose (x, y) position falls outside every named category's gat
 
 [Axis distribution]
 ### CCR7 (x-axis), range [-1.23, 6.45], n=63891 parent cells
-counts (30 bins, lo→hi): [...]
+counts (48 bins, lo→hi): [...]
 bin_centers:             [...]
 
 ### CD45RA (y-axis), range [0.00, 7.81], n=63891 parent cells
-counts (30 bins, lo→hi): [...]
+counts (48 bins, lo→hi): [...]
 bin_centers:             [...]
 
 ---

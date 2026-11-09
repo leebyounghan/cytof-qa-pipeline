@@ -19,9 +19,10 @@ results_flat/
 benchmark_flat/
 
 # Under benchmark/: track metadata (notes.yaml, splits.json, panel_meta.yaml,
-# hard_*.yaml) and task.json; skip plots and derived per-step data
+# hard_*.yaml, gating_plan.json) and task.json; skip plots and derived per-step data
 benchmark/**/*
 !benchmark/**/
+!benchmark/*/gating_plan.json
 !benchmark/notes.yaml
 !benchmark/splits.json
 !benchmark/hard_depletion.yaml
