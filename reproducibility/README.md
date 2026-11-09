@@ -78,10 +78,16 @@ Preserved server logs confirm vLLM 0.32.0 for the revised Qwen3.6-27B visual exp
 
 The recorded combined MD5 of the Agent-Gate and VLM-Gate runners is `e88cf8e0755d5b401269298c7b09ca63`. The preserved working files reproduce this fingerprint. Individual SHA-256 hashes are included in `environment.json`.
 
-## Code revision and remaining records
+## Code provenance
 
 The preserved visual run manifest identifies source commit `6137debaf3006fefc3b4804c5824dd812e146dea` **with local changes** in five execution files. Those changes are now in the repository. Four files are byte-identical to the preserved files and match the SHA-256 values in `environment.json`: `src/agent_gate/inference/run_agent.py`, `src/vlm_gate/inference/run_openai.py`, `src/llm_gate/inference/run_openai.py`, and `src/llm/inference/run_openai.py`. `src/llm_gate_flat/runner.py` combines the preserved sampling options with the later GPT-6 latency and cost logging, so its hash differs; models without an entry in `pricing.json` are logged with a null cost.
 
-The current environment inventory and the historical execution-file hashes serve different purposes: the inventory fixes the current software reference, while the hashes identify the preserved execution code. Neither substitutes for a final archived code revision.
+This repository contains the code used to produce all experimental results
+reported in the manuscript. The five execution-file changes that were local at
+the time of the revised Qwen visual runs are now committed here. The historical
+file hashes identify the exact files preserved from those runs; the later
+latency and cost logging in `src/llm_gate_flat/runner.py` explains why its
+current hash differs. The environment inventory records software versions and
+is separate from the code provenance.
 
 GPT-6 Luna/Sol API runtime records and execution dates remain unverified in this audit. Hosted model identifiers and inference settings should accompany their run records. Code and dependency pinning cannot guarantee identical future responses from a hosted API model.
