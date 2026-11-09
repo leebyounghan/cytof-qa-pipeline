@@ -103,7 +103,7 @@ async def run_online(
     seed: int | None = None,
     api_reasoning_effort: str | None = None,
 ) -> None:
-    client = AsyncOpenAI()
+    client = AsyncOpenAI(timeout=None)
     semaphore = asyncio.Semaphore(concurrency)
 
     print(f'Sending {len(groups)} requests (concurrency={concurrency}) ...')

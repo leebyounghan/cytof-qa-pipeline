@@ -67,19 +67,31 @@ class _OpenAICall:
     """Sync OpenAI chat call with per-attempt inference accounting."""
 
     def __init__(self, model: str, max_tokens: int, temperature: float = 0.0,
-                 reasoning_effort: str | None = None, max_retries: int = 3):
-        self._client = OpenAI()
+                 reasoning_effort: str | None = None, max_retries: int = 3,
+                 top_p: float | None = None, top_k: int | None = None,
+                 presence_penalty: float | None = None,
+                 thinking_token_budget: int | None = None, seed: int | None = None):
+        self._client = OpenAI(timeout=1800)
         self.model = model
         self.max_tokens = max_tokens
         self.temperature = temperature
         self.reasoning_effort = reasoning_effort
         self.max_retries = max_retries
+        # Sampling / thinking knobs. Defaults keep the greedy behaviour (T=0, no extra_body) of the closed
+        # models; the Qwen3.6 tb8096 recipe passes T=1.0, top_p, top_k, and the thinking budget.
+        self.top_p = top_p
+        self.top_k = top_k
+        self.presence_penalty = presence_penalty
+        self.thinking_token_budget = thinking_token_budget
+        self.seed = seed
         pricing_path = Path(__file__).with_name("pricing.json")
         with pricing_path.open() as handle:
             pricing = json.load(handle)
-        if model not in pricing:
-            raise ValueError(f"No inference cost rates for model {model!r} in {pricing_path}")
-        self.pricing = pricing[model]
+        # Locally served models (vLLM) have no API price; their calls are logged with a null cost.
+        self.pricing = pricing.get(model)
+        if self.pricing is None:
+            print(f"[WARN] No inference cost rates for model {model!r} in {pricing_path}; "
+                  "estimated_cost_usd is recorded as null.", file=sys.stderr)
         self._log_path: Path | None = None
         self._dataset: str | None = None
         self._sample: str | None = None
@@ -132,7 +144,8 @@ class _OpenAICall:
             "cached_prompt_tokens": sum(row["usage"]["cached_prompt_tokens"] for row in success),
             "completion_tokens": sum(row["usage"]["completion_tokens"] for row in success),
             "reasoning_tokens": sum(row["usage"]["reasoning_tokens"] for row in success),
-            "estimated_cost_usd": sum(row["estimated_cost_usd"] for row in success),
+            "estimated_cost_usd": (sum(row["estimated_cost_usd"] for row in success)
+                                   if self.pricing is not None else None),
             "pricing_usd_per_million_tokens": self.pricing,
         }
 
@@ -142,7 +155,7 @@ class _OpenAICall:
             started_at = datetime.now(timezone.utc).isoformat()
             started = time.perf_counter()
             try:
-                kwargs = dict(
+                kwargs: dict = dict(
                     model=self.model,
                     messages=[
                         {"role": "system", "content": system_prompt},
@@ -153,6 +166,20 @@ class _OpenAICall:
                 )
                 if self.reasoning_effort is not None:
                     kwargs["reasoning_effort"] = self.reasoning_effort
+                if self.top_p is not None:
+                    kwargs["top_p"] = self.top_p
+                if self.presence_penalty is not None:
+                    kwargs["presence_penalty"] = self.presence_penalty
+                if self.seed is not None:
+                    kwargs["seed"] = self.seed
+                # top_k / thinking_token_budget are vLLM-only → extra_body.
+                extra: dict = {}
+                if self.top_k is not None:
+                    extra["top_k"] = self.top_k
+                if self.thinking_token_budget is not None:
+                    extra["thinking_token_budget"] = self.thinking_token_budget
+                if extra:
+                    kwargs["extra_body"] = extra
                 resp = self._client.chat.completions.create(**kwargs)
                 usage = resp.usage
                 if usage is None:
@@ -167,7 +194,7 @@ class _OpenAICall:
                 reasoning_tokens = (completion_details.reasoning_tokens or 0) if completion_details else 0
                 if not 0 <= cached_tokens <= prompt_tokens:
                     raise ValueError(f"Invalid cached token count in OpenAI response {resp.id}")
-                cost = (
+                cost = None if self.pricing is None else (
                     (prompt_tokens - cached_tokens) * self.pricing["input"]
                     + cached_tokens * self.pricing["cached_input"]
                     + completion_tokens * self.pricing["output"]
@@ -416,8 +443,16 @@ def main() -> None:
     )
     parser.add_argument("--model", default="gpt-5.4")
     parser.add_argument("--max-tokens", type=int, default=8192)
+    # Sampling / thinking (defaults keep original greedy behavior; pass the
+    # Qwen3.6 tb8096 recipe explicitly: T=1.0 top_p=0.95 top_k=20 tb=8096).
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--api-reasoning-effort", choices=("none", "low", "medium", "high", "xhigh"))
+    parser.add_argument("--top-p", type=float, default=None)
+    parser.add_argument("--top-k", type=int, default=None)
+    parser.add_argument("--presence-penalty", type=float, default=None)
+    parser.add_argument("--thinking-token-budget", type=int, default=None)
+    parser.add_argument("--seed", type=int, default=None,
+                        help="Sampling seed (OpenAI/vLLM `seed`) for reproducible seed sweeps.")
     parser.add_argument("--tiebreak", default="smallest", choices=("smallest", "priority"))
     parser.add_argument("--method-name", default="llm_gate_flat",
                         help="Method identifier embedded in prediction.json (default llm_gate_flat).")
@@ -462,9 +497,12 @@ def main() -> None:
         f"model={args.model}, tiebreak={args.tiebreak}",
     )
 
-    llm_call = _OpenAICall(model=args.model, max_tokens=args.max_tokens,
-                           temperature=args.temperature,
-                           reasoning_effort=args.api_reasoning_effort)
+    llm_call = _OpenAICall(
+        model=args.model, max_tokens=args.max_tokens,
+        temperature=args.temperature, reasoning_effort=args.api_reasoning_effort,
+        top_p=args.top_p, top_k=args.top_k, presence_penalty=args.presence_penalty,
+        thinking_token_budget=args.thinking_token_budget, seed=args.seed,
+    )
     system_prompt = get_system_prompt()
 
     summaries: list[dict] = []

@@ -58,6 +58,37 @@ except ImportError:
 load_dotenv()
 
 
+# ── reasoning sidecar (--reasoning-out, 2026-11-01) ─────────────────────────
+REASONING_OUT: str | None = None
+_REASONING_LOG: list = []
+
+
+def _log_reasoning(group: dict, resp, turn: int | None = None) -> dict:
+    """Record the server's reasoning text and token use of one response (vLLM returns it as `reasoning`)."""
+    choice = resp.choices[0]
+    msg = choice.message
+    reasoning = (getattr(msg, 'reasoning', None) or (getattr(msg, 'model_extra', None) or {}).get('reasoning')
+                 or getattr(msg, 'reasoning_content', None) or '')
+    usage = getattr(resp, 'usage', None)
+    rec = {'sample': group['sample'], 'step': group['step'], 'turn': turn,
+           'completion_tokens': getattr(usage, 'completion_tokens', None),
+           'finish_reason': choice.finish_reason, 'reasoning_chars': len(reasoning)}
+    if REASONING_OUT:
+        _REASONING_LOG.append({**rec, 'reasoning': reasoning})
+    return rec
+
+
+def _write_reasoning() -> None:
+    if not REASONING_OUT:
+        return
+    import gzip
+    Path(REASONING_OUT).parent.mkdir(parents=True, exist_ok=True)
+    with gzip.open(REASONING_OUT, 'wt', encoding='utf-8') as f:
+        for r in _REASONING_LOG:
+            f.write(json.dumps(r, ensure_ascii=False) + '\n')
+    print(f'Wrote {len(_REASONING_LOG):,} reasoning records → {REASONING_OUT}')
+
+
 async def _call_one(
     client: AsyncOpenAI, group: dict, *,
     model: str, system_prompt: str,
@@ -67,6 +98,8 @@ async def _call_one(
     presence_penalty: float | None,
     frequency_penalty: float | None,
     api_reasoning_effort: str | None = None,
+    request_seed: int | None = None,
+    thinking_token_budget: int | None = None,
 ) -> str:
     """One (sample, step) → final JSON text. Builds the multimodal user
     message inline so each step's scatter is its own ``image_url``.
@@ -106,7 +139,12 @@ async def _call_one(
             kwargs['frequency_penalty'] = frequency_penalty
         if api_reasoning_effort is not None:
             kwargs['reasoning_effort'] = api_reasoning_effort
+        if request_seed is not None:
+            kwargs['seed'] = request_seed
+        if thinking_token_budget is not None:  # same extra_body key as the LLM-Gate client
+            kwargs['extra_body'] = {'thinking_token_budget': thinking_token_budget}
         resp = await client.chat.completions.create(**kwargs)
+        _log_reasoning(group, resp)
         return resp.choices[0].message.content or ''
 
 
@@ -119,9 +157,11 @@ async def run_online(
     presence_penalty: float | None = None,
     frequency_penalty: float | None = None,
     api_reasoning_effort: str | None = None,
+    request_seed: int | None = None,
+    thinking_token_budget: int | None = None,
     save_raw: bool = False,
 ) -> None:
-    client = AsyncOpenAI()
+    client = AsyncOpenAI(timeout=None)
     semaphore = asyncio.Semaphore(concurrency)
 
     print(f'Sending {len(groups)} multimodal requests '
@@ -136,7 +176,9 @@ async def run_online(
                     top_p=top_p,
                     presence_penalty=presence_penalty,
                     frequency_penalty=frequency_penalty,
-                    api_reasoning_effort=api_reasoning_effort)
+                    api_reasoning_effort=api_reasoning_effort,
+                    request_seed=request_seed,
+                    thinking_token_budget=thinking_token_budget)
           for g in groups],
         return_exceptions=True,
     )
@@ -173,6 +215,7 @@ async def run_online(
         for step in sample['steps'].values()
     )
     print(f'Wrote {n_steps:,} steps / {n_gates:,} gates → {output_path}')
+    _write_reasoning()
 
 
 def main() -> None:
@@ -193,6 +236,15 @@ def main() -> None:
                         default='scatter')
     parser.add_argument('--api-reasoning-effort', default=None,
                         choices=['none', 'low', 'medium', 'high', 'xhigh'])
+    parser.add_argument('--reasoning-out', default=None,
+                        help='Write every response\'s reasoning text, completion tokens and finish reason to '
+                             'this gzipped JSONL (pred.json is unchanged).')
+    parser.add_argument('--thinking-token-budget', type=int, default=None,
+                        help='vLLM thinking-token budget, forwarded as extra_body.thinking_token_budget '
+                             '(as in the LLM-Gate client). Unset = no budget.')
+    parser.add_argument('--request-seed', type=int, default=None,
+                        help='Per-request sampling seed sent with every request (vLLM/OpenAI `seed`). '
+                             'Unset = no seed (original behaviour).')
     parser.add_argument('--sample', nargs='+', default=None,
                         help='Sample names to include')
     parser.add_argument('--max_samples', type=int, default=0,
@@ -235,6 +287,8 @@ def main() -> None:
     add_hard_depletion_args(parser)
     add_hard_shift_args(parser)
     args = parser.parse_args()
+    global REASONING_OUT
+    REASONING_OUT = args.reasoning_out
 
     resolve_hard_depletion_args(args)
     resolve_hard_shift_args(
@@ -294,6 +348,8 @@ def main() -> None:
         presence_penalty=args.presence_penalty,
         frequency_penalty=args.frequency_penalty,
         api_reasoning_effort=args.api_reasoning_effort,
+        request_seed=args.request_seed,
+        thinking_token_budget=args.thinking_token_budget,
         save_raw=args.save_raw,
     ))
 

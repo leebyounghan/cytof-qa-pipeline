@@ -66,12 +66,13 @@ Preserved server logs confirm vLLM 0.32.0 for the revised Qwen3.6-27B visual exp
 - Serving: data parallel size 2, tensor parallel size 2, and maximum model length 65536. These values describe each serving lane, rather than a single eight-GPU tensor-parallel process.
 - Parsing: `qwen3` reasoning parser, `qwen3_coder` tool parser, and chat-template content format `string`.
 - Agent-Gate: at most four turns, final-turn tool-call arguments accepted as the final gate, and context-overflow requests scored as empty answers.
+- Runner options for these settings: `--thinking-token-budget 8096`, `--request-seed <seed>`, and, for `src/agent_gate/inference/run_agent.py`, `--max-turns 4 --final-tool-call-as-answer --context-overflow-as-empty`. The cascade runner `src/llm_gate_flat/runner.py` takes `--temperature 1.0 --top-p 0.95 --top-k 20 --thinking-token-budget 8096 --seed <seed>`.
 
 The recorded combined MD5 of the Agent-Gate and VLM-Gate runners is `e88cf8e0755d5b401269298c7b09ca63`. The preserved working files reproduce this fingerprint. Individual SHA-256 hashes are included in `environment.json`.
 
 ## Code revision and remaining records
 
-The preserved visual run manifest identifies source commit `6137debaf3006fefc3b4804c5824dd812e146dea` **with local changes**. A commit identifier alone therefore does not specify that execution state. Five execution files differ from the audited public checkout. Their changes must be preserved and reconciled before assigning one immutable repository revision to the manuscript analyses.
+The preserved visual run manifest identifies source commit `6137debaf3006fefc3b4804c5824dd812e146dea` **with local changes** in five execution files. Those changes are now in the repository. Four files are byte-identical to the preserved files and match the SHA-256 values in `environment.json`: `src/agent_gate/inference/run_agent.py`, `src/vlm_gate/inference/run_openai.py`, `src/llm_gate/inference/run_openai.py`, and `src/llm/inference/run_openai.py`. `src/llm_gate_flat/runner.py` combines the preserved sampling options with the later GPT-6 latency and cost logging, so its hash differs; models without an entry in `pricing.json` are logged with a null cost.
 
 The current environment inventory and the historical execution-file hashes serve different purposes: the inventory fixes the current software reference, while the hashes identify the preserved execution code. Neither substitutes for a final archived code revision.
 

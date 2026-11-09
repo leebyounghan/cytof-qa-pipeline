@@ -60,7 +60,7 @@ from src.agent_gate.tools.registry import (
 from src.agent_gate.tools.render_overlay import (
     render_bare_scatter, render_gate_trajectory,
 )
-from src.visual_variants import load_visual_groups
+from src.visual_variants import describe_plot, load_visual_groups
 
 try:
     from openai import AsyncOpenAI
@@ -70,6 +70,37 @@ except ImportError:
     sys.exit(1)
 
 load_dotenv()
+
+
+# ── reasoning sidecar (--reasoning-out, 2026-11-01) ─────────────────────────
+REASONING_OUT: str | None = None
+_REASONING_LOG: list = []
+
+
+def _log_reasoning(group: dict, resp, turn: int | None = None) -> dict:
+    """Record the server's reasoning text and token use of one response (vLLM returns it as `reasoning`)."""
+    choice = resp.choices[0]
+    msg = choice.message
+    reasoning = (getattr(msg, 'reasoning', None) or (getattr(msg, 'model_extra', None) or {}).get('reasoning')
+                 or getattr(msg, 'reasoning_content', None) or '')
+    usage = getattr(resp, 'usage', None)
+    rec = {'sample': group['sample'], 'step': group['step'], 'turn': turn,
+           'completion_tokens': getattr(usage, 'completion_tokens', None),
+           'finish_reason': choice.finish_reason, 'reasoning_chars': len(reasoning)}
+    if REASONING_OUT:
+        _REASONING_LOG.append({**rec, 'reasoning': reasoning})
+    return rec
+
+
+def _write_reasoning() -> None:
+    if not REASONING_OUT:
+        return
+    import gzip
+    Path(REASONING_OUT).parent.mkdir(parents=True, exist_ok=True)
+    with gzip.open(REASONING_OUT, 'wt', encoding='utf-8') as f:
+        for r in _REASONING_LOG:
+            f.write(json.dumps(r, ensure_ascii=False) + '\n')
+    print(f'Wrote {len(_REASONING_LOG):,} reasoning records → {REASONING_OUT}')
 
 
 # ── per-step agentic loop ───────────────────────────────────────────────────
@@ -149,6 +180,10 @@ async def _run_agent_step(
     api_reasoning_effort: str | None,
     semaphore: asyncio.Semaphore,
     dump_dir: Path | None = None,
+    request_seed: int | None = None,
+    thinking_token_budget: int | None = None,
+    plot_style: str = 'scatter',
+    final_tool_call_as_answer: bool = False,
 ) -> tuple[str, dict]:
     """Run the tool-call loop for one (sample, step). Returns
     ``(final_text, trace)`` where ``final_text`` is the model's last
@@ -198,6 +233,9 @@ async def _run_agent_step(
     async with semaphore:
         for turn in range(max_turns):
             tool_choice = _tool_choice_for_turn(turn, max_turns)
+            final_turn = turn == max_turns - 1
+            if final_turn and final_tool_call_as_answer:
+                tool_choice = 'auto'
             kwargs = dict(
                 model=model,
                 messages=messages,
@@ -214,12 +252,33 @@ async def _run_agent_step(
                 kwargs['frequency_penalty'] = frequency_penalty
             if api_reasoning_effort is not None:
                 kwargs['reasoning_effort'] = api_reasoning_effort
+            if request_seed is not None:
+                kwargs['seed'] = request_seed
+            if thinking_token_budget is not None:  # same extra_body key as the LLM-Gate client
+                kwargs['extra_body'] = {'thinking_token_budget': thinking_token_budget}
 
             resp = await client.chat.completions.create(**kwargs)
+            trace.setdefault('turn_log', []).append(_log_reasoning(group, resp, turn))
             choice = resp.choices[0]
             msg = choice.message
             trace['n_turns'] += 1
             trace['finish_reason'] = choice.finish_reason
+
+            if msg.tool_calls and final_turn and final_tool_call_as_answer:
+                # Final turn answered with a tool call: its `gates` argument is the committed answer (paper-era
+                # behaviour, see --final-tool-call-as-answer). The call is not executed.
+                gates = None
+                for tc in msg.tool_calls:
+                    try:
+                        _a = json.loads(tc.function.arguments or '{}')
+                    except (json.JSONDecodeError, TypeError, ValueError):
+                        continue
+                    if isinstance(_a, dict) and _a.get('gates') is not None:
+                        gates = _a['gates']
+                        break
+                trace['final_from_tool_call'] = True
+                final_text = json.dumps(gates) if gates is not None else (msg.content or '')
+                break
 
             if msg.tool_calls:
                 # Append the assistant turn (must precede every tool reply).
@@ -238,6 +297,7 @@ async def _run_agent_step(
                         text, image_uri = await asyncio.to_thread(
                             dispatch_tool_call, tc, ctx,
                         )
+                    text = describe_plot(text, plot_style)
                     trace['tool_diagnostics'].append(text)
                     # Capture the raw `gates` arg per call so a trajectory
                     # composite can be drawn after the loop. Parse failures
@@ -332,10 +392,17 @@ async def run_online(
     api_reasoning_effort: str | None = None,
     save_raw: bool = False,
     dump_dir: Path | None = None,
+    request_seed: int | None = None,
+    thinking_token_budget: int | None = None,
+    plot_style: str = 'scatter',
+    final_tool_call_as_answer: bool = False,
+    context_overflow_as_empty: bool = False,
 ) -> None:
-    client = AsyncOpenAI()
+    client = AsyncOpenAI(timeout=None)
     semaphore = asyncio.Semaphore(concurrency)
     tool_schemas = get_tool_schemas()
+    for t in tool_schemas:  # same wording fix as the VLM and Responses runners
+        t['function']['description'] = describe_plot(t['function']['description'], plot_style)
 
     if dump_dir is not None:
         dump_dir.mkdir(parents=True, exist_ok=True)
@@ -358,12 +425,19 @@ async def run_online(
             api_reasoning_effort=api_reasoning_effort,
             semaphore=semaphore,
             dump_dir=dump_dir,
+            request_seed=request_seed,
+            thinking_token_budget=thinking_token_budget,
+            plot_style=plot_style,
+            final_tool_call_as_answer=final_tool_call_as_answer,
           ) for g in groups],
         return_exceptions=True,
     )
 
+    def _overflow(o):
+        return context_overflow_as_empty and 'maximum context length' in str(o)
+
     failures = [(g['sample'], g['step'], o) for g, o in zip(groups, outputs)
-                if isinstance(o, Exception)]
+                if isinstance(o, Exception) and not _overflow(o)]
     if failures:
         sample, step, error = failures[0]
         raise RuntimeError(f'{len(failures)} agent steps failed; '
@@ -422,6 +496,7 @@ async def run_online(
     n_calls = sum(t['n_tool_calls'] for t in traces)
     print(f'Wrote {n_steps:,} steps / {n_gates:,} gates / '
           f'{n_calls:,} overlay calls → {output_path}')
+    _write_reasoning()
 
 
 def main() -> None:
@@ -442,6 +517,22 @@ def main() -> None:
                         default='scatter')
     parser.add_argument('--api-reasoning-effort', default=None,
                         choices=['none', 'low', 'medium', 'high', 'xhigh'])
+    parser.add_argument('--final-tool-call-as-answer', action='store_true',
+                        help='Last turn: send tool_choice=auto and, if the model answers with a tool call, take '
+                             'its `gates` as the final answer (vLLM 0.32 drops tool-call text under '
+                             'tool_choice=none; the paper-era server kept it in content, where it was parsed).')
+    parser.add_argument('--context-overflow-as-empty', action='store_true',
+                        help='A step whose request exceeds the context length is recorded as an empty answer '
+                             '(paper runner behaviour) instead of failing the cohort.')
+    parser.add_argument('--reasoning-out', default=None,
+                        help='Write every turn\'s reasoning text, completion tokens and finish reason to this '
+                             'gzipped JSONL (pred.json keeps only a small per-turn log in agent_trace).')
+    parser.add_argument('--thinking-token-budget', type=int, default=None,
+                        help='vLLM thinking-token budget, forwarded as extra_body.thinking_token_budget '
+                             '(as in the LLM-Gate client). Unset = no budget.')
+    parser.add_argument('--request-seed', type=int, default=None,
+                        help='Per-request sampling seed sent with every request (vLLM/OpenAI `seed`). '
+                             'Unset = no seed (original behaviour).')
     parser.add_argument('--sample', nargs='+', default=None,
                         help='Sample names to include')
     parser.add_argument('--max_samples', type=int, default=0,
@@ -500,6 +591,8 @@ def main() -> None:
     add_hard_depletion_args(parser)
     add_hard_shift_args(parser)
     args = parser.parse_args()
+    global REASONING_OUT
+    REASONING_OUT = args.reasoning_out
 
     if args.max_turns < 2:
         parser.error('--max-turns must be >= 2 (turn 1 forced to call the '
@@ -524,6 +617,7 @@ def main() -> None:
     if args.input_root:
         groups = load_visual_groups(args.dataset_path, args.input_root,
                                     args.plot_style, sample_filter)
+        system_prompt = describe_plot(get_system_prompt(), args.plot_style)
     else:
         groups = load_gate_tasks(
             args.dataset_path,
@@ -531,6 +625,7 @@ def main() -> None:
             sample_filter=sample_filter,
             perturbation_name=perturbation_name,
         )
+        system_prompt = get_system_prompt()
     if not groups:
         print('No groups found. Exiting.')
         return
@@ -555,15 +650,20 @@ def main() -> None:
         concurrency=args.concurrency,
         max_tokens=args.max_tokens,
         max_turns=args.max_turns,
-        system_prompt=get_system_prompt(),
+        system_prompt=system_prompt,
         perturbation=perturbation_name,
         temperature=args.temperature,
         top_p=args.top_p,
         presence_penalty=args.presence_penalty,
         frequency_penalty=args.frequency_penalty,
         api_reasoning_effort=args.api_reasoning_effort,
+        request_seed=args.request_seed,
+        thinking_token_budget=args.thinking_token_budget,
         save_raw=args.save_raw,
         dump_dir=args.dump_overlays,
+        plot_style=args.plot_style if args.input_root else 'scatter',
+        final_tool_call_as_answer=args.final_tool_call_as_answer,
+        context_overflow_as_empty=args.context_overflow_as_empty,
     ))
 
 
