@@ -947,9 +947,9 @@
     "code_freeze_status": "The repository includes the execution code used for all manuscript results. The five changes that were local during the revised visual runs are committed; preserved file hashes record their historical state."
   },
   "unverified": [
-    "GPT-6 Luna/Sol API runtime records and execution dates",
     "Installation of the complete package snapshot in a clean environment"
   ],
+  "gpt6_api_run_record": "gpt6_api_runs.md",
   "r_flowdensity_environment": {
     "record": "r_flowdensity.md",
     "verified_on": "2026-11-09",

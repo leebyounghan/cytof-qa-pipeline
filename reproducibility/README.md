@@ -90,4 +90,7 @@ latency and cost logging in `src/llm_gate_flat/runner.py` explains why its
 current hash differs. The environment inventory records software versions and
 is separate from the code provenance.
 
-GPT-6 Luna/Sol API runtime records and execution dates remain unverified in this audit. Hosted model identifiers and inference settings should accompany their run records. Code and dependency pinning cannot guarantee identical future responses from a hosted API model.
+The [GPT-6 API run record](gpt6_api_runs.md) gives the Luna and Sol model IDs,
+request settings, execution dates, and retained job evidence for the reported
+experiments. Hosted model aliases may change at the provider, so code and
+dependency pinning cannot guarantee identical future responses.
