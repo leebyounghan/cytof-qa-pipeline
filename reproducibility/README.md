@@ -2,6 +2,12 @@
 
 This directory provides two installation-tested environments based on the GPU environment captured on 6 November 2026: one for inference and analysis, and one for raw FCS conversion. Current versions are retained where compatible. This record does not assert that every historical result used these versions.
 
+The separate cluster R environment was verified on 9 November 2026. Its R,
+Bioconductor, and CRAN package versions and installation paths are recorded in
+[r_flowdensity.md](r_flowdensity.md). This check confirms the installed R
+packages and `flowDensity::deGate`; it does not constitute a clean R install or
+an end-to-end flowDensity benchmark run.
+
 ## Software and hardware
 
 | Component | Reference value |
@@ -55,7 +61,9 @@ The original inventory failed dependency resolution because fcsparser requires N
 
 Both hash-pinned environments installed successfully and passed `uv pip check`. Checks also passed for FCS parsing using a bundled fixture, Parquet roundtrips, KDE, KMeans, MiniSom, plot rendering, CPU tensor operations, and imports including vLLM, torchvision, and torchaudio. The public checkout's evaluator and LLM-Gate, VLM-Gate, and Agent-Gate command-line help checks passed in the inference environment.
 
-The validation pod requested no GPUs. GPU model inference, hosted API calls, R/Bioconductor/flowDensity, and complete benchmark reproduction were not tested. R-related package versions still need to be verified separately.
+The validation pod requested no GPUs. GPU model inference, hosted API calls,
+R/Bioconductor/flowDensity, and complete benchmark reproduction were not tested
+in that pod. The separate LSF R package check is recorded above.
 
 ## Revised Qwen visual experiments
 

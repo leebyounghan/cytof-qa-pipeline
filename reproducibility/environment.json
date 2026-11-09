@@ -947,11 +947,24 @@
     "code_freeze_status": "The five execution files differ from the audited public checkout. Preserve and reconcile these changes before claiming a single manuscript code revision."
   },
   "unverified": [
-    "R, Bioconductor, flowDensity and data.table environment versions",
     "GPT-6 Luna/Sol API runtime records and execution dates",
     "Installation of the complete package snapshot in a clean environment",
     "A single immutable code revision covering all reported analyses"
   ],
+  "r_flowdensity_environment": {
+    "record": "r_flowdensity.md",
+    "verified_on": "2026-11-09",
+    "lsf_job_id": "50112469",
+    "module": "R/4.4",
+    "r_version": "4.4.2",
+    "packages": {
+      "flowDensity": "1.38.0",
+      "flowCore": "2.16.0",
+      "data.table": "1.15.4",
+      "jsonlite": "1.8.8"
+    },
+    "validation": "Namespaces loaded and flowDensity::deGate was available; clean R installation and end-to-end benchmark were not tested."
+  },
   "validated_installation": {
     "record": "installation-validation.json",
     "inference_lock": "inference.lock.txt",

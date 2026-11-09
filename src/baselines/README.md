@@ -22,6 +22,9 @@ python -m src.eval --predictions results/flowsom/ \
 
 The R gating stage (`flowdensity/flowdensity_gate.R`) uses `data.table::fread` for CSV parsing and `parallel::mclapply` to process step directories in parallel. Defaults to `detectCores() - 1`; override with `--cores N`. `--overwrite` re-runs even when `thresholds.json` already exists.
 
+The verified R and package versions are recorded in
+[the reproducibility manifest](../../reproducibility/r_flowdensity.md).
+
 ```bash
 python -m src.baselines.flowdensity.pre_flowdensity \
     --benchmark benchmark/ --data-dir data/ --output-dir results/flowdensity/
