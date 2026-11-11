@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # ──────────────────────────────────────────────────────────────────────────────
-# LLM-Gate seed sweep — the 10-seed stability runs behind the paper's
-# seed-stability table (open-weight LLM-Gate rows are reported as 10-seed means).
+# LLM-Gate seed sweep — the three-seed stability runs behind the paper's
+# seed-stability table (Table S21: seeds 42, 123, 456; main Table 2 reports seed 42).
 #
-# 5 open backbones × 10 seeds, sequential. Each run drives the full
+# 6 open backbones × 3 seeds, sequential. Each run drives the full
 # LLM-Gate pipeline (vLLM serve → clients → propagate → eval) via
 # src/llm_gate/scripts/run_vllm_gate.sh with GENERATION_SEED exported.
 #
@@ -16,7 +16,7 @@
 set -uo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
-SEEDS=(${SEEDS:-1 2 3 4 5 6 7 42 123 456})
+SEEDS=(${SEEDS:-42 123 456})
 
 DATASETS=(Acute2020 Acute2021 Bjornson Vaccine
           FR-FCM-Z74D_hc FR-FCM-Z74D_tissue FRDR_covid19
@@ -29,11 +29,12 @@ export HF_HUB_OFFLINE="${HF_HUB_OFFLINE:-1}"
 
 mkdir -p results/seed_sweep
 
-# short_name|gate_config  (paper LLM-Gate roster — 5 open backbones)
+# short_name|gate_config  (paper LLM-Gate roster — 6 open backbones)
 MODELS=(
   "qwen3_5_4b|src/llm_gate/configs/models/qwen3_5_4b_tb8096.yaml"
   "qwen3_5_27b|src/llm_gate/configs/models/qwen3_5_27b_tb8096.yaml"
   "qwen3_6_27b|src/llm_gate/configs/models/qwen3_6_27b_tb8096.yaml"
+  "qwen3_8_27b|src/llm_gate/configs/models/qwen3_8_27b_tb8096.yaml"
   "gemma_4_26b_a4b|src/llm_gate/configs/models/gemma_4_26b_a4b_it.yaml"
   "gemma_4_31b|src/llm_gate/configs/models/gemma_4_31b_it.yaml"
 )
@@ -67,4 +68,4 @@ for model_spec in "${MODELS[@]}"; do
 done
 
 log "DONE: $RUN run, $SKIP skipped, $FAIL failed"
-log "Aggregate with: python scripts/aggregate_seed_sweep.py --root results/seed_sweep"
+log "Aggregate with: python scripts/aggregate_seed_sweep.py --paradigm gate"

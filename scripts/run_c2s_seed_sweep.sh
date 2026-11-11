@@ -6,7 +6,7 @@
 #   • density_grid  (flowDensity grid cell-sentences)  → src/llm/scripts/run_vllm_grid.sh
 #   • clustering    (FlowSOM cell-sentences)           → src/llm_flowsom/scripts/run_vllm_flowsom.sh
 #
-# 5 open backbones × 10 seeds × 2 paradigms = 100 runs, sequential.
+# 6 open backbones × 3 seeds (42, 123, 456) × 2 paradigms = 36 runs, sequential.
 # Skips any (paradigm, model, seed) that already has 11 eval_summary.json.
 # Resumable: safe to re-run; only fills what is missing.
 #
@@ -25,7 +25,7 @@
 set -uo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
-SEEDS=(1 2 3 4 5 6 7 42 123 456)
+SEEDS=(${SEEDS:-42 123 456})
 
 DATASETS=(Acute2020 Acute2021 Bjornson Vaccine
           FR-FCM-Z74D_hc FR-FCM-Z74D_tissue FRDR_covid19
@@ -46,11 +46,12 @@ run_para() { [[ " $PARADIGMS " == *" $1 "* ]]; }
 
 mkdir -p results/seed_sweep
 
-# short_name|c2s_config  (paper LLM-C2S roster — 5 open backbones)
+# short_name|c2s_config  (paper LLM-C2S roster — 6 open backbones)
 MODELS=(
   "qwen3_5_4b|src/llm/configs/models/qwen3_5_4b_tb8096.yaml"
   "qwen3_5_27b|src/llm/configs/models/qwen3_5_27b_tb8096.yaml"
   "qwen3_6_27b|src/llm/configs/models/qwen3_6_27b_tb8096.yaml"
+  "qwen3_8_27b|src/llm/configs/models/qwen3_8_27b_tb8096.yaml"
   "gemma_4_26b_a4b|src/llm/configs/models/gemma_4_26b_a4b_it.yaml"
   "gemma_4_31b|src/llm/configs/models/gemma_4_31b_it.yaml"
 )

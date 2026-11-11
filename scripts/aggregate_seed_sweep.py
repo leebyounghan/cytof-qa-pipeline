@@ -20,7 +20,7 @@ COHORTS = ["Acute2020", "Acute2021", "Vaccine", "Bjornson",
            "FR-FCM-Z74D_hc", "FR-FCM-Z74D_tissue", "FRDR_covid19",
            "Lyoplate_tcell", "Lyoplate_treg", "Lyoplate_bcell", "Lyoplate_DC"]
 
-MODELS = ["qwen3_5_4b", "qwen3_5_27b", "qwen3_6_27b",
+MODELS = ["qwen3_5_4b", "qwen3_5_27b", "qwen3_6_27b", "qwen3_8_27b",
           "gemma_4_26b_a4b", "gemma_4_31b"]
 # gate sweep additionally has these:
 GATE_EXTRA = []
@@ -28,7 +28,8 @@ GATE_EXTRA = []
 DISPLAY = {
     "qwen3_5_4b": "Qwen3.5-4B",
     "qwen3_5_27b": "Qwen3.5-27B",
-    "qwen3_6_27b": "Qwen3.6-27B", "gemma_4_26b_a4b": "Gemma 4 26B A4B",
+    "qwen3_6_27b": "Qwen3.6-27B", "qwen3_8_27b": "Qwen3.8-27B",
+    "gemma_4_26b_a4b": "Gemma 4 26B A4B",
     "gemma_4_31b": "Gemma 4 31B",
 }
 METRICS = ["f1_macro_mean", "balanced_accuracy_mean", "iou_hull_macro_mean"]
